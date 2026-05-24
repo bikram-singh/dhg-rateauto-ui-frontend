@@ -161,7 +161,6 @@ jobs:
           cluster_name: ${{ inputs.GKE_CLUSTER }}
           location: ${{ inputs.GKE_REGION }}
           project_id: ${{ inputs.GCP_PROJECT_ID }}
-          use_dns_based_endpoint: true
 
       - name: Ensure namespace exists
         shell: bash
