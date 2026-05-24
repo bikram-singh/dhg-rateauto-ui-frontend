@@ -1,10 +1,10 @@
-import { LayoutDashboard, Building2, Hospital, DollarSign, Phone, BarChart2, CreditCard, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2, CreditCard, MessageSquare } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", active: true },
   { icon: Building2, label: "Departments" },
-  { icon: Hospital, label: "Hospitals" },
+  { icon: Building, label: "Hospitals" },
   { icon: DollarSign, label: "Pricing" },
 ];
 

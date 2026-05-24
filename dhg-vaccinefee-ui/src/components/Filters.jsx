@@ -1,4 +1,4 @@
-import { ChevronDown, Search, Building2, Syringe, Building, MapPin, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Search, Building2, Activity, Building, MapPin, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 
 export default function Filters() {
@@ -9,7 +9,7 @@ export default function Filters() {
     <div className="filters">
       <div className="filter-select-group">
         <FilterSelect icon={<Building2 size={15}/>} label="All Departments" />
-        <FilterSelect icon={<Syringe size={15}/>} label="All Vaccines" />
+        <FilterSelect icon={<Activity size={15}/>} label="All Vaccines" />
         <FilterSelect icon={<Building size={15}/>} label="All Facilities" />
         <FilterSelect icon={<MapPin size={15}/>} label="All Locations" />
       </div>

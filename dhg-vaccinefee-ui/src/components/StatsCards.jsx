@@ -1,4 +1,4 @@
-import { Syringe, Hospital, TrendingUp, ToggleRight } from "lucide-react";
+import { Activity, Building, TrendingUp } from "lucide-react";
 import { useState } from "react";
 
 export default function StatsCards() {
@@ -9,13 +9,13 @@ export default function StatsCards() {
       <StatCard
         label="Total Vaccines"
         value="24"
-        icon={<Syringe size={20} />}
+        icon={<Activity size={20} />}
         color="blue"
       />
       <StatCard
         label="Hospitals Covered"
         value="12"
-        icon={<Hospital size={20} />}
+        icon={<Building size={20} />}
         color="teal"
       />
       <StatCard
