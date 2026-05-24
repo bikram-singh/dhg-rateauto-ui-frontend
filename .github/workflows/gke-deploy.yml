@@ -1,0 +1,224 @@
+name: Continuous Deployment
+
+on:
+  workflow_call:
+    inputs:
+      APP_NAME:
+        description: Application name
+        required: true
+        type: string
+      APP_VERSION:
+        description: Image tag/version
+        required: true
+        type: string
+      IMAGE_URL:
+        description: Full image URL
+        required: true
+        type: string
+      GKE_ENVIRONMENT:
+        description: Deployment environment (dev, test, stage, prod)
+        required: true
+        type: string
+      GKE_REGION:
+        description: Cluster region/location
+        required: true
+        type: string
+      GKE_CLUSTER:
+        description: GKE cluster name
+        required: true
+        type: string
+      GKE_NAMESPACE:
+        description: Kubernetes namespace
+        required: true
+        type: string
+      GCP_PROJECT_ID:
+        description: GCP project id
+        required: true
+        type: string
+      K8S_MANIFESTS_DIR:
+        description: Directory containing template manifests
+        required: false
+        default: k8s
+        type: string
+      DEPLOYMENT_NAME:
+        description: Kubernetes deployment name
+        required: false
+        default: rate-automation-fee-sources-ui
+        type: string
+      SERVICE_NAME:
+        description: Kubernetes service name
+        required: false
+        default: rate-automation-fee-sources-ui-service
+        type: string
+      SERVICE_ACCOUNT_NAME:
+        description: Kubernetes service account name
+        required: false
+        default: rate-automation-fee-sources-ui
+        type: string
+      HPA_NAME:
+        description: Kubernetes HPA name
+        required: false
+        default: rate-automation-fee-sources-ui-hpa
+        type: string
+      CONTAINER_PORT:
+        description: App container port
+        required: false
+        default: '8080'
+        type: string
+      SERVICE_PORT:
+        description: Service port
+        required: false
+        default: '80'
+        type: string
+      REPLICAS:
+        description: Number of replicas
+        required: false
+        default: '2'
+        type: string
+      MIN_REPLICAS:
+        description: HPA minimum replicas
+        required: false
+        default: '2'
+        type: string
+      MAX_REPLICAS:
+        description: HPA maximum replicas
+        required: false
+        default: '10'
+        type: string
+      CPU_TARGET_UTILIZATION:
+        description: HPA CPU target utilization
+        required: false
+        default: '70'
+        type: string
+      MEMORY_TARGET_UTILIZATION:
+        description: HPA memory target utilization
+        required: false
+        default: '85'
+        type: string
+      LIVENESS_PATH:
+        description: Liveness probe path
+        required: false
+        default: /
+        type: string
+      READINESS_PATH:
+        description: Readiness probe path
+        required: false
+        default: /
+        type: string
+      REQUEST_CPU:
+        description: Container requested CPU
+        required: false
+        default: 100m
+        type: string
+      REQUEST_MEMORY:
+        description: Container requested memory
+        required: false
+        default: 256Mi
+        type: string
+      LIMIT_CPU:
+        description: Container CPU limit
+        required: false
+        default: 500m
+        type: string
+      LIMIT_MEMORY:
+        description: Container memory limit
+        required: false
+        default: 512Mi
+        type: string
+
+jobs:
+  deploy:
+    runs-on: uhg-runner
+    environment: ${{ inputs.GKE_ENVIRONMENT }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER_OPERA }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT_OPERA }}
+          create_credentials_file: true
+
+      - name: Setup gcloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.GCP_PROJECT_ID }}
+
+      - name: Install GKE auth plugin
+        shell: bash
+        run: |
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ inputs.GKE_CLUSTER }}
+          location: ${{ inputs.GKE_REGION }}
+          project_id: ${{ inputs.GCP_PROJECT_ID }}
+          use_dns_based_endpoint: true
+
+      - name: Ensure namespace exists
+        shell: bash
+        run: |
+          kubectl get namespace "${{ inputs.GKE_NAMESPACE }}" >/dev/null 2>&1 || kubectl create namespace "${{ inputs.GKE_NAMESPACE }}"
+
+      - name: Render manifests from templates
+        shell: bash
+        run: |
+          TEMPLATE_DIR="${{ inputs.K8S_MANIFESTS_DIR }}"
+          OUTPUT_DIR="k8s-rendered-${{ inputs.GKE_ENVIRONMENT }}"
+          mkdir -p "$OUTPUT_DIR"
+
+          for file in "$TEMPLATE_DIR"/*.yaml; do
+            filename="$(basename "$file")"
+            sed \
+              -e "s|__APP_NAME__|${{ inputs.APP_NAME }}|g" \
+              -e "s|__APP_VERSION__|${{ inputs.APP_VERSION }}|g" \
+              -e "s|__IMAGE_URL__|${{ inputs.IMAGE_URL }}|g" \
+              -e "s|__ENVIRONMENT__|${{ inputs.GKE_ENVIRONMENT }}|g" \
+              -e "s|__NAMESPACE__|${{ inputs.GKE_NAMESPACE }}|g" \
+              -e "s|__DEPLOYMENT_NAME__|${{ inputs.DEPLOYMENT_NAME }}|g" \
+              -e "s|__SERVICE_NAME__|${{ inputs.SERVICE_NAME }}|g" \
+              -e "s|__SERVICE_ACCOUNT_NAME__|${{ inputs.SERVICE_ACCOUNT_NAME }}|g" \
+              -e "s|__HPA_NAME__|${{ inputs.HPA_NAME }}|g" \
+              -e "s|__CONTAINER_PORT__|${{ inputs.CONTAINER_PORT }}|g" \
+              -e "s|__SERVICE_PORT__|${{ inputs.SERVICE_PORT }}|g" \
+              -e "s|__REPLICAS__|${{ inputs.REPLICAS }}|g" \
+              -e "s|__MIN_REPLICAS__|${{ inputs.MIN_REPLICAS }}|g" \
+              -e "s|__MAX_REPLICAS__|${{ inputs.MAX_REPLICAS }}|g" \
+              -e "s|__CPU_TARGET_UTILIZATION__|${{ inputs.CPU_TARGET_UTILIZATION }}|g" \
+              -e "s|__MEMORY_TARGET_UTILIZATION__|${{ inputs.MEMORY_TARGET_UTILIZATION }}|g" \
+              -e "s|__LIVENESS_PATH__|${{ inputs.LIVENESS_PATH }}|g" \
+              -e "s|__READINESS_PATH__|${{ inputs.READINESS_PATH }}|g" \
+              -e "s|__REQUEST_CPU__|${{ inputs.REQUEST_CPU }}|g" \
+              -e "s|__REQUEST_MEMORY__|${{ inputs.REQUEST_MEMORY }}|g" \
+              -e "s|__LIMIT_CPU__|${{ inputs.LIMIT_CPU }}|g" \
+              -e "s|__LIMIT_MEMORY__|${{ inputs.LIMIT_MEMORY }}|g" \
+              "$file" > "$OUTPUT_DIR/$filename"
+          done
+
+          echo "Rendered manifests:"
+          ls -la "$OUTPUT_DIR"
+
+      - name: Apply manifests
+        shell: bash
+        run: |
+          OUTPUT_DIR="k8s-rendered-${{ inputs.GKE_ENVIRONMENT }}"
+          kubectl apply -n "${{ inputs.GKE_NAMESPACE }}" -f "$OUTPUT_DIR/serviceaccount.yaml"
+          kubectl apply -n "${{ inputs.GKE_NAMESPACE }}" -f "$OUTPUT_DIR/service.yaml"
+          kubectl apply -n "${{ inputs.GKE_NAMESPACE }}" -f "$OUTPUT_DIR/deployment.yaml"
+          kubectl apply -n "${{ inputs.GKE_NAMESPACE }}" -f "$OUTPUT_DIR/hpa.yaml"
+
+      - name: Verify rollout
+        shell: bash
+        run: |
+          kubectl rollout status deployment/${{ inputs.DEPLOYMENT_NAME }} --namespace=${{ inputs.GKE_NAMESPACE }} --timeout=10m
+          kubectl get deployment/${{ inputs.DEPLOYMENT_NAME }} --namespace=${{ inputs.GKE_NAMESPACE }}
+          kubectl get service/${{ inputs.SERVICE_NAME }} --namespace=${{ inputs.GKE_NAMESPACE }}
+          kubectl get hpa/${{ inputs.HPA_NAME }} --namespace=${{ inputs.GKE_NAMESPACE }}

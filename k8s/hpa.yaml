@@ -1,0 +1,29 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: __HPA_NAME__
+  namespace: __NAMESPACE__
+  labels:
+    app: __APP_NAME__
+    app.kubernetes.io/name: __APP_NAME__
+    app.kubernetes.io/environment: __ENVIRONMENT__
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: __DEPLOYMENT_NAME__
+  minReplicas: __MIN_REPLICAS__
+  maxReplicas: __MAX_REPLICAS__
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: __CPU_TARGET_UTILIZATION__
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: __MEMORY_TARGET_UTILIZATION__

@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __DEPLOYMENT_NAME__
+  namespace: __NAMESPACE__
+  labels:
+    app: __APP_NAME__
+    app.kubernetes.io/name: __APP_NAME__
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/version: __APP_VERSION__
+    app.kubernetes.io/environment: __ENVIRONMENT__
+spec:
+  replicas: __REPLICAS__
+  progressDeadlineSeconds: 900
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: __APP_NAME__
+  template:
+    metadata:
+      labels:
+        app: __APP_NAME__
+        app.kubernetes.io/name: __APP_NAME__
+        app.kubernetes.io/component: ui
+        app.kubernetes.io/version: __APP_VERSION__
+        app.kubernetes.io/environment: __ENVIRONMENT__
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "__CONTAINER_PORT__"
+        prometheus.io/path: "__READINESS_PATH__"
+    spec:
+      serviceAccountName: __SERVICE_ACCOUNT_NAME__
+      containers:
+        - name: __APP_NAME__
+          image: __IMAGE_URL__
+          imagePullPolicy: Always
+          ports:
+            - containerPort: __CONTAINER_PORT__
+              name: http
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "__CONTAINER_PORT__"
+            - name: NODE_ENV
+              value: production
+            - name: APP_ENV
+              value: __ENVIRONMENT__
+          resources:
+            requests:
+              memory: __REQUEST_MEMORY__
+              cpu: __REQUEST_CPU__
+            limits:
+              memory: __LIMIT_MEMORY__
+              cpu: __LIMIT_CPU__
+          livenessProbe:
+            httpGet:
+              path: __LIVENESS_PATH__
+              port: __CONTAINER_PORT__
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: __READINESS_PATH__
+              port: __CONTAINER_PORT__
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /app/.cache
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Always

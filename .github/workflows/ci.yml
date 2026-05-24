@@ -1,0 +1,241 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+  security-events: write
+  id-token: write
+
+env:
+  NODE_VERSION: "24"
+  GAR_HOST: ${{ vars.GAR_HOST != '' && vars.GAR_HOST || 'us-central1-docker.pkg.dev' }}
+  GCP_REGION: ${{ vars.GCP_REGION != '' && vars.GCP_REGION || 'us-central1' }}
+
+jobs:
+  setup:
+    name: Setup metadata
+    runs-on: uhg-runner
+    environment: dev
+    outputs:
+      APP_ID: ${{ steps.meta.outputs.APP_ID }}
+      APP_NAME: ${{ steps.meta.outputs.APP_NAME }}
+      APP_VERSION: ${{ steps.meta.outputs.APP_VERSION }}
+      IMAGE_URL: ${{ steps.meta.outputs.IMAGE_URL }}
+      ABORT: ${{ steps.guard.outputs.ABORT }}
+      SHOULD_DEPLOY: ${{ steps.guard.outputs.SHOULD_DEPLOY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup metadata
+        id: meta
+        shell: bash
+        run: |
+          APP_NAME="${{ vars.APP_NAME }}"
+          if [ -z "$APP_NAME" ]; then
+            APP_NAME="$(basename "${GITHUB_REPOSITORY}")"
+          fi
+          fi
+
+          APP_ID="${{ vars.APP_ID }}"
+          if [ -z "$APP_ID" ]; then
+            APP_ID="feesources-ui"
+          fi
+
+          APP_VERSION="${GITHUB_SHA}"
+          GAR_REPOSITORY="${{ vars.GCR_ARTIFACT_REPO }}"
+          if [ -z "$GAR_REPOSITORY" ]; then
+            GAR_REPOSITORY="rate-automation-ui"
+          fi
+
+          IMAGE_URL="${{ env.GAR_HOST }}/${{ vars.GCP_PROJECT_ID }}/${GAR_REPOSITORY}/${APP_NAME}:${APP_VERSION}"
+
+          echo "APP_ID=${APP_ID}" >> "$GITHUB_OUTPUT"
+          echo "APP_NAME=${APP_NAME}" >> "$GITHUB_OUTPUT"
+          echo "APP_VERSION=${APP_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "IMAGE_URL=${IMAGE_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup guardrails
+        id: guard
+        shell: bash
+        run: |
+          ABORT="false"
+          SHOULD_DEPLOY="false"
+
+          if git log -1 --pretty=%s | grep -q '\[.*\]'; then
+            echo "Auto commit detected."
+            ABORT="true"
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && ("${GITHUB_REF}" == "refs/heads/main" || "${GITHUB_REF}" == "refs/heads/master") ]]; then
+            SHOULD_DEPLOY="true"
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            SHOULD_DEPLOY="true"
+          fi
+
+          if [[ "$ABORT" == "true" ]]; then
+            SHOULD_DEPLOY="false"
+          fi
+
+          echo "ABORT=${ABORT}" >> "$GITHUB_OUTPUT"
+          echo "SHOULD_DEPLOY=${SHOULD_DEPLOY}" >> "$GITHUB_OUTPUT"
+
+  ci:
+    name: Lint, test and build
+    runs-on: uhg-runner
+    needs: setup
+    if: ${{ needs.setup.outputs.ABORT != 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://centraluhg.jfrog.io/artifactory/api/npm/glb-npm-vir/
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.JFROG_NPM_TOKEN }}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  build-and-push-image:
+    name: Build and push image
+    runs-on: uhg-runner
+    environment: dev
+    needs:
+      - setup
+      - ci
+    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
+    outputs:
+      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER_OPERA }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT_OPERA }}
+          create_credentials_file: true
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Login to JFrog
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.JFROG_DOCKER_REGISTRY }}
+          username: ${{ secrets.JFROG_DOCKER_USERNAME }}
+          password: ${{ secrets.JFROG_DOCKER_TOKEN }}
+
+      - name: Configure Docker for GAR
+        run: gcloud auth configure-docker ${{ env.GAR_HOST }} --quiet
+
+      - name: Build and push image
+        env:
+          DOCKER_BUILDKIT: 1
+          JFROG_NPM_TOKEN: ${{ secrets.JFROG_NPM_TOKEN }}
+          IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+        run: |
+          docker buildx build \
+            -f .docker/Dockerfile \
+            --secret id=npm_token,env=JFROG_NPM_TOKEN \
+            -t "$IMAGE_URL" \
+            .
+          docker push "$IMAGE_URL"
+
+  deploy-dev:
+    name: GKE-Dev
+    needs:
+      - setup
+      - build-and-push-image
+    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
+    uses: ./.github/workflows/gke-deploy.yaml
+    with:
+      APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
+      APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
+      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+      GKE_ENVIRONMENT: dev
+      GKE_REGION: ${{ vars.GCP_REGION }}
+      GKE_CLUSTER: ${{ vars.GKE_CLUSTER_DEV }}
+      GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE_DEV }}
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      K8S_MANIFESTS_DIR: k8s
+      DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME != '' && vars.DEPLOYMENT_NAME || needs.setup.outputs.APP_NAME }}
+      SERVICE_NAME: ${{ vars.SERVICE_NAME != '' && vars.SERVICE_NAME || format('{0}-service', needs.setup.outputs.APP_NAME) }}
+      SERVICE_ACCOUNT_NAME: ${{ vars.SERVICE_ACCOUNT_NAME != '' && vars.SERVICE_ACCOUNT_NAME || needs.setup.outputs.APP_NAME }}
+      HPA_NAME: ${{ vars.HPA_NAME != '' && vars.HPA_NAME || format('{0}-hpa', needs.setup.outputs.APP_NAME) }}
+    secrets: inherit
+
+  deploy-test:
+    name: GKE-Test
+    needs:
+      - setup
+      - deploy-dev
+    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
+    uses: ./.github/workflows/gke-deploy.yaml
+    with:
+      APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
+      APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
+      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+      GKE_ENVIRONMENT: test
+      GKE_REGION: ${{ vars.GCP_REGION }}
+      GKE_CLUSTER: ${{ vars.GKE_CLUSTER_TEST }}
+      GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE_TEST }}
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      K8S_MANIFESTS_DIR: k8s
+      DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME != '' && vars.DEPLOYMENT_NAME || needs.setup.outputs.APP_NAME }}
+      SERVICE_NAME: ${{ vars.SERVICE_NAME != '' && vars.SERVICE_NAME || format('{0}-service', needs.setup.outputs.APP_NAME) }}
+      SERVICE_ACCOUNT_NAME: ${{ vars.SERVICE_ACCOUNT_NAME != '' && vars.SERVICE_ACCOUNT_NAME || needs.setup.outputs.APP_NAME }}
+      HPA_NAME: ${{ vars.HPA_NAME != '' && vars.HPA_NAME || format('{0}-hpa', needs.setup.outputs.APP_NAME) }}
+    secrets: inherit
+
+  deploy-stage:
+    name: GKE-Stage
+    needs:
+      - setup
+      - deploy-test
+    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
+    uses: ./.github/workflows/gke-deploy.yaml
+    with:
+      APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
+      APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
+      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+      GKE_ENVIRONMENT: stage
+      GKE_REGION: ${{ vars.GCP_REGION }}
+      GKE_CLUSTER: ${{ vars.GKE_CLUSTER_STAGE }}
+      GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE_STAGE }}
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      K8S_MANIFESTS_DIR: k8s
+      DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME != '' && vars.DEPLOYMENT_NAME || needs.setup.outputs.APP_NAME }}
+      SERVICE_NAME: ${{ vars.SERVICE_NAME != '' && vars.SERVICE_NAME || format('{0}-service', needs.setup.outputs.APP_NAME) }}
+      SERVICE_ACCOUNT_NAME: ${{ vars.SERVICE_ACCOUNT_NAME != '' && vars.SERVICE_ACCOUNT_NAME || needs.setup.outputs.APP_NAME }}
+      HPA_NAME: ${{ vars.HPA_NAME != '' && vars.HPA_NAME || format('{0}-hpa', needs.setup.outputs.APP_NAME) }}
+    secrets: inherit
