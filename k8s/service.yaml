@@ -8,6 +8,8 @@ metadata:
     app.kubernetes.io/name: __APP_NAME__
     app.kubernetes.io/component: ui
     app.kubernetes.io/environment: __ENVIRONMENT__
+  annotations:
+    cloud.google.com/backend-config: '{"default": "dhg-rateauto-dev-backend-config"}'
 spec:
   type: ClusterIP
   ports:
