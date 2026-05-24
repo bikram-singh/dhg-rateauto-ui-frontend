@@ -1,33 +1,34 @@
 name: Continuous Integration
-
+ 
 on:
-  # push:
-  #   branches:
-  #     - "**"
-  # pull_request:
-  #   branches:
-  #     - "**"
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
   workflow_dispatch:
-
+ 
 permissions:
   actions: read
   contents: read
   pull-requests: write
   security-events: write
   id-token: write
-
+ 
 env:
   NODE_VERSION: "20"
-  GAR_HOST: ${{ vars.GAR_HOST != '' && vars.GAR_HOST || 'us-central1-docker.pkg.dev' }}
-  GCP_REGION: ${{ vars.GCP_REGION != '' && vars.GCP_REGION || 'us-central1' }}
-
+  GAR_HOST: "us-central1-docker.pkg.dev"
+  GCP_REGION: "us-central1"
+  GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
+  GAR_REPOSITORY: "dhg-vaccinefee-repo"
+  APP_NAME: "dhg-vaccinefee-ui"
+ 
 jobs:
   setup:
     name: Setup metadata
     runs-on: ubuntu-latest
-    environment: dev
     outputs:
-      APP_ID: ${{ steps.meta.outputs.APP_ID }}
       APP_NAME: ${{ steps.meta.outputs.APP_NAME }}
       APP_VERSION: ${{ steps.meta.outputs.APP_VERSION }}
       IMAGE_URL: ${{ steps.meta.outputs.IMAGE_URL }}
@@ -36,61 +37,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+ 
       - name: Setup metadata
         id: meta
         shell: bash
         run: |
-          APP_NAME="${{ vars.APP_NAME }}"
-          if [ -z "$APP_NAME" ]; then
-            APP_NAME="$(basename "${GITHUB_REPOSITORY}")"
-          fi
-
-          APP_ID="${{ vars.APP_ID }}"
-          if [ -z "$APP_ID" ]; then
-            APP_ID="dhg-vaccine-ui"
-          fi
-
           APP_VERSION="${GITHUB_SHA}"
-          GAR_REPOSITORY="${{ vars.GCR_ARTIFACT_REPO }}"
-          if [ -z "$GAR_REPOSITORY" ]; then
-            GAR_REPOSITORY="dhg-enterprise-ui"
-          fi
-
-          IMAGE_URL="${{ env.GAR_HOST }}/${{ vars.GCP_PROJECT_ID }}/${GAR_REPOSITORY}/${APP_NAME}:${APP_VERSION}"
-
-          echo "APP_ID=${APP_ID}" >> "$GITHUB_OUTPUT"
-          echo "APP_NAME=${APP_NAME}" >> "$GITHUB_OUTPUT"
+          IMAGE_URL="us-central1-docker.pkg.dev/dhg-vaccine-rateauto-nonpord/dhg-vaccinefee-repo/dhg-vaccinefee-ui:${APP_VERSION}"
+ 
+          echo "APP_NAME=dhg-vaccinefee-ui" >> "$GITHUB_OUTPUT"
           echo "APP_VERSION=${APP_VERSION}" >> "$GITHUB_OUTPUT"
           echo "IMAGE_URL=${IMAGE_URL}" >> "$GITHUB_OUTPUT"
-
+ 
       - name: Setup guardrails
         id: guard
         shell: bash
         run: |
           ABORT="false"
           SHOULD_DEPLOY="false"
-
+ 
           if git log -1 --pretty=%s | grep -q '\[.*\]'; then
             echo "Auto commit detected — aborting."
             ABORT="true"
           fi
-
+ 
           if [[ "${GITHUB_EVENT_NAME}" == "push" && ("${GITHUB_REF}" == "refs/heads/main" || "${GITHUB_REF}" == "refs/heads/master") ]]; then
             SHOULD_DEPLOY="true"
           fi
-
+ 
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
             SHOULD_DEPLOY="true"
           fi
-
+ 
           if [[ "$ABORT" == "true" ]]; then
             SHOULD_DEPLOY="false"
           fi
-
+ 
           echo "ABORT=${ABORT}" >> "$GITHUB_OUTPUT"
           echo "SHOULD_DEPLOY=${SHOULD_DEPLOY}" >> "$GITHUB_OUTPUT"
-
+ 
   ci:
     name: Lint, test and build
     runs-on: ubuntu-latest
@@ -99,54 +84,51 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+ 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: "20"
           cache: npm
-
+ 
       - name: Install dependencies
         run: npm ci
-
+ 
       - name: Lint
         run: npm run lint
-
+ 
       - name: Test
         run: npm test -- --watchAll=false --passWithNoTests
-
+ 
       - name: Build
         run: npm run build
-
+ 
   build-and-push-image:
     name: Build and push image
     runs-on: ubuntu-latest
-    environment: dev
     needs:
       - setup
       - ci
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
-    outputs:
-      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+ 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
-          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER_NONPROD }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT_NONPROD }}
           create_credentials_file: true
-
+ 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ vars.GCP_PROJECT_ID }}
-
+          project_id: "dhg-vaccine-rateauto-nonpord"
+ 
       - name: Configure Docker for GAR
-        run: gcloud auth configure-docker ${{ env.GAR_HOST }} --quiet
-
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+ 
       - name: Build and push image
         env:
           DOCKER_BUILDKIT: 1
@@ -157,7 +139,7 @@ jobs:
             -t "$IMAGE_URL" \
             --push \
             .
-
+ 
   deploy-dev:
     name: GKE-Dev
     needs:
@@ -166,21 +148,21 @@ jobs:
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
     uses: ./.github/workflows/gke-deploy.yml
     with:
-      APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
+      APP_NAME: "dhg-vaccinefee-ui"
       APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
       IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
       GKE_ENVIRONMENT: dev
-      GKE_REGION: ${{ vars.GCP_REGION }}
-      GKE_CLUSTER: ${{ vars.GKE_CLUSTER_DEV }}
-      GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE_DEV }}
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GKE_REGION: "us-central1"
+      GKE_CLUSTER: "dhg-rateauto-dev-gke-cluster"
+      GKE_NAMESPACE: "dhg-rateauto-dev-namespace"
+      GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
       K8S_MANIFESTS_DIR: k8s
-      DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME != '' && vars.DEPLOYMENT_NAME || needs.setup.outputs.APP_NAME }}
-      SERVICE_NAME: ${{ vars.SERVICE_NAME != '' && vars.SERVICE_NAME || format('{0}-service', needs.setup.outputs.APP_NAME) }}
-      SERVICE_ACCOUNT_NAME: ${{ vars.SERVICE_ACCOUNT_NAME != '' && vars.SERVICE_ACCOUNT_NAME || needs.setup.outputs.APP_NAME }}
-      HPA_NAME: ${{ vars.HPA_NAME != '' && vars.HPA_NAME || format('{0}-hpa', needs.setup.outputs.APP_NAME) }}
+      DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
+      SERVICE_NAME: "dhg-vaccinefee-ui-service"
+      SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
+      HPA_NAME: "dhg-vaccinefee-ui-hpa"
     secrets: inherit
-
+ 
   deploy-test:
     name: GKE-Test
     needs:
@@ -189,21 +171,21 @@ jobs:
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
     uses: ./.github/workflows/gke-deploy.yml
     with:
-      APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
+      APP_NAME: "dhg-vaccinefee-ui"
       APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
       IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
       GKE_ENVIRONMENT: test
-      GKE_REGION: ${{ vars.GCP_REGION }}
-      GKE_CLUSTER: ${{ vars.GKE_CLUSTER_TEST }}
-      GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE_TEST }}
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GKE_REGION: "us-central1"
+      GKE_CLUSTER: "dhg-rateauto-test-gke-cluster"
+      GKE_NAMESPACE: "dhg-rateauto-test-namespace"
+      GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
       K8S_MANIFESTS_DIR: k8s
-      DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME != '' && vars.DEPLOYMENT_NAME || needs.setup.outputs.APP_NAME }}
-      SERVICE_NAME: ${{ vars.SERVICE_NAME != '' && vars.SERVICE_NAME || format('{0}-service', needs.setup.outputs.APP_NAME) }}
-      SERVICE_ACCOUNT_NAME: ${{ vars.SERVICE_ACCOUNT_NAME != '' && vars.SERVICE_ACCOUNT_NAME || needs.setup.outputs.APP_NAME }}
-      HPA_NAME: ${{ vars.HPA_NAME != '' && vars.HPA_NAME || format('{0}-hpa', needs.setup.outputs.APP_NAME) }}
+      DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
+      SERVICE_NAME: "dhg-vaccinefee-ui-service"
+      SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
+      HPA_NAME: "dhg-vaccinefee-ui-hpa"
     secrets: inherit
-
+ 
   deploy-stage:
     name: GKE-Stage
     needs:
@@ -212,17 +194,17 @@ jobs:
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
     uses: ./.github/workflows/gke-deploy.yml
     with:
-      APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
+      APP_NAME: "dhg-vaccinefee-ui"
       APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
       IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
       GKE_ENVIRONMENT: stage
-      GKE_REGION: ${{ vars.GCP_REGION }}
-      GKE_CLUSTER: ${{ vars.GKE_CLUSTER_STAGE }}
-      GKE_NAMESPACE: ${{ vars.GKE_NAMESPACE_STAGE }}
-      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GKE_REGION: "us-central1"
+      GKE_CLUSTER: "dhg-rateauto-stage-gke-cluster"
+      GKE_NAMESPACE: "dhg-rateauto-test-namespace"
+      GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
       K8S_MANIFESTS_DIR: k8s
-      DEPLOYMENT_NAME: ${{ vars.DEPLOYMENT_NAME != '' && vars.DEPLOYMENT_NAME || needs.setup.outputs.APP_NAME }}
-      SERVICE_NAME: ${{ vars.SERVICE_NAME != '' && vars.SERVICE_NAME || format('{0}-service', needs.setup.outputs.APP_NAME) }}
-      SERVICE_ACCOUNT_NAME: ${{ vars.SERVICE_ACCOUNT_NAME != '' && vars.SERVICE_ACCOUNT_NAME || needs.setup.outputs.APP_NAME }}
-      HPA_NAME: ${{ vars.HPA_NAME != '' && vars.HPA_NAME || format('{0}-hpa', needs.setup.outputs.APP_NAME) }}
+      DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
+      SERVICE_NAME: "dhg-vaccinefee-ui-service"
+      SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
+      HPA_NAME: "dhg-vaccinefee-ui-hpa"
     secrets: inherit
