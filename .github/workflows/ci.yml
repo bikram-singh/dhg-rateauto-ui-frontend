@@ -140,7 +140,7 @@ jobs:
           IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
         run: |
           docker buildx build \
-            -f dhg-vaccinefee-ui/.docker/Dockerfile \
+            -f dhg-vaccinefee-ui/Docker/Dockerfile \
             -t "$IMAGE_URL" \
             --push \
             dhg-vaccinefee-ui/
