@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, SlidersHorizontal, Grid, List, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
 
 const ALL_DATA = [
   { dept: "Infectious Diseases", vaccine: "COVID-19 Vaccine", hospital: "City Hospital",         location: "New York",    mfg: "Pfizer-BioNTech", price: 120, insurance: "Vco",      status: "Available" },

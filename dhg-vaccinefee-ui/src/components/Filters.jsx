@@ -1,4 +1,4 @@
-import { ChevronDown, Search, Building2, Activity, Building, MapPin, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Search, Building2, Activity, Building, MapPin } from "lucide-react";
 import { useState } from "react";
 
 export default function Filters() {

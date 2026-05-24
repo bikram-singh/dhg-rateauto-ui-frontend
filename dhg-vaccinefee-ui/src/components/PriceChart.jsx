@@ -1,5 +1,5 @@
 import {
-  ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, Legend,
+  ComposedChart, Bar, Line, XAxis, YAxis, Tooltip,
   CartesianGrid, ResponsiveContainer
 } from "recharts";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
