@@ -140,7 +140,7 @@ jobs:
           IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
         run: |
           docker buildx build \
-            -f dhg-vaccinefee-ui/Docker/Dockerfile \
+            -f Docker/Dockerfile \
             -t "$IMAGE_URL" \
             --push \
             dhg-vaccinefee-ui/
@@ -161,7 +161,7 @@ jobs:
       GKE_CLUSTER: "dhg-rateauto-dev-gke-cluster"
       GKE_NAMESPACE: "dhg-rateauto-dev-namespace"
       GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
-      K8S_MANIFESTS_DIR: dhg-vaccinefee-ui/k8s
+      K8S_MANIFESTS_DIR: k8s
       DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
       SERVICE_NAME: "dhg-vaccinefee-ui-service"
       SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
@@ -184,7 +184,7 @@ jobs:
       GKE_CLUSTER: "dhg-rateauto-test-gke-cluster"
       GKE_NAMESPACE: "dhg-rateauto-test-namespace"
       GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
-      K8S_MANIFESTS_DIR: dhg-vaccinefee-ui/k8s
+      K8S_MANIFESTS_DIR: k8s
       DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
       SERVICE_NAME: "dhg-vaccinefee-ui-service"
       SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
@@ -207,7 +207,7 @@ jobs:
       GKE_CLUSTER: "dhg-rateauto-stage-gke-cluster"
       GKE_NAMESPACE: "dhg-rateauto-test-namespace"
       GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
-      K8S_MANIFESTS_DIR: dhg-vaccinefee-ui/k8s
+      K8S_MANIFESTS_DIR: k8s
       DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
       SERVICE_NAME: "dhg-vaccinefee-ui-service"
       SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
