@@ -1,14 +1,44 @@
-import { Home, Hospital, DollarSign } from "lucide-react";
+import { LayoutDashboard, Building2, Hospital, DollarSign, Phone, BarChart2, CreditCard, MessageSquare } from "lucide-react";
+import { useState } from "react";
+
+const navItems = [
+  { icon: LayoutDashboard, label: "Dashboard", active: true },
+  { icon: Building2, label: "Departments" },
+  { icon: Hospital, label: "Hospitals" },
+  { icon: DollarSign, label: "Pricing" },
+];
+
+const bottomItems = [
+  { icon: Phone, label: "Contact" },
+  { icon: BarChart2, label: "Reports" },
+  { icon: CreditCard, label: "Billing" },
+  { icon: MessageSquare, label: "Support" },
+];
 
 export default function Sidebar() {
+  const [active, setActive] = useState("Dashboard");
+
   return (
-    <div className="w-60 bg-blue-700 text-white p-4 space-y-4">
-      <h2 className="text-lg font-bold">Menu</h2>
-      <div className="space-y-2">
-        <p className="flex items-center gap-2"><Home size={16}/> Dashboard</p>
-        <p className="flex items-center gap-2"><Hospital size={16}/> Hospitals</p>
-        <p className="flex items-center gap-2"><DollarSign size={16}/> Pricing</p>
+    <aside className="sidebar">
+      <nav className="sidebar-nav">
+        {navItems.map(({ icon: Icon, label }) => (
+          <button
+            key={label}
+            className={`sidebar-item ${active === label ? "sidebar-item--active" : ""}`}
+            onClick={() => setActive(label)}
+          >
+            <Icon size={18} />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
+      <div className="sidebar-bottom">
+        {bottomItems.map(({ icon: Icon, label }) => (
+          <button key={label} className="sidebar-item sidebar-item--bottom" title={label}>
+            <Icon size={18} />
+          </button>
+        ))}
       </div>
-    </div>
+    </aside>
   );
 }

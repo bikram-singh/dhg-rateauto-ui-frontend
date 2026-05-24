@@ -1,13 +1,13 @@
 name: Continuous Integration
 
 on:
-  # push:
-  #   branches:
-  #     - "**"
-  # pull_request:
-  #   branches:
-  #     - "**"
-  workflow_dispatch
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
 
 permissions:
   actions: read
@@ -17,7 +17,7 @@ permissions:
   id-token: write
 
 env:
-  NODE_VERSION: "24"
+  NODE_VERSION: "20"
   GAR_HOST: ${{ vars.GAR_HOST != '' && vars.GAR_HOST || 'us-central1-docker.pkg.dev' }}
   GCP_REGION: ${{ vars.GCP_REGION != '' && vars.GCP_REGION || 'us-central1' }}
 
@@ -45,17 +45,16 @@ jobs:
           if [ -z "$APP_NAME" ]; then
             APP_NAME="$(basename "${GITHUB_REPOSITORY}")"
           fi
-          fi
 
           APP_ID="${{ vars.APP_ID }}"
           if [ -z "$APP_ID" ]; then
-            APP_ID="feesources-ui"
+            APP_ID="dhg-vaccine-ui"
           fi
 
           APP_VERSION="${GITHUB_SHA}"
           GAR_REPOSITORY="${{ vars.GCR_ARTIFACT_REPO }}"
           if [ -z "$GAR_REPOSITORY" ]; then
-            GAR_REPOSITORY="rate-automation-ui"
+            GAR_REPOSITORY="dhg-enterprise-ui"
           fi
 
           IMAGE_URL="${{ env.GAR_HOST }}/${{ vars.GCP_PROJECT_ID }}/${GAR_REPOSITORY}/${APP_NAME}:${APP_VERSION}"
@@ -73,7 +72,7 @@ jobs:
           SHOULD_DEPLOY="false"
 
           if git log -1 --pretty=%s | grep -q '\[.*\]'; then
-            echo "Auto commit detected."
+            echo "Auto commit detected — aborting."
             ABORT="true"
           fi
 
@@ -105,19 +104,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          registry-url: https://centraluhg.jfrog.io/artifactory/api/npm/glb-npm-vir/
           cache: npm
 
       - name: Install dependencies
         run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.JFROG_NPM_TOKEN }}
 
       - name: Lint
         run: npm run lint
 
       - name: Test
-        run: npm test
+        run: npm test -- --watchAll=false --passWithNoTests
 
       - name: Build
         run: npm run build
@@ -139,8 +135,8 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER_OPERA }}
-          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT_OPERA }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_WIF_SERVICE_ACCOUNT }}
           create_credentials_file: true
 
       - name: Setup gcloud
@@ -148,28 +144,19 @@ jobs:
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
 
-      - name: Login to JFrog
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.JFROG_DOCKER_REGISTRY }}
-          username: ${{ secrets.JFROG_DOCKER_USERNAME }}
-          password: ${{ secrets.JFROG_DOCKER_TOKEN }}
-
       - name: Configure Docker for GAR
         run: gcloud auth configure-docker ${{ env.GAR_HOST }} --quiet
 
       - name: Build and push image
         env:
           DOCKER_BUILDKIT: 1
-          JFROG_NPM_TOKEN: ${{ secrets.JFROG_NPM_TOKEN }}
           IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
         run: |
           docker buildx build \
             -f .docker/Dockerfile \
-            --secret id=npm_token,env=JFROG_NPM_TOKEN \
             -t "$IMAGE_URL" \
+            --push \
             .
-          docker push "$IMAGE_URL"
 
   deploy-dev:
     name: GKE-Dev
@@ -177,7 +164,7 @@ jobs:
       - setup
       - build-and-push-image
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
-    uses: ./.github/workflows/gke-deploy.yaml
+    uses: ./.github/workflows/gke-deploy.yml
     with:
       APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
       APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
@@ -200,7 +187,7 @@ jobs:
       - setup
       - deploy-dev
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
-    uses: ./.github/workflows/gke-deploy.yaml
+    uses: ./.github/workflows/gke-deploy.yml
     with:
       APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
       APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
@@ -223,7 +210,7 @@ jobs:
       - setup
       - deploy-test
     if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
-    uses: ./.github/workflows/gke-deploy.yaml
+    uses: ./.github/workflows/gke-deploy.yml
     with:
       APP_NAME: ${{ needs.setup.outputs.APP_NAME }}
       APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}

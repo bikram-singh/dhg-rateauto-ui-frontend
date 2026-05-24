@@ -1,34 +1,45 @@
-# — Stage 1: Build — #
-FROM edgeinternaluhg.optum.com:443/glb-docker-uhg-loc/uhg-goldenimages/node:24-latest AS builder
+# ── Stage 1: Build ── #
+FROM node:20-alpine AS builder
 
-LABEL ASK_ID="AIDE_0091809"
+LABEL maintainer="DHG Platform Team"
+LABEL app="dhg-enterprise-ui"
 
 WORKDIR /app
 
-COPY web/ ./
-COPY webpack.config.js ./
-COPY babel.config.json ./
-COPY tsconfig.json ./
+# Copy dependency manifests first for layer caching
+COPY package.json package-lock.json* ./
+
+# Install dependencies from public npm registry
+RUN npm ci --prefer-offline
+
+# Copy source code
 COPY src/ ./src/
+COPY public/ ./public/
 
-USER root
-
-RUN --mount=type=secret,id=npm_token \
-    npm install --ignore-scripts \
-    --registry https://centraluhg.jfrog.io/artifactory/api/npm/glb-npm-vir/ \
-    --//centraluhg.jfrog.io/artifactory/api/npm/glb-npm-vir/:_authToken=$(cat /run/secrets/npm_token)
-
+# Build the production bundle
 RUN npm run build
 
-# — Stage 2: Serve — #
-FROM edgeinternaluhg.optum.com:443/glb-docker-uhg-loc/uhg-goldenimages/nginx:1.29-latest-dev AS production
+# ── Stage 2: Serve ── #
+FROM nginx:1.25-alpine AS production
 
-LABEL ASK_ID="AIDE_0091809"
+LABEL maintainer="DHG Platform Team"
 
 EXPOSE 8080
 
-COPY --from=builder /app/build /usr/share/nginx/html/feesources
+# Copy built assets from builder stage
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Copy custom nginx config (serves on port 8080, handles SPA routing)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Drop to non-root user for security
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    touch /var/run/nginx.pid && \
+    chown nginx:nginx /var/run/nginx.pid
+
+USER nginx
 
 ENTRYPOINT []
 CMD ["nginx", "-g", "daemon off;"]

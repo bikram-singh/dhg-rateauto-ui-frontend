@@ -7,11 +7,11 @@ import DataTable from "../components/DataTable";
 
 export default function Dashboard() {
   return (
-    <div className="flex bg-gray-100 min-h-screen">
+    <div className="app-layout">
       <Sidebar />
-      <div className="flex-1">
+      <div className="main-content">
         <Header />
-        <div className="p-6 space-y-6">
+        <div className="page-body">
           <Filters />
           <StatsCards />
           <PriceChart />
