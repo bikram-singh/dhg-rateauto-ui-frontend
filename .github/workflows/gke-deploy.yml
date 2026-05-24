@@ -128,7 +128,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: uhg-runner
+    runs-on: ubuntu-latest
     environment: ${{ inputs.GKE_ENVIRONMENT }}
     permissions:
       contents: read
