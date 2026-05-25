@@ -2,6 +2,7 @@
   "name": "dhg-vaccinefee-ui",
   "version": "1.0.0",
   "private": true,
+  "homepage": "/vaccinefee-ui",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
