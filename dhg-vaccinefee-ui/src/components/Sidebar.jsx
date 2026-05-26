@@ -2,10 +2,10 @@ import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2, Cre
 import { useState } from "react";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: Building2, label: "Departments" },
-  { icon: Building, label: "Hospitals" },
-  { icon: DollarSign, label: "Pricing" },
+  { icon: LayoutDashboard, label: "Dashboard" },
+  { icon: Building2,       label: "Departments" },
+  { icon: Building,        label: "Hospitals" },
+  { icon: DollarSign,      label: "Pricing" },
 ];
 
 const bottomItems = [
@@ -15,8 +15,7 @@ const bottomItems = [
   { icon: MessageSquare, label: "Support",  tooltip: "support@dummyhealthgroup.com" },
 ];
 
-export default function Sidebar() {
-  const [active, setActive] = useState("Dashboard");
+export default function Sidebar({ activePage, setActivePage }) {
   const [hovered, setHovered] = useState(null);
 
   return (
@@ -25,8 +24,8 @@ export default function Sidebar() {
         {navItems.map(({ icon: Icon, label }) => (
           <button
             key={label}
-            className={`sidebar-item ${active === label ? "sidebar-item--active" : ""}`}
-            onClick={() => setActive(label)}
+            className={`sidebar-item ${activePage === label ? "sidebar-item--active" : ""}`}
+            onClick={() => setActivePage(label)}
           >
             <Icon size={18} />
             <span>{label}</span>
@@ -51,18 +50,10 @@ export default function Sidebar() {
             </button>
             {hovered === label && (
               <div style={{
-                position: "absolute",
-                left: "52px",
-                bottom: "0",
-                background: "rgba(13,27,75,0.97)",
-                border: "1px solid rgba(79,195,247,0.3)",
-                borderRadius: "8px",
-                padding: "8px 14px",
-                whiteSpace: "nowrap",
-                color: "#fff",
-                fontSize: "12px",
-                zIndex: 1000,
-                pointerEvents: "none",
+                position: "absolute", left: "52px", bottom: "0",
+                background: "rgba(13,27,75,0.97)", border: "1px solid rgba(79,195,247,0.3)",
+                borderRadius: "8px", padding: "8px 14px", whiteSpace: "nowrap",
+                color: "#fff", fontSize: "12px", zIndex: 1000, pointerEvents: "none",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
               }}>
                 <div style={{ fontWeight: 600, color: "#4FC3F7", marginBottom: "2px" }}>{label}</div>
