@@ -2,14 +2,19 @@ import { ChevronDown, Search, Building2, Activity, Building, MapPin } from "luci
 import { useState } from "react";
 
 export default function Filters({ departments = [], vaccines = [], hospitals = [], onSearch }) {
-  const [selectedDept, setSelectedDept]       = useState("");
-  const [selectedVaccine, setSelectedVaccine] = useState("");
+  const [selectedDept, setSelectedDept]         = useState("");
+  const [selectedVaccine, setSelectedVaccine]   = useState("");
   const [selectedFacility, setSelectedFacility] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [priceRange, setPriceRange]           = useState([100, 3000]);
-  const [priceEnabled, setPriceEnabled]       = useState(true);
+  const [priceRange, setPriceRange]             = useState([100, 5000]);
+  const [priceEnabled, setPriceEnabled]         = useState(true);
 
-  const locations = [...new Set(hospitals.map((h) => h.location).filter(Boolean))].sort();
+  // Extract unique city names (first part before comma)
+  const locations = [...new Set(
+    hospitals
+      .map((h) => h.location ? h.location.split(",")[0].trim() : null)
+      .filter(Boolean)
+  )].sort();
 
   const handleSearch = () => {
     onSearch({
@@ -27,9 +32,13 @@ export default function Filters({ departments = [], vaccines = [], hospitals = [
     setSelectedVaccine("");
     setSelectedFacility("");
     setSelectedLocation("");
-    setPriceRange([100, 3000]);
-    onSearch({ department: "", vaccine: "", facility: "", location: "", priceMin: null, priceMax: null });
+    setPriceRange([100, 5000]);
+    onSearch({
+      department: "", vaccine: "", facility: "", location: "", priceMin: null, priceMax: null
+    });
   };
+
+  const hasFilters = selectedDept || selectedVaccine || selectedFacility || selectedLocation;
 
   return (
     <div className="filters">
@@ -99,11 +108,17 @@ export default function Filters({ departments = [], vaccines = [], hospitals = [
         Search
       </button>
 
-      {(selectedDept || selectedVaccine || selectedFacility || selectedLocation) && (
-        <button
-          onClick={handleReset}
-          style={{ marginLeft: "8px", background: "transparent", border: "1px solid rgba(255,255,255,0.3)", color: "rgba(255,255,255,0.7)", borderRadius: "6px", padding: "6px 12px", cursor: "pointer", fontSize: "12px" }}
-        >
+      {hasFilters && (
+        <button onClick={handleReset} style={{
+          marginLeft: "8px",
+          background: "transparent",
+          border: "1px solid rgba(255,255,255,0.3)",
+          color: "rgba(255,255,255,0.7)",
+          borderRadius: "6px",
+          padding: "6px 12px",
+          cursor: "pointer",
+          fontSize: "12px"
+        }}>
           Reset
         </button>
       )}

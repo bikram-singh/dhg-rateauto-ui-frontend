@@ -38,18 +38,37 @@ export default function Dashboard() {
       });
   }, []);
 
+  // Build lookup maps for fast access
+  const vaccineMap    = Object.fromEntries(vaccines.map((v) => [v.id, v]));
+  const hospitalMap   = Object.fromEntries(hospitals.map((h) => [h.id, h]));
+  const departmentMap = Object.fromEntries(departments.map((d) => [d.id, d]));
+
   // Apply filters to pricing data
   const filteredPricing = pricing.filter((p) => {
-    const vaccine    = vaccines.find((v) => v.id === p.vaccine_id)    || p.vaccine;
-    const hospital   = hospitals.find((h) => h.id === p.hospital_id)  || p.hospital;
-    const department = departments.find((d) => d.id === p.department_id) || p.department;
+    const vaccine    = vaccineMap[p.vaccine_id]    || p.vaccine;
+    const hospital   = hospitalMap[p.hospital_id]  || p.hospital;
+    const department = departmentMap[p.department_id] || p.department;
 
+    // Department filter - exact match
     if (filters.department && department?.name !== filters.department) return false;
-    if (filters.vaccine    && vaccine?.name    !== filters.vaccine)    return false;
-    if (filters.facility   && hospital?.name   !== filters.facility)   return false;
-    if (filters.location   && hospital?.location !== filters.location) return false;
-    if (filters.priceMax   && parseFloat(p.price) > filters.priceMax)  return false;
-    if (filters.priceMin   && parseFloat(p.price) < filters.priceMin)  return false;
+
+    // Vaccine filter - exact match
+    if (filters.vaccine && vaccine?.name !== filters.vaccine) return false;
+
+    // Facility filter - exact match on hospital name
+    if (filters.facility && hospital?.name !== filters.facility) return false;
+
+    // Location filter - partial match (location field may contain city + state/country)
+    if (filters.location) {
+      const hospitalLocation = hospital?.location || "";
+      if (!hospitalLocation.toLowerCase().includes(filters.location.toLowerCase())) return false;
+    }
+
+    // Price range filter
+    const price = parseFloat(p.price);
+    if (filters.priceMax !== null && price > filters.priceMax) return false;
+    if (filters.priceMin !== null && price < filters.priceMin) return false;
+
     return true;
   });
 
