@@ -1,17 +1,17 @@
 import { ChevronDown, Search, Building2, Activity, Building, MapPin } from "lucide-react";
 import { useState } from "react";
 
-export default function Filters() {
+export default function Filters({ departments = [], vaccines = [], hospitals = [] }) {
   const [priceRange, setPriceRange] = useState([100, 3000]);
   const [priceEnabled, setPriceEnabled] = useState(true);
 
   return (
     <div className="filters">
       <div className="filter-select-group">
-        <FilterSelect icon={<Building2 size={15}/>} label="All Departments" />
-        <FilterSelect icon={<Activity size={15}/>} label="All Vaccines" />
-        <FilterSelect icon={<Building size={15}/>} label="All Facilities" />
-        <FilterSelect icon={<MapPin size={15}/>} label="All Locations" />
+        <FilterSelect icon={<Building2 size={15}/>} label="All Departments" options={departments.map((d) => d.name)} />
+        <FilterSelect icon={<Activity size={15}/>}  label="All Vaccines"    options={vaccines.map((v) => v.name)} />
+        <FilterSelect icon={<Building size={15}/>}  label="All Facilities"  options={hospitals.map((h) => h.name)} />
+        <FilterSelect icon={<MapPin size={15}/>}    label="All Locations"   options={[...new Set(hospitals.map((h) => h.location).filter(Boolean))]} />
       </div>
 
       <div className="filter-price">
@@ -43,14 +43,13 @@ export default function Filters() {
   );
 }
 
-function FilterSelect({ icon, label }) {
+function FilterSelect({ icon, label, options = [] }) {
   return (
     <div className="filter-select">
       <span className="filter-select-icon">{icon}</span>
       <select defaultValue="">
         <option value="" disabled>{label}</option>
-        <option>Option 1</option>
-        <option>Option 2</option>
+        {options.map((opt) => <option key={opt}>{opt}</option>)}
       </select>
       <ChevronDown size={14} className="filter-select-chevron" />
     </div>

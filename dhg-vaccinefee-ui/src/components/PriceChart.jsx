@@ -1,29 +1,14 @@
+import { useMemo } from "react";
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, Tooltip,
   CartesianGrid, ResponsiveContainer
 } from "recharts";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
-const data = [
-  { hospital: "City Hospital",          covid: 120, flu: 80, hepatitis: 200, measles: 260, tetanus: 150 },
-  { hospital: "Green Valley Medical",   covid: 200, flu: 160, hepatitis: 130, measles: 90,  tetanus: 110 },
-  { hospital: "Heartland Medical Hub",  covid: 280, flu: 190, hepatitis: 240, measles: 170, tetanus: 200 },
-  { hospital: "Central Health Medical", covid: 160, flu: 110, hepatitis: 180, measles: 220, tetanus: 140 },
-  { hospital: "Metro Care Clinic",      covid: 220, flu: 140, hepatitis: 160, measles: 100, tetanus: 310 },
+const VACCINE_COLORS = [
+  "#4FC3F7", "#1565C0", "#26A69A", "#FFA726", "#EF5350",
+  "#AB47BC", "#66BB6A", "#FF7043", "#42A5F5", "#EC407A",
 ];
-
-const VACCINES = [
-  { key: "covid",     label: "COVID-19 Vaccine",  color: "#4FC3F7" },
-  { key: "flu",       label: "Flu Vaccine",        color: "#1565C0" },
-  { key: "hepatitis", label: "Hepatitis B Vaccine",color: "#26A69A" },
-  { key: "measles",   label: "Measles Vaccine",    color: "#FFA726" },
-  { key: "tetanus",   label: "Tetanus Vaccine",    color: "#EF5350" },
-];
-
-const trendData = data.map((d, i) => ({
-  ...d,
-  trend: 180 + i * 35,
-}));
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -39,7 +24,60 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-export default function PriceChart() {
+export default function PriceChart({ pricing = [], vaccines = [], hospitals = [] }) {
+  const vaccineMap  = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v.name])), [vaccines]);
+  const hospitalMap = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h.name])), [hospitals]);
+
+  // Build chart data: group by hospital, with each vaccine as a key
+  const { chartData, vaccineKeys } = useMemo(() => {
+    if (!pricing.length) return { chartData: [], vaccineKeys: [] };
+
+    const vaccineSet = new Set();
+    const byHospital = {};
+
+    pricing.forEach((p) => {
+      const hospitalName = hospitalMap[p.hospital_id] || p.hospital?.name || `Hospital ${p.hospital_id}`;
+      const vaccineName  = vaccineMap[p.vaccine_id]  || p.vaccine?.name  || `Vaccine ${p.vaccine_id}`;
+      const safeKey      = vaccineName.replace(/[^a-zA-Z0-9]/g, "_");
+
+      vaccineSet.add(safeKey);
+      if (!byHospital[hospitalName]) byHospital[hospitalName] = { hospital: hospitalName };
+      byHospital[hospitalName][safeKey] = parseFloat(p.price || 0);
+    });
+
+    const chartData = Object.values(byHospital);
+    const vaccineKeys = [...vaccineSet].slice(0, 10); // max 10 vaccines
+
+    // Add trend line
+    chartData.forEach((d, i) => {
+      const vals = vaccineKeys.map((k) => d[k] || 0).filter(Boolean);
+      d.trend = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) + i * 20 : 0;
+    });
+
+    return { chartData, vaccineKeys };
+  }, [pricing, vaccineMap, hospitalMap]);
+
+  // Build legend from vaccine names
+  const legendItems = useMemo(() =>
+    vaccineKeys.map((key, i) => ({
+      key,
+      label: key.replace(/_/g, " "),
+      color: VACCINE_COLORS[i % VACCINE_COLORS.length],
+    })),
+    [vaccineKeys]
+  );
+
+  if (!chartData.length) {
+    return (
+      <div className="chart-card">
+        <div className="chart-header">
+          <h2 className="chart-title">Price Comparison by Vaccine</h2>
+        </div>
+        <div style={{ textAlign: "center", padding: "4rem", opacity: 0.5 }}>No pricing data available</div>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-card">
       <div className="chart-header">
@@ -55,10 +93,10 @@ export default function PriceChart() {
         </div>
       </div>
 
-      <div className="chart-trend-badge">+3.5%</div>
+      <div className="chart-trend-badge">Live Data</div>
 
       <ResponsiveContainer width="100%" height={300}>
-        <ComposedChart data={trendData} margin={{ top: 10, right: 40, left: 0, bottom: 0 }}>
+        <ComposedChart data={chartData} margin={{ top: 10, right: 40, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
           <XAxis
             dataKey="hospital"
@@ -73,7 +111,7 @@ export default function PriceChart() {
             tickFormatter={(v) => `₹${v}`}
           />
           <Tooltip content={<CustomTooltip />} />
-          {VACCINES.map(({ key, color }) => (
+          {legendItems.map(({ key, color }) => (
             <Bar key={key} dataKey={key} fill={color} radius={[3, 3, 0, 0]} maxBarSize={16} />
           ))}
           <Line
@@ -88,7 +126,7 @@ export default function PriceChart() {
       </ResponsiveContainer>
 
       <div className="chart-legend">
-        {VACCINES.map(({ key, label, color }) => (
+        {legendItems.map(({ key, label, color }) => (
           <span key={key} className="chart-legend-item">
             <span className="chart-legend-dot" style={{ background: color }} />
             {label}
