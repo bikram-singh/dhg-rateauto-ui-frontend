@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
 
-const PAGE_SIZES = [5, 10, 25];
+const PAGE_SIZES = [5, 10, 20, 30, 50, 100, 200];
 
 export default function DataTable({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
   const [search, setSearch]     = useState("");
