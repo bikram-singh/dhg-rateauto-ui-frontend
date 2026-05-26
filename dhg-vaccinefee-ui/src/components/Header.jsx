@@ -5,7 +5,7 @@ export default function Header() {
     <header className="header">
       <div className="header-brand">
         <div className="header-logo">
-          <svg viewBox="0 0 80 80" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 80 80" width="60" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="shieldGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#4FC3F7"/>

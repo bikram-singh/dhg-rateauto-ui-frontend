@@ -24,7 +24,7 @@
   --radius-sm:    6px;
   --radius-md:    10px;
   --radius-lg:    14px;
-  --sidebar-w:    220px;
+  --sidebar-w:    260px;
 }
 
 body {
@@ -54,7 +54,7 @@ body {
   flex-direction: column;
   gap: 18px;
   background: linear-gradient(160deg, #0f1e5c 0%, #0D1B4B 40%, #0a3d6b 100%);
-  min-height: calc(100vh - 72px);
+  min-height: calc(100vh - 90px);
 }
 
 /* ── SIDEBAR ── */
@@ -127,7 +127,7 @@ body {
   align-items: center;
   gap: 20px;
   padding: 0 24px;
-  height: 72px;
+  height: 90px;
   background: linear-gradient(90deg, #0D1B4B 0%, #1a3a7a 60%, #1565C0 100%);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   position: sticky;
@@ -148,14 +148,14 @@ body {
 }
 
 .header-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--white);
   line-height: 1.2;
 }
 
 .header-subtitle {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--accent-cyan);
   font-weight: 500;
   letter-spacing: 0.4px;
