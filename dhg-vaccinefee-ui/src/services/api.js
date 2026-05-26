@@ -7,8 +7,8 @@ async function fetchJSON(path) {
 }
 
 export const api = {
-  getVaccines:     () => fetchJSON("/vaccines/"),
-  getHospitals:    () => fetchJSON("/hospitals/"),
-  getDepartments:  () => fetchJSON("/departments/"),
-  getPricing:      () => fetchJSON("/pricing/?limit=200"),
+  getVaccines:     () => fetchJSON("/vaccines/?limit=200"),
+  getHospitals:    () => fetchJSON("/hospitals/?limit=200"),
+  getDepartments:  () => fetchJSON("/departments/?limit=200"),
+  getPricing:      () => fetchJSON("/pricing/?limit=2000"),
 };
