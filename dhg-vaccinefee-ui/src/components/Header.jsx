@@ -3,39 +3,45 @@ import { Search, Bell, Moon, ChevronDown } from "lucide-react";
 export default function Header() {
   return (
     <header className="header">
+
+      {/* ── BRAND ── */}
       <div className="header-brand">
-        <div className="header-logo">
-          <svg viewBox="0 0 80 80" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="header-logo-wrap">
+          <svg viewBox="0 0 90 90" width="68" height="68" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="shieldGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+              <linearGradient id="shGrad" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#4FC3F7"/>
-                <stop offset="100%" stopColor="#1565C0"/>
+                <stop offset="100%" stopColor="#0D47A1"/>
               </linearGradient>
             </defs>
-            {/* White base circle behind shield */}
-            <circle cx="40" cy="40" r="36" fill="white" opacity="0.95"/>
-            {/* Shield outline */}
-            <path d="M40 6 L70 19 L70 43 C70 58 56 70 40 74 C24 70 10 58 10 43 L10 19 Z"
-              fill="url(#shieldGrad)" opacity="0.18" stroke="url(#shieldGrad)" strokeWidth="2.5"/>
-            {/* Inner shield fill */}
-            <path d="M40 12 L66 23 L66 43 C66 56 54 66 40 70 C26 66 14 56 14 43 L14 23 Z"
-              fill="url(#shieldGrad)" opacity="0.12"/>
-            {/* Cross / plus icon */}
-            <rect x="35" y="20" width="10" height="3.5" rx="1.5" fill="#1565C0"/>
-            <rect x="38.25" y="16.5" width="3.5" height="10" rx="1.5" fill="#1565C0"/>
-            {/* CARING FOR EVERY LIFE text */}
-            <text x="40" y="40" textAnchor="middle" fontSize="7.5" fontWeight="700" fill="#4FC3F7" fontFamily="sans-serif" letterSpacing="0.5">CARING FOR</text>
-            <text x="40" y="49" textAnchor="middle" fontSize="7.5" fontWeight="700" fill="#4FC3F7" fontFamily="sans-serif" letterSpacing="0.5">EVERY LIFE</text>
-            {/* DHG label */}
-            <text x="40" y="64" textAnchor="middle" fontSize="12" fontWeight="800" fill="#1565C0" fontFamily="sans-serif" letterSpacing="2.5">DHG</text>
+            {/* White card base */}
+            <rect x="4" y="4" width="82" height="82" rx="16" fill="white"/>
+            {/* Shield body */}
+            <path d="M45 10 L76 23 L76 50 C76 66 62 77 45 82 C28 77 14 66 14 50 L14 23 Z"
+              fill="url(#shGrad)" opacity="0.13"/>
+            <path d="M45 15 L72 26 L72 50 C72 64 60 73 45 78 C30 73 18 64 18 50 L18 26 Z"
+              fill="url(#shGrad)" opacity="0.10" stroke="url(#shGrad)" strokeWidth="1.5"/>
+            {/* Plus cross */}
+            <rect x="39" y="22" width="12" height="4" rx="2" fill="#1565C0"/>
+            <rect x="42.5" y="18.5" width="5" height="11" rx="2" fill="#1565C0"/>
+            {/* Text lines */}
+            <text x="45" y="46" textAnchor="middle" fontSize="8" fontWeight="700"
+              fill="#1976D2" fontFamily="sans-serif" letterSpacing="0.6">CARING FOR</text>
+            <text x="45" y="56" textAnchor="middle" fontSize="8" fontWeight="700"
+              fill="#1976D2" fontFamily="sans-serif" letterSpacing="0.6">EVERY LIFE</text>
+            {/* DHG bold label */}
+            <text x="45" y="72" textAnchor="middle" fontSize="13" fontWeight="800"
+              fill="#0D47A1" fontFamily="sans-serif" letterSpacing="3">DHG</text>
           </svg>
         </div>
-        <div>
+
+        <div className="header-brand-text">
           <h1 className="header-title">Dummy Health Group</h1>
           <p className="header-subtitle">Caring for Every Life</p>
         </div>
       </div>
 
+      {/* ── SEARCH ── */}
       <div className="header-search">
         <Search size={16} className="header-search-icon" />
         <input
@@ -45,6 +51,7 @@ export default function Header() {
         />
       </div>
 
+      {/* ── ACTIONS ── */}
       <div className="header-actions">
         <button className="header-icon-btn" aria-label="Notifications">
           <Bell size={20} />
@@ -61,6 +68,7 @@ export default function Header() {
           <ChevronDown size={16} className="header-chevron" />
         </div>
       </div>
+
     </header>
   );
 }
