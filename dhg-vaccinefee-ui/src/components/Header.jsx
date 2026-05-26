@@ -4,34 +4,57 @@ export default function Header() {
   return (
     <header className="header">
 
-      {/* ── BRAND ── */}
       <div className="header-brand">
         <div className="header-logo-wrap">
-          <svg viewBox="0 0 90 90" width="68" height="68" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* DHG Logo - matching uploaded brand logo exactly */}
+          <svg viewBox="0 0 120 140" width="64" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="shGrad" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+              <linearGradient id="shieldGrad" x1="0" y1="0" x2="120" y2="140" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#00BCD4"/>
+                <stop offset="50%" stopColor="#29B6F6"/>
+                <stop offset="100%" stopColor="#1565C0"/>
+              </linearGradient>
+              <linearGradient id="crossGrad" x1="0" y1="0" x2="60" y2="80" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#4FC3F7"/>
-                <stop offset="100%" stopColor="#0D47A1"/>
+                <stop offset="100%" stopColor="#1E88E5"/>
+              </linearGradient>
+              <linearGradient id="circleGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#00BCD4"/>
+                <stop offset="100%" stopColor="#1565C0"/>
               </linearGradient>
             </defs>
-            {/* White card base */}
-            <rect x="4" y="4" width="82" height="82" rx="16" fill="white"/>
-            {/* Shield body */}
-            <path d="M45 10 L76 23 L76 50 C76 66 62 77 45 82 C28 77 14 66 14 50 L14 23 Z"
-              fill="url(#shGrad)" opacity="0.13"/>
-            <path d="M45 15 L72 26 L72 50 C72 64 60 73 45 78 C30 73 18 64 18 50 L18 26 Z"
-              fill="url(#shGrad)" opacity="0.10" stroke="url(#shGrad)" strokeWidth="1.5"/>
-            {/* Plus cross */}
-            <rect x="39" y="22" width="12" height="4" rx="2" fill="#1565C0"/>
-            <rect x="42.5" y="18.5" width="5" height="11" rx="2" fill="#1565C0"/>
-            {/* Text lines */}
-            <text x="45" y="46" textAnchor="middle" fontSize="8" fontWeight="700"
-              fill="#1976D2" fontFamily="sans-serif" letterSpacing="0.6">CARING FOR</text>
-            <text x="45" y="56" textAnchor="middle" fontSize="8" fontWeight="700"
-              fill="#1976D2" fontFamily="sans-serif" letterSpacing="0.6">EVERY LIFE</text>
-            {/* DHG bold label */}
-            <text x="45" y="72" textAnchor="middle" fontSize="13" fontWeight="800"
-              fill="#0D47A1" fontFamily="sans-serif" letterSpacing="3">DHG</text>
+
+            {/* Top circle/pin */}
+            <circle cx="60" cy="10" r="10" fill="url(#circleGrad)" stroke="white" strokeWidth="2.5"/>
+            <circle cx="60" cy="10" r="5" fill="white" opacity="0.9"/>
+
+            {/* Shield outline - teal/blue gradient border */}
+            <path d="M60 22 L108 40 L108 85 C108 110 86 126 60 134 C34 126 12 110 12 85 L12 40 Z"
+              fill="url(#shieldGrad)" stroke="none"/>
+
+            {/* Shield white inner */}
+            <path d="M60 28 L102 44 L102 85 C102 107 82 121 60 129 C38 121 18 107 18 85 L18 44 Z"
+              fill="white"/>
+
+            {/* CARING FOR EVERY LIFE arc text */}
+            <path id="topArc" d="M 28 58 A 34 34 0 0 1 92 58" fill="none"/>
+            <text fontSize="7.5" fontWeight="600" fill="#29B6F6" fontFamily="sans-serif" letterSpacing="1.5">
+              <textPath href="#topArc" startOffset="8%">CARING FOR EVERY LIFE</textPath>
+            </text>
+
+            {/* Medical cross */}
+            <rect x="48" y="62" width="24" height="8" rx="4" fill="url(#crossGrad)"/>
+            <rect x="56" y="54" width="8" height="24" rx="4" fill="url(#crossGrad)"/>
+
+            {/* DHG text */}
+            <text x="60" y="100" textAnchor="middle" fontSize="14" fontWeight="700"
+              fill="#29B6F6" fontFamily="sans-serif" letterSpacing="4">DHG</text>
+
+            {/* Dummy Health Group arc text at bottom */}
+            <path id="botArc" d="M 22 105 A 42 42 0 0 0 98 105" fill="none"/>
+            <text fontSize="7" fontWeight="500" fill="#29B6F6" fontFamily="sans-serif" letterSpacing="0.5">
+              <textPath href="#botArc" startOffset="5%">Dummy Health Group</textPath>
+            </text>
           </svg>
         </div>
 
@@ -41,7 +64,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ── SEARCH ── */}
       <div className="header-search">
         <Search size={16} className="header-search-icon" />
         <input
@@ -51,7 +73,6 @@ export default function Header() {
         />
       </div>
 
-      {/* ── ACTIONS ── */}
       <div className="header-actions">
         <button className="header-icon-btn" aria-label="Notifications">
           <Bell size={20} />
