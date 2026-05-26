@@ -168,5 +168,48 @@ jobs:
       HPA_NAME: "dhg-vaccinefee-ui-hpa"
     secrets: inherit
  
-  # deploy-test: DISABLED until dhg-rateauto-test-gke-cluster is ready
-  # deploy-stage: DISABLED until dhg-rateauto-stage-gke-cluster is ready
+  deploy-test:
+    name: GKE-Test
+    needs:
+      - setup
+      - deploy-dev
+    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
+    uses: ./.github/workflows/gke-deploy.yml
+    with:
+      APP_NAME: "dhg-vaccinefee-ui"
+      APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
+      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+      GKE_ENVIRONMENT: test
+      GKE_REGION: "us-central1"
+      GKE_CLUSTER: "dhg-rateauto-test-gke-cluster"
+      GKE_NAMESPACE: "dhg-rateauto-test-namespace"
+      GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
+      K8S_MANIFESTS_DIR: k8s
+      DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
+      SERVICE_NAME: "dhg-vaccinefee-ui-service"
+      SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
+      HPA_NAME: "dhg-vaccinefee-ui-hpa"
+    secrets: inherit
+ 
+  deploy-stage:
+    name: GKE-Stage
+    needs:
+      - setup
+      - deploy-test
+    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
+    uses: ./.github/workflows/gke-deploy.yml
+    with:
+      APP_NAME: "dhg-vaccinefee-ui"
+      APP_VERSION: ${{ needs.setup.outputs.APP_VERSION }}
+      IMAGE_URL: ${{ needs.setup.outputs.IMAGE_URL }}
+      GKE_ENVIRONMENT: stage
+      GKE_REGION: "us-central1"
+      GKE_CLUSTER: "dhg-rateauto-stage-gke-cluster"
+      GKE_NAMESPACE: "dhg-rateauto-test-namespace"
+      GCP_PROJECT_ID: "dhg-vaccine-rateauto-nonpord"
+      K8S_MANIFESTS_DIR: k8s
+      DEPLOYMENT_NAME: "dhg-vaccinefee-ui"
+      SERVICE_NAME: "dhg-vaccinefee-ui-service"
+      SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
+      HPA_NAME: "dhg-vaccinefee-ui-hpa"
+    secrets: inherit
