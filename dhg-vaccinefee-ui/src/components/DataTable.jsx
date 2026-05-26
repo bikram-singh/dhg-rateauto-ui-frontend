@@ -45,9 +45,9 @@ export default function DataTable({ pricing = [], vaccines = [], hospitals = [],
           <select
             value={pageSize}
             onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
-            className="table-page-select"
+            className="table-page-select" style={{ background: "#0D1B4B", color: "#fff", border: "1px solid rgba(79,195,247,0.3)" }}
           >
-            {PAGE_SIZES.map((s) => <option key={s}>{s}</option>)}
+            {PAGE_SIZES.map((s) => <option key={s} value={s} style={{ background: "#0D1B4B", color: "#fff" }}>{s}</option>)}
           </select>
           entries
         </div>
