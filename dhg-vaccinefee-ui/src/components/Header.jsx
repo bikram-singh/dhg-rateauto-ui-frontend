@@ -5,22 +5,30 @@ export default function Header() {
     <header className="header">
       <div className="header-brand">
         <div className="header-logo">
-          <svg viewBox="0 0 80 80" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 90 90" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="shieldGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#4FC3F7"/>
-                <stop offset="100%" stopColor="#1565C0"/>
+              <linearGradient id="shieldGrad" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#64B5F6"/>
+                <stop offset="50%" stopColor="#1565C0"/>
+                <stop offset="100%" stopColor="#0D47A1"/>
+              </linearGradient>
+              <linearGradient id="crossGrad" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFFFFF"/>
+                <stop offset="100%" stopColor="#E3F2FD"/>
               </linearGradient>
             </defs>
-            <path d="M40 4 L72 18 L72 44 C72 60 56 72 40 76 C24 72 8 60 8 44 L8 18 Z"
-              fill="url(#shieldGrad)" opacity="0.15" stroke="url(#shieldGrad)" strokeWidth="3"/>
-            <path d="M40 10 L68 22 L68 44 C68 58 54 68 40 72 C26 68 12 58 12 44 L12 22 Z"
-              fill="white" opacity="0.12"/>
-            <text x="40" y="36" textAnchor="middle" fontSize="9" fontWeight="700" fill="#4FC3F7" fontFamily="sans-serif" letterSpacing="1">CARING FOR</text>
-            <text x="40" y="45" textAnchor="middle" fontSize="9" fontWeight="700" fill="#4FC3F7" fontFamily="sans-serif" letterSpacing="1">EVERY LIFE</text>
-            <text x="40" y="62" textAnchor="middle" fontSize="11" fontWeight="800" fill="#1565C0" fontFamily="sans-serif" letterSpacing="2">DHG</text>
-            <rect x="34" y="15" width="12" height="4" rx="1" fill="white"/>
-            <rect x="38" y="11" width="4" height="12" rx="1" fill="white"/>
+            {/* Outer shield */}
+            <path d="M45 5 L78 20 L78 48 C78 66 63 78 45 83 C27 78 12 66 12 48 L12 20 Z"
+              fill="url(#shieldGrad)" />
+            {/* Inner shield highlight */}
+            <path d="M45 12 L72 25 L72 48 C72 63 59 73 45 78 C31 73 18 63 18 48 L18 25 Z"
+              fill="white" opacity="0.15"/>
+            {/* Cross symbol */}
+            <rect x="38" y="24" width="14" height="42" rx="3" fill="url(#crossGrad)" opacity="0.95"/>
+            <rect x="22" y="38" width="46" height="14" rx="3" fill="url(#crossGrad)" opacity="0.95"/>
+            {/* DHG text */}
+            <text x="45" y="72" textAnchor="middle" fontSize="10" fontWeight="800"
+              fill="white" fontFamily="sans-serif" letterSpacing="2" opacity="0.9">DHG</text>
           </svg>
         </div>
         <div>
