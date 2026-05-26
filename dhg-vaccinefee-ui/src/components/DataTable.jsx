@@ -6,7 +6,7 @@ const PAGE_SIZES = [5, 10, 20, 30, 50, 100, 200];
 export default function DataTable({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
   const [search, setSearch]     = useState("");
   const [page, setPage]         = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(50);
 
   // Build lookup maps
   const vaccineMap    = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
