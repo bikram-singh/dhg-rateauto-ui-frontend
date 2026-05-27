@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import { Printer, Download, User, Calendar, MapPin, Shield } from "lucide-react";
+import { Printer } from "lucide-react";
 
 const VACCINE_SCHEDULE = [
   { vaccine:"BCG Vaccine", age:"Birth", dose:"1", notes:"Given at birth" },
@@ -32,10 +32,6 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
   const [dates, setDates]       = useState({});
   const cardRef                 = useRef(null);
 
-  const cityList = useMemo(() =>
-    [...new Set(hospitals.map((h) => h.location?.split(",")[0].trim()).filter(Boolean))].sort(),
-    [hospitals]
-  );
 
   const toggleVaccine = (v) => {
     setSelectedVaccines((prev) =>

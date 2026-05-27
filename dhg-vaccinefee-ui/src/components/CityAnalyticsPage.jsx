@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, LineChart, Line, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, Legend } from "recharts";
 import { Download } from "lucide-react";
 
 const CITIES = ["New Delhi","Noida","Mumbai","Bengaluru","Hyderabad","Pune","Chennai","Kolkata","Jaipur","Ahmedabad"];
@@ -7,7 +7,6 @@ const COLORS  = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC","#FF7043","#4
 
 export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospitals = [] }) {
   const [selectedCities, setSelectedCities] = useState(["New Delhi","Mumbai","Bengaluru"]);
-  const [metric, setMetric] = useState("vaccines");
 
   const toggleCity = (city) => {
     setSelectedCities((prev) =>

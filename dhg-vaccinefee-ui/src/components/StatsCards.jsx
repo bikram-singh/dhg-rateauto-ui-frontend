@@ -1,5 +1,5 @@
-import { Activity, Building, TrendingUp, RefreshCw } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
+import { RefreshCw } from "lucide-react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 
 export default function StatsCards({ vaccines = [], hospitals = [], pricing = [], onRefresh }) {
   const [lastRefresh, setLastRefresh] = useState(new Date());
@@ -14,29 +14,28 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
   const available    = pricing.filter((p) => p.status === "Available").length;
   const lowStock     = pricing.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= 10).length;
   const outOfStock   = pricing.filter((p) => p.stock_quantity === 0).length;
-  const insured      = pricing.filter((p) => p.insurance_covered !== "No").length;
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown((c) => {
-        if (c <= 1) {
-          handleRefresh();
-          return 30;
-        }
-        return c - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const interval = setInterval(() => {
+    setCountdown((c) => {
+      if (c <= 1) {
+        handleRefresh();
+        return 30;
+      }
+      return c - 1;
+    });
+  }, 1000);
+  return () => clearInterval(interval);
+}, [handleRefresh]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     if (onRefresh) await onRefresh();
     setLastRefresh(new Date());
     setCountdown(30);
     setTimeout(() => setRefreshing(false), 800);
-  };
+  }, [onRefresh]);
 
   return (
     <div>

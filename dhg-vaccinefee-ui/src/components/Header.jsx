@@ -1,5 +1,5 @@
 import { Search, Bell, Sun, Moon, ChevronDown, X } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 
 export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode, pricing = [] }) {
   const [showAlerts, setShowAlerts]   = useState(false);

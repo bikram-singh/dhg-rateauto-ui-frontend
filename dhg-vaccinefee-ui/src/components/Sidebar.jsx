@@ -1,7 +1,6 @@
-import {
-  LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
+import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
   CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map,
-  Pill, Trophy, Bot, BarChart, Calendar, CreditCard as CardIcon, Globe
+  Pill, Trophy, Bot, Calendar, CreditCard as CardIcon, Globe
 } from "lucide-react";
 import { useState } from "react";
 

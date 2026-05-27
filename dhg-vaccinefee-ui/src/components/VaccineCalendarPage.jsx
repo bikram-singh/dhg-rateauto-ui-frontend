@@ -55,8 +55,9 @@ export default function VaccineCalendarPage({ vaccines = [], pricing = [] }) {
       const dueDate = new Date(dobDate);
       dueDate.setMonth(dueDate.getMonth() + Math.round(s.monthOffset));
       return { ...s, dueDate, isPast: dueDate < today, isThisMonth: dueDate.getFullYear() === year && dueDate.getMonth() === month };
-    });
-  }, [dobDate, year, month]);
+  });
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [dobDate, year, month]);
 
   // Calendar grid
   const firstDay   = new Date(year, month, 1).getDay();
