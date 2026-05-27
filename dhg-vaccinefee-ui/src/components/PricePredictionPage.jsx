@@ -151,7 +151,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
               const sel = selectedVaccines.find((x) => x.id === v.id);
               const ci  = selectedVaccines.indexOf(sel);
               return (
-                <button key={v.id} onClick={() => toggleVaccine(v)}
+                <button type="button" key={v.id} onClick={() => toggleVaccine(v)}
                   style={{ padding:"5px 12px", borderRadius:"20px", fontSize:"11px",
                     fontWeight:"500", cursor:"pointer",
                     background: sel ? `${COLORS[ci]}25` : "rgba(255,255,255,0.05)",
@@ -248,7 +248,6 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
                 </span>
               </div>
             </div>
-            <ReferenceLine />
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={chartData} margin={{ top:5, right:30, left:0, bottom:5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)"/>
