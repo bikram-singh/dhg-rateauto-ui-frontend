@@ -18,6 +18,12 @@ const bottomItems = [
 export default function Sidebar({ activePage, setActivePage }) {
   const [hovered, setHovered] = useState(null);
 
+  const handleBottomClick = (label) => {
+    if (label === "Contact") window.open("tel:+919466679107");
+    else if (label === "Support") window.open("mailto:support@dummyhealthgroup.com");
+    else setActivePage(label); // Reports and Billing navigate as pages
+  };
+
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
@@ -37,26 +43,23 @@ export default function Sidebar({ activePage, setActivePage }) {
         {bottomItems.map(({ icon: Icon, label, tooltip }) => (
           <div key={label} style={{ position: "relative" }}>
             <button
-              className="sidebar-item sidebar-item--bottom"
+              className={`sidebar-item sidebar-item--bottom ${activePage === label ? "sidebar-item--active" : ""}`}
               title={tooltip}
               onMouseEnter={() => setHovered(label)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => {
-                if (label === "Contact") window.open("tel:+919466679107");
-                if (label === "Support") window.open("mailto:support@dummyhealthgroup.com");
-              }}
+              onClick={() => handleBottomClick(label)}
             >
               <Icon size={18} />
             </button>
             {hovered === label && (
               <div style={{
-                position: "absolute", left: "52px", bottom: "0",
-                background: "rgba(13,27,75,0.97)", border: "1px solid rgba(79,195,247,0.3)",
-                borderRadius: "8px", padding: "8px 14px", whiteSpace: "nowrap",
-                color: "#fff", fontSize: "12px", zIndex: 1000, pointerEvents: "none",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
+                position:"absolute", left:"52px", bottom:"0",
+                background:"rgba(13,27,75,0.97)", border:"1px solid rgba(79,195,247,0.3)",
+                borderRadius:"8px", padding:"8px 14px", whiteSpace:"nowrap",
+                color:"#fff", fontSize:"12px", zIndex:1000, pointerEvents:"none",
+                boxShadow:"0 4px 12px rgba(0,0,0,0.3)"
               }}>
-                <div style={{ fontWeight: 600, color: "#4FC3F7", marginBottom: "2px" }}>{label}</div>
+                <div style={{ fontWeight:600, color:"#4FC3F7", marginBottom:"2px" }}>{label}</div>
                 <div>{tooltip}</div>
               </div>
             )}

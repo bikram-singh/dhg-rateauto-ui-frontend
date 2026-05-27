@@ -1,6 +1,6 @@
-import { Search, Bell, Moon, ChevronDown } from "lucide-react";
+import { Search, Bell, Moon, Sun, ChevronDown } from "lucide-react";
 
-export default function Header({ searchQuery = "", setSearchQuery }) {
+export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode }) {
   return (
     <header className="header">
       <div className="header-brand">
@@ -54,17 +54,27 @@ export default function Header({ searchQuery = "", setSearchQuery }) {
           onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
         />
         {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)",
-              background:"none", border:"none", cursor:"pointer", color:"#94A3B8", fontSize:"16px" }}
-          >✕</button>
+          <button onClick={() => setSearchQuery("")} style={{
+            position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)",
+            background:"none", border:"none", cursor:"pointer", color:"#94A3B8", fontSize:"16px"
+          }}>✕</button>
         )}
       </div>
 
       <div className="header-actions">
         <button className="header-icon-btn" aria-label="Notifications"><Bell size={20} /></button>
-        <button className="header-icon-btn" aria-label="Toggle theme"><Moon size={20} /></button>
+
+        {/* Dark/Light mode toggle */}
+        <button
+          className="header-icon-btn"
+          aria-label="Toggle theme"
+          onClick={toggleDarkMode}
+          title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          style={{ position: "relative" }}
+        >
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+
         <div className="header-user">
           <div className="header-avatar">JD</div>
           <div className="header-user-info">
