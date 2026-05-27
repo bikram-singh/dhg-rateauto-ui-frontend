@@ -12,7 +12,11 @@ export default function Filters({ departments = [], vaccines = [], hospitals = [
   // Extract unique city names (first part before comma)
   const locations = [...new Set(
     hospitals
-      .map((h) => h.location ? h.location.split(",")[0].trim() : null)
+      .map((h) => h.location ? (() => {
+      const city = h.location.split(",")[0].trim();
+      if (city === "New Delhi") return "Delhi";
+      return city;
+    })() : null)
       .filter(Boolean)
   )].sort();
 

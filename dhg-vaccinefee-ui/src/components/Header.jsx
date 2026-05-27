@@ -169,7 +169,7 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
           <div className="header-avatar">JD</div>
           <div className="header-user-info">
             <span className="header-user-role">Admin</span>
-            <span className="header-user-name">John Doe</span>
+            <span className="header-user-name">Bikram Singh</span>
           </div>
           <ChevronDown size={16} className="header-chevron" />
         </div>

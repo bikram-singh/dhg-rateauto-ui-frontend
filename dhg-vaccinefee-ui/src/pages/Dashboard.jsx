@@ -20,6 +20,8 @@ import AIVaccineAdvisor from "../components/AIVaccineAdvisor";
 import CityAnalyticsPage from "../components/CityAnalyticsPage";
 import VaccineCardPage from "../components/VaccineCardPage";
 import VaccineCalendarPage from "../components/VaccineCalendarPage";
+import PricePredictionPage from "../components/PricePredictionPage";
+import AdvancedReportsPage from "../components/AdvancedReportsPage";
 import { api } from "../services/api";
 
 export default function Dashboard() {
@@ -130,6 +132,8 @@ export default function Dashboard() {
     {activePage === "AI Advisor"       && <AIVaccineAdvisor     {...sp}/>}
     {activePage === "City Analytics"   && <CityAnalyticsPage    {...sp}/>}
     {activePage === "Vaccine Card"     && <VaccineCardPage      {...sp}/>}
-    {activePage === "Vaccine Calendar" && <VaccineCalendarPage  {...sp}/>}
+    {activePage === "Vaccine Calendar"  && <VaccineCalendarPage   {...sp}/>}
+    {activePage === "Price Prediction"  && <PricePredictionPage  {...sp}/>}
+    {activePage === "Advanced Reports"  && <AdvancedReportsPage  {...sp}/>}
   </>);
 }
