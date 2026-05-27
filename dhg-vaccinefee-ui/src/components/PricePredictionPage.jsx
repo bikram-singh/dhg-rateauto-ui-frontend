@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { TrendingUp, TrendingDown, Minus, Download } from "lucide-react";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC"];

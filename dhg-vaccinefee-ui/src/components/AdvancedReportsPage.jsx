@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef } from "react";
-import { Download, Printer, Mail, BarChart2, FileText } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Printer, Mail, FileText } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC","#FF7043","#42A5F5","#26A69A"];
@@ -9,7 +9,6 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
   const [emailSent, setEmailSent]     = useState(false);
   const [sending, setSending]         = useState(false);
   const [reportType, setReportType]   = useState("executive");
-  const reportRef                     = useRef(null);
 
   const vaccineMap    = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
   const hospitalMap   = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h])), [hospitals]);
