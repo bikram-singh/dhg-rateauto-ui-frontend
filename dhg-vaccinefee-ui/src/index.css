@@ -790,3 +790,60 @@ body {
 .table-search-input { background: var(--input-bg) !important; color: var(--text-primary) !important; border-color: var(--card-border) !important; }
 .header-search-input { background: var(--input-bg) !important; color: var(--text-primary) !important; }
 .page-btn { background: var(--card-bg) !important; border-color: var(--card-border) !important; color: var(--text-muted) !important; }
+
+/* ── MOBILE RESPONSIVE IMPROVEMENTS ── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 60px; --header-h: 60px; }
+
+  .sidebar-item span { display: none; }
+  .sidebar-item { padding: 10px; justify-content: center; gap: 0; }
+  .sidebar-item--active { border-left: none; border-bottom: 3px solid #fff; }
+  .sidebar-bottom { flex-direction: column; gap: 4px; }
+
+  .header { padding: 0 12px; gap: 10px; height: var(--header-h); }
+  .header-search { display: none; }
+  .header-title { font-size: 15px; }
+  .header-subtitle { display: none; }
+  .header-logo-wrap { width: 44px; height: 44px; }
+  .header-user-info { display: none; }
+
+  .page-body { padding: 12px; gap: 12px; }
+
+  .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-value { font-size: 22px; }
+  .stat-card--trend { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  .filters { padding: 10px; gap: 8px; }
+  .filter-select-group { gap: 6px; }
+  .filter-select { min-width: 120px; padding: 5px 8px; }
+  .filter-select select { font-size: 12px; }
+  .filter-price { display: none; }
+
+  .chart-card { padding: 14px 12px; }
+  .chart-legend { gap: 10px; }
+  .chart-legend-item { font-size: 10px; }
+
+  .table-toolbar { padding: 10px 12px; gap: 8px; }
+  .table-search-input { width: 150px; }
+  .table-view-btns { display: none; }
+
+  .data-table th, .data-table td { padding: 8px 10px; font-size: 11px; }
+
+  .table-footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .table-pagination { flex-wrap: wrap; gap: 3px; }
+  .page-btn { padding: 4px 8px; font-size: 11px; min-width: 28px; }
+}
+
+@media (max-width: 480px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { display: none; }
+  .stats-row { grid-template-columns: 1fr; }
+  .header-brand-text { display: none; }
+}
+
+/* ── TABLET ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root { --sidebar-w: 180px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .header-search { max-width: 300px; }
+}
