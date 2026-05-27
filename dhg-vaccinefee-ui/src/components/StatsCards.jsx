@@ -16,7 +16,17 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
   const outOfStock   = pricing.filter((p) => p.stock_quantity === 0).length;
 
   // Auto-refresh every 30 seconds
-  useEffect(() => {
+  // handleRefresh FIRST
+const handleRefresh = useCallback(async () => {
+  setRefreshing(true);
+  if (onRefresh) await onRefresh();
+  setLastRefresh(new Date());
+  setCountdown(30);
+  setTimeout(() => setRefreshing(false), 800);
+}, [onRefresh]);
+
+// useEffect SECOND
+useEffect(() => {
   const interval = setInterval(() => {
     setCountdown((c) => {
       if (c <= 1) {
@@ -28,14 +38,6 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
   }, 1000);
   return () => clearInterval(interval);
 }, [handleRefresh]);
-
-  const handleRefresh = useCallback(async () => {
-    setRefreshing(true);
-    if (onRefresh) await onRefresh();
-    setLastRefresh(new Date());
-    setCountdown(30);
-    setTimeout(() => setRefreshing(false), 800);
-  }, [onRefresh]);
 
   return (
     <div>

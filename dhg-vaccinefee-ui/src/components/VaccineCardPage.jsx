@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef } from "react";
 import { Printer } from "lucide-react";
 
 const VACCINE_SCHEDULE = [
