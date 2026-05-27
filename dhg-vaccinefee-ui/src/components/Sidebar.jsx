@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2, CreditCard, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2, CreditCard, MessageSquare, TrendingUp, Search, GitCompare } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -6,6 +6,9 @@ const navItems = [
   { icon: Building2,       label: "Departments" },
   { icon: Building,        label: "Hospitals" },
   { icon: DollarSign,      label: "Pricing" },
+  { icon: TrendingUp,      label: "Price History" },
+  { icon: Search,          label: "Vaccine Search" },
+  { icon: GitCompare,      label: "Compare" },
 ];
 
 const bottomItems = [
@@ -21,18 +24,16 @@ export default function Sidebar({ activePage, setActivePage }) {
   const handleBottomClick = (label) => {
     if (label === "Contact") window.open("tel:+919466679107");
     else if (label === "Support") window.open("mailto:support@dummyhealthgroup.com");
-    else setActivePage(label); // Reports and Billing navigate as pages
+    else setActivePage(label);
   };
 
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
         {navItems.map(({ icon: Icon, label }) => (
-          <button
-            key={label}
+          <button key={label}
             className={`sidebar-item ${activePage === label ? "sidebar-item--active" : ""}`}
-            onClick={() => setActivePage(label)}
-          >
+            onClick={() => setActivePage(label)}>
             <Icon size={18} />
             <span>{label}</span>
           </button>
@@ -47,18 +48,15 @@ export default function Sidebar({ activePage, setActivePage }) {
               title={tooltip}
               onMouseEnter={() => setHovered(label)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => handleBottomClick(label)}
-            >
+              onClick={() => handleBottomClick(label)}>
               <Icon size={18} />
             </button>
             {hovered === label && (
-              <div style={{
-                position:"absolute", left:"52px", bottom:"0",
+              <div style={{ position:"absolute", left:"52px", bottom:"0",
                 background:"rgba(13,27,75,0.97)", border:"1px solid rgba(79,195,247,0.3)",
                 borderRadius:"8px", padding:"8px 14px", whiteSpace:"nowrap",
                 color:"#fff", fontSize:"12px", zIndex:1000, pointerEvents:"none",
-                boxShadow:"0 4px 12px rgba(0,0,0,0.3)"
-              }}>
+                boxShadow:"0 4px 12px rgba(0,0,0,0.3)" }}>
                 <div style={{ fontWeight:600, color:"#4FC3F7", marginBottom:"2px" }}>{label}</div>
                 <div>{tooltip}</div>
               </div>
