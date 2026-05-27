@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 
 const AGE_GROUPS = ["All Ages","Newborn (0-1m)","Infant (1-12m)","Toddler (1-3y)","Children (4-12y)","Adolescent (13-18y)","Adult (19-60y)","Senior (60+)"];
 
@@ -45,7 +45,7 @@ export default function VaccineSearchPage({ pricing = [], vaccines = [], hospita
   const [maxPrice, setMaxPrice]   = useState(10000);
   const [selected, setSelected]   = useState(null);
 
-  const vaccineMap  = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
+  
   const hospitalMap = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h])), [hospitals]);
 
   // Enrich vaccines with pricing stats
