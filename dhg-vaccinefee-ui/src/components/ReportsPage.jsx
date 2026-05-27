@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Download, Printer } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#4FC3F7","#1565C0","#26A69A","#FFA726","#EF5350","#AB47BC","#66BB6A","#FF7043"];
 
