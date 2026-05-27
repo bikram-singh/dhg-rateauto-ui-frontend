@@ -59,7 +59,6 @@ export default function HospitalMapPage({ pricing = [], vaccines = [], hospitals
   const [hoveredId, setHoveredId]   = useState(null);
 
   const vaccineMap  = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
-  const hospitalMap = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h])), [hospitals]);
 
   // Enrich hospitals with coords and stats
   const enriched = useMemo(() => hospitals.map((h) => {

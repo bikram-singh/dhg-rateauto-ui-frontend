@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Trophy, TrendingUp, TrendingDown, Star, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 const RANK_CRITERIA = ["Overall Score","Lowest Avg Price","Most Vaccines","Highest Availability","Most Insured"];
 

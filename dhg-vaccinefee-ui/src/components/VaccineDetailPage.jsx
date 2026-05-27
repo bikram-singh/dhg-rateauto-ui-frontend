@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, ChevronDown, ChevronUp, Shield, AlertTriangle, Clock, Users, Activity } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, Shield, AlertTriangle, Clock, Users, Activity, DollarSign } from "lucide-react";
 
 const VACCINE_DETAILS = {
   1:  { diseases:["COVID-19"], uses:"Prevents COVID-19 infection, hospitalization and severe disease", sideEffects:["Sore arm","Fatigue","Headache","Chills","Fever","Nausea"], schedule:"2 doses, 3 weeks apart + booster", whoShouldTake:"Everyone 5+ years", whoShouldAvoid:"Severe allergic reaction to previous dose", doses:2, durationWeeks:3 },
@@ -27,8 +27,6 @@ const DEFAULT_DETAIL = {
   whoShouldAvoid:"Prior allergic reaction to any vaccine component",
   doses:1, durationWeeks:0,
 };
-
-const AGE_BADGE_COLOR = { "Newborn":"#4FC3F7","Infant":"#66BB6A","Children":"#FFA726","Adult":"#42A5F5","Senior":"#EF5350","All":"#26A69A" };
 
 export default function VaccineDetailPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
   const [search, setSearch]         = useState("");
