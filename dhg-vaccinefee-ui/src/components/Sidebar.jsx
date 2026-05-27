@@ -1,4 +1,5 @@
-import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2, CreditCard, MessageSquare, TrendingUp, Search, GitCompare } from "lucide-react";
+import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
+  CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map, Pill, Trophy, Bot } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -9,13 +10,17 @@ const navItems = [
   { icon: TrendingUp,      label: "Price History" },
   { icon: Search,          label: "Vaccine Search" },
   { icon: GitCompare,      label: "Compare" },
+  { icon: Map,             label: "Hospital Map" },
+  { icon: Pill,            label: "Vaccine Details" },
+  { icon: Trophy,          label: "Rankings" },
+  { icon: Bot,             label: "AI Advisor" },
 ];
 
 const bottomItems = [
-  { icon: Phone,         label: "Contact",  tooltip: "+91-9466679107" },
-  { icon: BarChart2,     label: "Reports",  tooltip: "Reports" },
-  { icon: CreditCard,    label: "Billing",  tooltip: "Billing" },
-  { icon: MessageSquare, label: "Support",  tooltip: "support@dummyhealthgroup.com" },
+  { icon: Phone,         label: "Contact", tooltip: "+91-9466679107" },
+  { icon: BarChart2,     label: "Reports", tooltip: "Reports" },
+  { icon: CreditCard,    label: "Billing", tooltip: "Billing" },
+  { icon: MessageSquare, label: "Support", tooltip: "support@dummyhealthgroup.com" },
 ];
 
 export default function Sidebar({ activePage, setActivePage }) {
@@ -42,7 +47,7 @@ export default function Sidebar({ activePage, setActivePage }) {
 
       <div className="sidebar-bottom">
         {bottomItems.map(({ icon: Icon, label, tooltip }) => (
-          <div key={label} style={{ position: "relative" }}>
+          <div key={label} style={{ position:"relative" }}>
             <button
               className={`sidebar-item sidebar-item--bottom ${activePage === label ? "sidebar-item--active" : ""}`}
               title={tooltip}

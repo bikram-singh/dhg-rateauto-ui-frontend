@@ -847,3 +847,12 @@ body {
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .header-search { max-width: 300px; }
 }
+
+/* ── SIDEBAR EXPANDED for more nav items ── */
+.sidebar { width: var(--sidebar-w); min-height: 100vh; overflow-y: auto; }
+.sidebar-nav { padding-bottom: 8px; }
+
+/* AI Advisor gradient nav item */
+.sidebar-item[class*="AI"] {
+  background: linear-gradient(90deg, rgba(79,195,247,0.1), rgba(21,101,192,0.1));
+}
