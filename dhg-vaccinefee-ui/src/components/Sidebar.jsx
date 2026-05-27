@@ -1,5 +1,8 @@
-import { LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
-  CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map, Pill, Trophy, Bot } from "lucide-react";
+import {
+  LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
+  CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map,
+  Pill, Trophy, Bot, BarChart, Calendar, CreditCard as CardIcon, Globe
+} from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -14,6 +17,9 @@ const navItems = [
   { icon: Pill,            label: "Vaccine Details" },
   { icon: Trophy,          label: "Rankings" },
   { icon: Bot,             label: "AI Advisor" },
+  { icon: Globe,           label: "City Analytics" },
+  { icon: CardIcon,        label: "Vaccine Card" },
+  { icon: Calendar,        label: "Vaccine Calendar" },
 ];
 
 const bottomItems = [
@@ -44,10 +50,9 @@ export default function Sidebar({ activePage, setActivePage }) {
           </button>
         ))}
       </nav>
-
       <div className="sidebar-bottom">
         {bottomItems.map(({ icon: Icon, label, tooltip }) => (
-          <div key={label} style={{ position:"relative" }}>
+          <div key={label} style={{ position: "relative" }}>
             <button
               className={`sidebar-item sidebar-item--bottom ${activePage === label ? "sidebar-item--active" : ""}`}
               title={tooltip}

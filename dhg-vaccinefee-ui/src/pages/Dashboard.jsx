@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import Filters from "../components/Filters";
@@ -17,6 +17,9 @@ import HospitalMapPage from "../components/HospitalMapPage";
 import VaccineDetailPage from "../components/VaccineDetailPage";
 import HospitalRankingPage from "../components/HospitalRankingPage";
 import AIVaccineAdvisor from "../components/AIVaccineAdvisor";
+import CityAnalyticsPage from "../components/CityAnalyticsPage";
+import VaccineCardPage from "../components/VaccineCardPage";
+import VaccineCalendarPage from "../components/VaccineCalendarPage";
 import { api } from "../services/api";
 
 export default function Dashboard() {
@@ -37,11 +40,19 @@ export default function Dashboard() {
     document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
-  useEffect(() => {
-    Promise.all([api.getPricing(), api.getVaccines(), api.getHospitals(), api.getDepartments()])
-      .then(([p, v, h, d]) => { setPricing(p); setVaccines(v); setHospitals(h); setDepartments(d); setLoading(false); })
-      .catch((err) => { setError(err.message); setLoading(false); });
+  const fetchAll = useCallback(async () => {
+    try {
+      const [p, v, h, d] = await Promise.all([
+        api.getPricing(), api.getVaccines(), api.getHospitals(), api.getDepartments()
+      ]);
+      setPricing(p); setVaccines(v); setHospitals(h); setDepartments(d);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message); setLoading(false);
+    }
   }, []);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const vaccineMap    = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
   const hospitalMap   = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h])), [hospitals]);
@@ -74,8 +85,13 @@ export default function Dashboard() {
     <div className="app-layout">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
       <div className="main-content">
-        <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-          darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)} />
+        <Header
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          darkMode={darkMode}
+          toggleDarkMode={() => setDarkMode(!darkMode)}
+          pricing={pricing}
+        />
         <div className="page-body">{children}</div>
       </div>
     </div>
@@ -94,21 +110,26 @@ export default function Dashboard() {
   );
 
   return layout(<>
-    {activePage === "Dashboard"      && <><Filters departments={departments} vaccines={vaccines} hospitals={hospitals} onSearch={setFilters}/>
-      <StatsCards vaccines={vaccines} hospitals={hospitals} pricing={filteredPricing}/>
+    {activePage === "Dashboard" && <>
+      <Filters departments={departments} vaccines={vaccines} hospitals={hospitals} onSearch={setFilters}/>
+      <StatsCards vaccines={vaccines} hospitals={hospitals} pricing={filteredPricing} onRefresh={fetchAll}/>
       <PriceChart pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals}/>
-      <DataTable  pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/></>}
-    {activePage === "Departments"    && <DepartmentsPage    {...sp}/>}
-    {activePage === "Hospitals"      && <HospitalsPage      {...sp}/>}
-    {activePage === "Pricing"        && <PricingPage        pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/>}
-    {activePage === "Reports"        && <ReportsPage        {...sp}/>}
-    {activePage === "Billing"        && <BillingPage        {...sp}/>}
-    {activePage === "Price History"  && <PriceHistoryPage   {...sp}/>}
-    {activePage === "Vaccine Search" && <VaccineSearchPage  {...sp}/>}
-    {activePage === "Compare"        && <CompareHospitalsPage {...sp}/>}
-    {activePage === "Hospital Map"   && <HospitalMapPage    {...sp}/>}
-    {activePage === "Vaccine Details"&& <VaccineDetailPage  {...sp}/>}
-    {activePage === "Rankings"       && <HospitalRankingPage {...sp}/>}
-    {activePage === "AI Advisor"     && <AIVaccineAdvisor   {...sp}/>}
+      <DataTable  pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/>
+    </>}
+    {activePage === "Departments"      && <DepartmentsPage      {...sp}/>}
+    {activePage === "Hospitals"        && <HospitalsPage        {...sp}/>}
+    {activePage === "Pricing"          && <PricingPage          pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/>}
+    {activePage === "Reports"          && <ReportsPage          {...sp}/>}
+    {activePage === "Billing"          && <BillingPage          {...sp}/>}
+    {activePage === "Price History"    && <PriceHistoryPage     {...sp}/>}
+    {activePage === "Vaccine Search"   && <VaccineSearchPage    {...sp}/>}
+    {activePage === "Compare"          && <CompareHospitalsPage {...sp}/>}
+    {activePage === "Hospital Map"     && <HospitalMapPage      {...sp}/>}
+    {activePage === "Vaccine Details"  && <VaccineDetailPage    {...sp}/>}
+    {activePage === "Rankings"         && <HospitalRankingPage  {...sp}/>}
+    {activePage === "AI Advisor"       && <AIVaccineAdvisor     {...sp}/>}
+    {activePage === "City Analytics"   && <CityAnalyticsPage    {...sp}/>}
+    {activePage === "Vaccine Card"     && <VaccineCardPage      {...sp}/>}
+    {activePage === "Vaccine Calendar" && <VaccineCalendarPage  {...sp}/>}
   </>);
 }
