@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, X, LogOut, Share2 } from "lucide-react";
+import { Search, Bell, Sun, Moon, ChevronDown, X, LogOut, Share2 } from "lucide-react";
 import { useState, useMemo } from "react";
 
 export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode, pricing = [], user, onLogout }) {
@@ -191,7 +191,7 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
             <span className="header-user-name">{user?.name || "Bikram Singh"}</span>
           </div>
           <button onClick={onLogout} title="Logout"
-            style={{ background:"none", border:"none", color:"rgba(255,255,255,0.5)",
+            style={{ background:"none", border:"none", color:"#4FC3F7",
               cursor:"pointer", padding:"4px", marginLeft:"4px", display:"flex", alignItems:"center" }}>
             <LogOut size={16}/>
           </button>
