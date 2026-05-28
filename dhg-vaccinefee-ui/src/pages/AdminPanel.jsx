@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Plus, Edit2, Trash2, Save, X, Search } from "lucide-react";
 
 const API_BASE = "/vaccinefee/api";

@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, ChevronDown, X, LogOut, Share2 } from "lucide-react";
+import { Search, Bell, Sun, Moon, X, LogOut, Share2 } from "lucide-react";
 import { useState, useMemo } from "react";
 
 export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode, pricing = [], user, onLogout }) {

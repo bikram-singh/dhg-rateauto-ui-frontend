@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Shield, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Lock, User } from "lucide-react";
 
 const USERS = [
   { username: "bikram", password: "Admin@123", role: "Admin", name: "Bikram Singh" },
