@@ -28,6 +28,7 @@ import AdminPanel from "./AdminPanel";
 import UserManagementPage from "../components/UserManagementPage";
 import AuditLogPage from "../components/AuditLogPage";
 import AppointmentPage from "../components/AppointmentPage";
+import HospitalProfilePage from "../components/HospitalProfilePage";
 
 export default function Dashboard() {
   // Auth
@@ -187,5 +188,6 @@ export default function Dashboard() {
     {activePage === "User Management"    && <UserManagementPage userRole={currentUser?.role}/>}
     {activePage === "Audit Log"           && <AuditLogPage currentUser={currentUser}/>}
     {activePage === "Appointments"        && <AppointmentPage {...sp}/>}
+    {activePage === "Hospital Profiles"   && <HospitalProfilePage {...sp}/>}
   </>);
 }
