@@ -23,15 +23,34 @@ import VaccineCalendarPage from "../components/VaccineCalendarPage";
 import PricePredictionPage from "../components/PricePredictionPage";
 import AdvancedReportsPage from "../components/AdvancedReportsPage";
 import { api } from "../services/api";
+import LoginPage from "./LoginPage";
+import AdminPanel from "./AdminPanel";
 
 export default function Dashboard() {
+  // Auth
+  const [currentUser, setCurrentUser] = useState(() => {
+    const token = sessionStorage.getItem("dhg_token");
+    if (!token) return null;
+    try {
+      const user = JSON.parse(atob(token));
+      if (user.exp < Date.now()) { sessionStorage.removeItem("dhg_token"); return null; }
+      return user;
+    } catch { return null; }
+  });
+
   const [pricing, setPricing]         = useState([]);
   const [vaccines, setVaccines]       = useState([]);
   const [hospitals, setHospitals]     = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState(null);
-  const [activePage, setActivePage]   = useState("Dashboard");
+  const [activePage, setActivePage]   = useState(() => {
+    const hash = window.location.hash.replace("#", "");
+    const validPages = ["Dashboard","Departments","Hospitals","Pricing","Price History",
+      "Vaccine Search","Compare","Hospital Map","Vaccine Details","Rankings","AI Advisor",
+      "City Analytics","Vaccine Card","Vaccine Calendar","Price Prediction","Advanced Reports","Admin Panel"];
+    return validPages.includes(hash) ? hash : "Dashboard";
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [darkMode, setDarkMode]       = useState(true);
   const [filters, setFilters]         = useState({
@@ -41,6 +60,11 @@ export default function Dashboard() {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
   }, [darkMode]);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("dhg_token");
+    setCurrentUser(null);
+  };
 
   const fetchAll = useCallback(async () => {
     try {
@@ -83,9 +107,15 @@ export default function Dashboard() {
 
   const sp = { pricing, vaccines, hospitals, departments };
 
+  // Show login page if not authenticated
+  if (!currentUser) return <LoginPage onLogin={setCurrentUser}/>;
+
   const layout = (children) => (
     <div className="app-layout">
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      <Sidebar activePage={activePage} setActivePage={(page) => {
+          setActivePage(page);
+          window.location.hash = page;
+        }} />
       <div className="main-content">
         <Header
           searchQuery={searchQuery}
@@ -93,6 +123,8 @@ export default function Dashboard() {
           darkMode={darkMode}
           toggleDarkMode={() => setDarkMode(!darkMode)}
           pricing={pricing}
+          user={currentUser}
+          onLogout={handleLogout}
         />
         <div className="page-body">{children}</div>
       </div>
@@ -135,5 +167,6 @@ export default function Dashboard() {
     {activePage === "Vaccine Calendar"  && <VaccineCalendarPage   {...sp}/>}
     {activePage === "Price Prediction"  && <PricePredictionPage  {...sp}/>}
     {activePage === "Advanced Reports"  && <AdvancedReportsPage  {...sp}/>}
+    {activePage === "Admin Panel"        && <AdminPanel {...sp} userRole={currentUser?.role}/>}
   </>);
 }

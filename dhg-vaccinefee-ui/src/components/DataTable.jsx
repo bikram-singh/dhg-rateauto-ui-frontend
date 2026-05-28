@@ -18,7 +18,10 @@ export default function DataTable({ pricing = [], vaccines = [], hospitals = [],
       dept:      departmentMap[p.department_id]?.name   || p.department?.name   || "—",
       vaccine:   vaccineMap[p.vaccine_id]?.name         || p.vaccine?.name      || "—",
       hospital:  hospitalMap[p.hospital_id]?.name       || p.hospital?.name     || "—",
-      location:  hospitalMap[p.hospital_id]?.location   || p.hospital?.location || "—",
+      location:  (() => {
+        const loc = hospitalMap[p.hospital_id]?.location || p.hospital?.location || "—";
+        return loc === "New Delhi, Delhi" ? "Delhi" : loc.replace("New Delhi", "Delhi");
+      })(),
       mfg:       vaccineMap[p.vaccine_id]?.manufacturer || p.vaccine?.manufacturer || "—",
       price:     parseFloat(p.price || 0),
       insurance: p.insurance_covered || "No",

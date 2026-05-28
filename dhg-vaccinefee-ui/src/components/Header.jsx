@@ -1,7 +1,7 @@
-import { Search, Bell, Sun, Moon, ChevronDown, X } from "lucide-react";
+import { Search, Bell, Sun, Moon, ChevronDown, X, LogOut, Share2 } from "lucide-react";
 import { useState, useMemo } from "react";
 
-export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode, pricing = [] }) {
+export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode, pricing = [], user, onLogout }) {
   const [showAlerts, setShowAlerts]   = useState(false);
   const [dismissed, setDismissed]     = useState([]);
 
@@ -18,43 +18,51 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
   return (
     <header className="header">
       <div className="header-brand">
-        <div className="header-logo-wrap">
-          <svg viewBox="0 0 120 140" width="64" height="74" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Brand logo box — white background with blue logo inside, matching sketch */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: "0",
+          background: "white", borderRadius: "12px",
+          border: "2px solid #E0E7EF", padding: "6px 16px 6px 8px",
+          boxShadow: "0 2px 8px rgba(21,101,192,0.12)"
+        }}>
+          {/* Shield logo */}
+          <svg viewBox="0 0 80 90" width="54" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="shieldGrad" x1="0" y1="0" x2="120" y2="140" gradientUnits="userSpaceOnUse">
+              <linearGradient id="hSG" x1="0" y1="0" x2="80" y2="90" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#00BCD4"/>
                 <stop offset="50%" stopColor="#29B6F6"/>
                 <stop offset="100%" stopColor="#1565C0"/>
               </linearGradient>
-              <linearGradient id="crossGrad" x1="0" y1="0" x2="60" y2="80" gradientUnits="userSpaceOnUse">
+              <linearGradient id="hCG" x1="0" y1="0" x2="40" y2="55" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#4FC3F7"/>
-                <stop offset="100%" stopColor="#1E88E5"/>
-              </linearGradient>
-              <linearGradient id="circleGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#00BCD4"/>
                 <stop offset="100%" stopColor="#1565C0"/>
               </linearGradient>
             </defs>
-            <circle cx="60" cy="10" r="10" fill="url(#circleGrad)" stroke="white" strokeWidth="2.5"/>
-            <circle cx="60" cy="10" r="5" fill="white" opacity="0.9"/>
-            <path d="M60 22 L108 40 L108 85 C108 110 86 126 60 134 C34 126 12 110 12 85 L12 40 Z" fill="url(#shieldGrad)"/>
-            <path d="M60 28 L102 44 L102 85 C102 107 82 121 60 129 C38 121 18 107 18 85 L18 44 Z" fill="white"/>
-            <path id="topArc" d="M 28 58 A 34 34 0 0 1 92 58" fill="none"/>
-            <text fontSize="7.5" fontWeight="600" fill="#29B6F6" fontFamily="sans-serif" letterSpacing="1.5">
-              <textPath href="#topArc" startOffset="8%">CARING FOR EVERY LIFE</textPath>
-            </text>
-            <rect x="48" y="62" width="24" height="8" rx="4" fill="url(#crossGrad)"/>
-            <rect x="56" y="54" width="8" height="24" rx="4" fill="url(#crossGrad)"/>
-            <text x="60" y="100" textAnchor="middle" fontSize="14" fontWeight="700" fill="#29B6F6" fontFamily="sans-serif" letterSpacing="4">DHG</text>
-            <path id="botArc" d="M 22 105 A 42 42 0 0 0 98 105" fill="none"/>
-            <text fontSize="7" fontWeight="500" fill="#29B6F6" fontFamily="sans-serif" letterSpacing="0.5">
-              <textPath href="#botArc" startOffset="5%">Dummy Health Group</textPath>
-            </text>
+            {/* Top circle */}
+            <circle cx="40" cy="7" r="7" fill="url(#hSG)" stroke="white" strokeWidth="2"/>
+            <circle cx="40" cy="7" r="3.5" fill="white" opacity="0.9"/>
+            {/* Shield outer */}
+            <path d="M40 15 L72 27 L72 56 C72 73 58 83 40 88 C22 83 8 73 8 56 L8 27 Z" fill="url(#hSG)"/>
+            {/* Shield white inner */}
+            <path d="M40 20 L68 30 L68 56 C68 71 55 79 40 84 C25 79 12 71 12 56 L12 30 Z" fill="white"/>
+            {/* Plus cross */}
+            <rect x="32" y="42" width="16" height="5.5" rx="2.5" fill="url(#hCG)"/>
+            <rect x="37" y="36" width="6" height="17" rx="2.5" fill="url(#hCG)"/>
+            {/* DHG text */}
+            <text x="40" y="75" textAnchor="middle" fontSize="9" fontWeight="800"
+              fill="#1565C0" fontFamily="sans-serif" letterSpacing="2.5">DHG</text>
           </svg>
-        </div>
-        <div className="header-brand-text">
-          <h1 className="header-title">Dummy Health Group</h1>
-          <p className="header-subtitle">Caring for Every Life</p>
+
+          {/* Brand text beside logo */}
+          <div style={{ paddingLeft: "4px" }}>
+            <div style={{
+              fontSize: "17px", fontWeight: "700", color: "#0D1B4B",
+              lineHeight: 1.2, letterSpacing: "-0.3px"
+            }}>Dummy Health Group</div>
+            <div style={{
+              fontSize: "11px", color: "#1565C0", fontWeight: "500", letterSpacing: "0.2px"
+            }}>Caring for Every Life</div>
+          </div>
         </div>
       </div>
 
@@ -165,13 +173,28 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
           {darkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
 
+        {/* Share deep link button */}
+        <button className="header-icon-btn" title="Share current page"
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link copied! Share: " + window.location.href);
+          }}>
+          <Share2 size={18}/>
+        </button>
+
         <div className="header-user">
-          <div className="header-avatar">JD</div>
-          <div className="header-user-info">
-            <span className="header-user-role">Admin</span>
-            <span className="header-user-name">Bikram Singh</span>
+          <div className="header-avatar">
+            {user?.name ? user.name.split(" ").map((n) => n[0]).join("").substring(0,2).toUpperCase() : "BS"}
           </div>
-          <ChevronDown size={16} className="header-chevron" />
+          <div className="header-user-info">
+            <span className="header-user-role">{user?.role || "Admin"}</span>
+            <span className="header-user-name">{user?.name || "Bikram Singh"}</span>
+          </div>
+          <button onClick={onLogout} title="Logout"
+            style={{ background:"none", border:"none", color:"rgba(255,255,255,0.5)",
+              cursor:"pointer", padding:"4px", marginLeft:"4px", display:"flex", alignItems:"center" }}>
+            <LogOut size={16}/>
+          </button>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
   CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map,
-  Pill, Trophy, Bot, Calendar, CreditCard as CardIcon, Globe, Activity
+  Pill, Trophy, Bot, BarChart, Calendar, CreditCard as CardIcon, Globe, Activity, Settings
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,6 +22,7 @@ const navItems = [
   { icon: Calendar,        label: "Vaccine Calendar" },
   { icon: Activity,          label: "Price Prediction" },
   { icon: BarChart2,         label: "Advanced Reports" },
+  { icon: Settings,          label: "Admin Panel" },
 ];
 
 const bottomItems = [
