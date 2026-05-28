@@ -29,6 +29,18 @@ import AdminPanel from "./AdminPanel";
 export default function Dashboard() {
   // Auth
   const [currentUser, setCurrentUser] = useState(() => {
+    // Check JWT token in localStorage (real auth)
+    const jwt = localStorage.getItem("dhg_jwt_token");
+    if (jwt) {
+      try {
+        const payload = JSON.parse(atob(jwt.split(".")[1]));
+        if (payload.exp * 1000 > Date.now()) {
+          return { username: payload.sub, role: payload.role, name: payload.sub === "bikram" ? "Bikram Singh" : payload.sub };
+        }
+        localStorage.removeItem("dhg_jwt_token");
+      } catch { localStorage.removeItem("dhg_jwt_token"); }
+    }
+    // Fallback: check sessionStorage (demo mode)
     const token = sessionStorage.getItem("dhg_token");
     if (!token) return null;
     try {
@@ -62,6 +74,7 @@ export default function Dashboard() {
   }, [darkMode]);
 
   const handleLogout = () => {
+    localStorage.removeItem("dhg_jwt_token");
     sessionStorage.removeItem("dhg_token");
     setCurrentUser(null);
   };
