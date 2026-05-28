@@ -28,7 +28,7 @@ export default function UserManagementPage({ userRole }) {
     setLoading(false);
   };
 
-  useEffect(() => { loadUsers(); }, []);
+  useEffect(() => { loadUsers(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreate = async (e) => {
     e.preventDefault();
