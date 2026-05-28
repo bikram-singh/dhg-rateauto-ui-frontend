@@ -25,6 +25,9 @@ import AdvancedReportsPage from "../components/AdvancedReportsPage";
 import { api } from "../services/api";
 import LoginPage from "./LoginPage";
 import AdminPanel from "./AdminPanel";
+import UserManagementPage from "../components/UserManagementPage";
+import AuditLogPage from "../components/AuditLogPage";
+import AppointmentPage from "../components/AppointmentPage";
 
 export default function Dashboard() {
   // Auth
@@ -181,5 +184,8 @@ export default function Dashboard() {
     {activePage === "Price Prediction"  && <PricePredictionPage  {...sp}/>}
     {activePage === "Advanced Reports"  && <AdvancedReportsPage  {...sp}/>}
     {activePage === "Admin Panel"        && <AdminPanel {...sp} userRole={currentUser?.role}/>}
+    {activePage === "User Management"    && <UserManagementPage userRole={currentUser?.role}/>}
+    {activePage === "Audit Log"           && <AuditLogPage currentUser={currentUser}/>}
+    {activePage === "Appointments"        && <AppointmentPage {...sp}/>}
   </>);
 }
