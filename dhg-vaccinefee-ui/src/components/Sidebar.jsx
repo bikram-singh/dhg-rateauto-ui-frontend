@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
   CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map,
-  Pill, Trophy, Bot, Calendar, CreditCard as CardIcon, Globe, Activity, Settings, Users, ClipboardList, CalendarCheck, Building
+  Pill, Trophy, Bot, Calendar, CreditCard as CardIcon, Globe, Activity, Settings, Users, ClipboardList, CalendarCheck, Building, Building2 as BuildingProfile
 } from "lucide-react";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ const navItems = [
   { icon: LayoutDashboard, label: "Dashboard" },
   { icon: Building2,       label: "Departments" },
   { icon: Building,        label: "Hospitals" },
-  { icon: Building,          label: "Hospital Profiles" },
+  { icon: BuildingProfile,   label: "Hospital Profiles" },
   { icon: DollarSign,      label: "Pricing" },
   { icon: TrendingUp,      label: "Price History" },
   { icon: Search,          label: "Vaccine Search" },
