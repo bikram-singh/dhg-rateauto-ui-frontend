@@ -1,7 +1,8 @@
 import {
   LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
   CreditCard, MessageSquare, TrendingUp, Search, GitCompare, Map,
-  Pill, Trophy, Bot, Calendar, CreditCard as CardIcon, Globe, Activity, Settings, Users, ClipboardList, CalendarCheck, Building, Building2 as BuildingProfile
+  Pill, Trophy, Bot, Calendar, CreditCard as CardIcon, Globe, Activity,
+  Settings, Users, ClipboardList, CalendarCheck
 } from "lucide-react";
 import { useState } from "react";
 
@@ -9,7 +10,7 @@ const navItems = [
   { icon: LayoutDashboard, label: "Dashboard" },
   { icon: Building2,       label: "Departments" },
   { icon: Building,        label: "Hospitals" },
-  { icon: BuildingProfile,   label: "Hospital Profiles" },
+  { icon: Building2,       label: "Hospital Profiles" },
   { icon: DollarSign,      label: "Pricing" },
   { icon: TrendingUp,      label: "Price History" },
   { icon: Search,          label: "Vaccine Search" },
@@ -20,12 +21,12 @@ const navItems = [
   { icon: Globe,           label: "City Analytics" },
   { icon: CardIcon,        label: "Vaccine Card" },
   { icon: Calendar,        label: "Vaccine Calendar" },
-  { icon: Activity,          label: "Price Prediction" },
-  { icon: BarChart2,         label: "Advanced Reports" },
-  { icon: Settings,          label: "Admin Panel" },
-  { icon: Users,             label: "User Management" },
-  { icon: ClipboardList,     label: "Audit Log" },
-  { icon: CalendarCheck,     label: "Appointments" },
+  { icon: Activity,        label: "Price Prediction" },
+  { icon: BarChart2,       label: "Advanced Reports" },
+  { icon: Settings,        label: "Admin Panel" },
+  { icon: Users,           label: "User Management" },
+  { icon: ClipboardList,   label: "Audit Log" },
+  { icon: CalendarCheck,   label: "Appointments" },
 ];
 
 const bottomItems = [
@@ -56,6 +57,7 @@ export default function Sidebar({ activePage, setActivePage }) {
           </button>
         ))}
       </nav>
+
       {/* AI Advisor — special highlighted item just above bottom icons */}
       <button
         className={`sidebar-item ${activePage === "AI Advisor" ? "sidebar-item--active" : ""}`}
