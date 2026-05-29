@@ -19,7 +19,7 @@ const navConfig = [
     color: "#29B6F6",
     children: [
       { icon: Building2,     label: "Departments" },
-      { icon: Building,      label: "Hospitals" },
+      { icon: Building,      label: "Hospitals List" },
       { icon: Stethoscope,   label: "Hospital Profiles" },
       { icon: Trophy,        label: "Rankings" },
       { icon: GitCompare,    label: "Compare" },
@@ -214,17 +214,17 @@ export default function Sidebar({ activePage, setActivePage }) {
 
       {/* AI Advisor — always visible special item */}
       <button
-        onClick={() => setActivePage("AI Advisor")}
+        onClick={() => setActivePage("Vaccine Advisor")}
         style={{
           width: "100%", display: "flex", alignItems: "center",
           gap: "10px", padding: "7px 10px", border: "none",
           borderRadius: "10px", cursor: "pointer", margin: "6px 0",
-          background: activePage === "AI Advisor"
+          background: activePage === "Vaccine Advisor"
             ? "linear-gradient(90deg,rgba(79,195,247,0.25),rgba(21,101,192,0.15))"
             : "linear-gradient(90deg,rgba(79,195,247,0.08),rgba(21,101,192,0.04))",
-          borderLeft: activePage === "AI Advisor"
+          borderLeft: activePage === "Vaccine Advisor"
             ? "3px solid #4FC3F7" : "3px solid rgba(79,195,247,0.3)",
-          boxShadow: activePage === "AI Advisor" ? "0 2px 8px rgba(79,195,247,0.15)" : "none",
+          boxShadow: activePage === "Vaccine Advisor" ? "0 2px 8px rgba(79,195,247,0.15)" : "none",
         }}>
         <div style={{
           width: "30px", height: "30px", borderRadius: "8px", flexShrink: 0,

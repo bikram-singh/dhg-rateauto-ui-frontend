@@ -180,8 +180,8 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
         {[
           { label:"Total Records", value:pricing.length.toLocaleString(), color:"#4FC3F7" },
           { label:"Vaccines", value:vaccines.length, color:"#FFA726" },
-          { label:"Hospitals", value:hospitals.length, color:"#66BB6A" },
-          { label:"Avg Price", value:`₹${avgPrice}`, color:"#AB47BC" },
+          { label:"Hospitals List", value:hospitals.length, color:"#66BB6A" },
+          { label:"Avg Price", value:(avgPrice === 0 ? "FREE" : `₹${avgPrice}`), color:"#AB47BC" },
         ].map((k) => (
           <div key={k.label} style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
             borderRadius:"12px", padding:"16px 20px", borderTop:`3px solid ${k.color}` }}>

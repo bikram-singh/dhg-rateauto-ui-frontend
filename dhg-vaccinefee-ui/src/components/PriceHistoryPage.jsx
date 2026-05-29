@@ -190,7 +190,7 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
             { label:"Min Price", value:`₹${priceStats.min}`, color:"#22C55E" },
             { label:"Max Price", value:`₹${priceStats.max}`, color:"#EF5350" },
             { label:"Avg Price", value:`₹${priceStats.avg}`, color:"#4FC3F7" },
-            { label:"Hospitals", value:priceStats.count, color:"#FFA726" },
+            { label:"Hospitals List", value:priceStats.count, color:"#FFA726" },
           ].map((s) => (
             <div key={s.label} style={{ background: t.card, border:`1px solid ${t.border}`,
               borderRadius:"12px", padding:"16px 18px", borderTop:`3px solid ${s.color}` }}>

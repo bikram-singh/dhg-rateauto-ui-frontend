@@ -57,8 +57,8 @@ export default function Dashboard() {
   const [error, setError]             = useState(null);
   const [activePage, setActivePage]   = useState(() => {
     const hash = window.location.hash.replace("#", "");
-    const validPages = ["Dashboard","Departments","Hospitals","Hospital Profiles","Pricing",
-      "Price History","Vaccine Search","Compare","Vaccine Details","Rankings","AI Advisor",
+    const validPages = ["Dashboard","Departments","Hospitals List","Hospital Profiles","Pricing",
+      "Price History","Vaccine Search","Compare","Vaccine Details","Rankings","Vaccine Advisor",
       "City Analytics","Vaccine Card","Price Prediction","Advanced Reports","Reports",
       "Admin Panel","User Management","Audit Log","Appointments"];
     return validPages.includes(hash) ? hash : "Dashboard";
@@ -167,7 +167,7 @@ export default function Dashboard() {
       <DataTable  pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/>
     </>}
     {activePage === "Departments"      && <DepartmentsPage      {...sp}/>}
-    {activePage === "Hospitals"        && <HospitalsPage        {...sp}/>}
+    {activePage === "Hospitals List"        && <HospitalsPage        {...sp}/>}
     {activePage === "Hospital Profiles"&& <HospitalProfilePage  {...sp}/>}
     {activePage === "Rankings"         && <HospitalRankingPage  {...sp}/>}
     {activePage === "Compare"          && <CompareHospitalsPage {...sp}/>}
@@ -185,6 +185,6 @@ export default function Dashboard() {
     {activePage === "User Management"  && <UserManagementPage   userRole={currentUser?.role}/>}
     {activePage === "Audit Log"        && <AuditLogPage         currentUser={currentUser}/>}
     $0
-    {activePage === "AI Advisor"       && <AIVaccineAdvisor     {...sp}/>}
+    {activePage === "Vaccine Advisor"       && <AIVaccineAdvisor     {...sp}/>}
   </>);
 }

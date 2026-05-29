@@ -290,7 +290,7 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
                                 <div>
                                   <div style={{ fontSize:"14px", fontWeight:"700",
                                     color: price === 0 ? "#4ADE80" : isBest ? "#4ADE80" : isWorst ? "#F87171" : COLORS[i] }}>
-                                    {price === 0 ? "FREE" : `₹${price}`}
+                                    {price === 0 ? "FREE" : (price === 0 ? "FREE" : `₹${price}`)}
                                     {isBest && <span style={{ fontSize:"9px", marginLeft:"3px" }}>✓</span>}
                                   </div>
                                   <div style={{ display:"flex", gap:"4px", justifyContent:"center", marginTop:"3px", flexWrap:"wrap" }}>

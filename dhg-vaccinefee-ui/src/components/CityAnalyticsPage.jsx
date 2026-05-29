@@ -56,7 +56,7 @@ export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospita
 
   // Radar data
   const radarData = [
-    { metric: "Hospitals",   ...Object.fromEntries(selectedStats.map((c) => [c.city, Math.min(100, c.hospitals * 5)])) },
+    { metric: "Hospitals List",   ...Object.fromEntries(selectedStats.map((c) => [c.city, Math.min(100, c.hospitals * 5)])) },
     { metric: "Vaccines",    ...Object.fromEntries(selectedStats.map((c) => [c.city, Math.min(100, c.vaccines * 2)])) },
     { metric: "Availability",...Object.fromEntries(selectedStats.map((c) => [c.city, c.availPct])) },
     { metric: "Insurance",   ...Object.fromEntries(selectedStats.map((c) => [c.city, c.insuredPct])) },
@@ -66,7 +66,7 @@ export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospita
 
   const exportCSV = () => {
     const rows = [
-      ["City","Hospitals","Unique Vaccines","Avg Price","Min Price","Available","Insured","Available%","Score"],
+      ["City","Hospitals List","Unique Vaccines","Avg Price","Min Price","Available","Insured","Available%","Score"],
       ...cityStats.map((c) => [c.city,c.hospitals,c.vaccines,c.avgPrice,c.minPrice,c.available,c.insured,`${c.availPct}%`,c.score])
     ];
     const blob = new Blob([rows.map((r)=>r.join(",")).join("\n")], { type:"text/csv" });
@@ -116,7 +116,7 @@ export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospita
             <div style={{ color: t.text, fontWeight:"700", fontSize:"15px", marginBottom:"12px" }}>{c.city}</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px" }}>
               {[
-                { label:"Hospitals", value:c.hospitals, color:COLORS[i] },
+                { label:"Hospitals List", value:c.hospitals, color:COLORS[i] },
                 { label:"Vaccines",  value:c.vaccines,  color:COLORS[i] },
                 { label:"Avg Price", value:c.avgPrice === 0 ? "FREE" : `₹${c.avgPrice}`, color:"#4FC3F7" },
                 { label:"Available", value:`${c.availPct}%`, color:"#4ADE80" },
@@ -143,7 +143,7 @@ export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospita
               <XAxis dataKey="city" tick={{ fill:"rgba(255,255,255,0.5)", fontSize:10 }} tickLine={false} axisLine={false}/>
               <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:10 }} tickLine={false} axisLine={false}/>
               <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
-              <Bar dataKey="Hospitals" fill="#4FC3F7" radius={[4,4,0,0]}/>
+              <Bar dataKey="Hospitals List" fill="#4FC3F7" radius={[4,4,0,0]}/>
               <Bar dataKey="Vaccines"  fill="#FFA726" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
@@ -174,7 +174,7 @@ export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospita
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
               <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
-                {["City","Hospitals","Vaccines","Avg Price","Min Price","Available","Insured%","Score"].map((h) => (
+                {["City","Hospitals List","Vaccines","Avg Price","Min Price","Available","Insured%","Score"].map((h) => (
                   <th key={h} style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600",
                     color: t.textSec, textTransform:"uppercase", letterSpacing:"0.4px" }}>{h}</th>
                 ))}

@@ -145,7 +145,7 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                 {[
                   { label:"Min Price", value: selected.minPrice === 0 ? "FREE" : `₹${selected.minPrice}`, color:"#4ADE80" },
                   { label:"Avg Price", value:`₹${selected.avgPrice}`, color:"#4FC3F7" },
-                  { label:"Hospitals", value:selected.available, color:"#FFA726" },
+                  { label:"Hospitals List", value:selected.available, color:"#FFA726" },
                   { label:"Insured", value:selected.insured, color:"#AB47BC" },
                 ].map((s) => (
                   <div key={s.label} style={{ background: t.input, borderRadius:"8px", padding:"10px 14px", textAlign:"center" }}>

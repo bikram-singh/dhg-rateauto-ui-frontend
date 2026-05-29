@@ -52,7 +52,7 @@ export default function AuditLogPage({ currentUser, darkMode = true }) {
       const demoLogs = [
         { id:1, timestamp: new Date(Date.now()-1000*60*2).toISOString(),   user:"bikram", action:"LOGIN",  resource:"Dashboard",   details:"Login successful", ip:"103.21.58.x" },
         { id:2, timestamp: new Date(Date.now()-1000*60*5).toISOString(),   user:"bikram", action:"VIEW",   resource:"Pricing",     details:"Viewed 5,439 pricing records", ip:"103.21.58.x" },
-        { id:3, timestamp: new Date(Date.now()-1000*60*8).toISOString(),   user:"bikram", action:"VIEW",   resource:"AI Advisor",  details:"Asked: vaccine recommendations for 65+", ip:"103.21.58.x" },
+        { id:3, timestamp: new Date(Date.now()-1000*60*8).toISOString(),   user:"bikram", action:"VIEW",   resource:"Vaccine Advisor",  details:"Asked: vaccine recommendations for 65+", ip:"103.21.58.x" },
         { id:4, timestamp: new Date(Date.now()-1000*60*15).toISOString(),  user:"viewer", action:"LOGIN",  resource:"Dashboard",   details:"Login successful", ip:"202.54.1.x" },
         { id:5, timestamp: new Date(Date.now()-1000*60*20).toISOString(),  user:"bikram", action:"CREATE", resource:"User",        details:"Created user: viewer (Viewer role)", ip:"103.21.58.x" },
         { id:6, timestamp: new Date(Date.now()-1000*60*35).toISOString(),  user:"bikram", action:"VIEW",   resource:"Admin Panel", details:"Viewed vaccine records", ip:"103.21.58.x" },

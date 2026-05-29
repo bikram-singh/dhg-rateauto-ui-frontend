@@ -28,7 +28,7 @@ export default function Header({
   const ALL_PAGES = [
     { label: "Dashboard",        icon: "🏠", desc: "Main dashboard with live KPIs and charts" },
     { label: "Departments",      icon: "🏢", desc: "Medical department categories" },
-    { label: "Hospitals",        icon: "🏥", desc: "All hospitals directory" },
+    { label: "Hospitals List",        icon: "🏥", desc: "All hospitals directory" },
     { label: "Hospital Profiles",icon: "🔍", desc: "Detailed hospital profiles with charts" },
     { label: "Rankings",         icon: "🏆", desc: "Hospital rankings by score" },
     { label: "Compare",          icon: "⚖️", desc: "Compare hospitals side by side" },
@@ -45,7 +45,7 @@ export default function Header({
     { label: "Admin Panel",      icon: "⚙️", desc: "Add, edit, delete records" },
     { label: "User Management",  icon: "👥", desc: "Add and manage dashboard users" },
     { label: "Audit Log",        icon: "📝", desc: "Track all user actions" },
-    { label: "AI Advisor",       icon: "✨", desc: "Voice and chat vaccine advisor" },
+    { label: "Vaccine Advisor",       icon: "✨", desc: "Voice and chat vaccine advisor" },
   ];
 
   // ── Live search results ──
@@ -264,7 +264,7 @@ export default function Header({
                           </div>
                           <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px" }}>
                             {v.manufacturer} • {v.hospitalCount} hospitals
-                            {v.minPrice != null && v.minPrice > 0 && ` • from ₹${v.minPrice}`}
+                            {v.minPrice != null && v.minPrice > 0 && v.minPrice > 0 ? ` • from ₹${v.minPrice}` : " • Free"}
                           </div>
                         </div>
                         <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "20px",
