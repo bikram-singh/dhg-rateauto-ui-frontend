@@ -9,7 +9,6 @@ import DepartmentsPage from "../components/DepartmentsPage";
 import HospitalsPage from "../components/HospitalsPage";
 import PricingPage from "../components/PricingPage";
 import ReportsPage from "../components/ReportsPage";
-import BillingPage from "../components/BillingPage";
 import PriceHistoryPage from "../components/PriceHistoryPage";
 import VaccineSearchPage from "../components/VaccineSearchPage";
 import CompareHospitalsPage from "../components/CompareHospitalsPage";
