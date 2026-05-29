@@ -13,9 +13,9 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
     return Math.round(pricing.reduce((s, p) => s + parseFloat(p.price || 0), 0) / pricing.length);
   }, [pricing]);
 
-  const available    = pricing.filter((p) => p.status === "Available").length;
-  const lowStock     = pricing.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= 10).length;
-  const outOfStock   = pricing.filter((p) => p.stock_quantity === 0).length;
+  const available  = pricing.filter((p) => p.status === "Available").length;
+  const lowStock   = pricing.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= 10).length;
+  const outOfStock = pricing.filter((p) => p.stock_quantity === 0).length;
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
 
         <div className="stat-card stat-card--indigo">
           <span className="stat-label">Avg Price</span>
-          <span className="stat-value">₹{avgPrice || "—"}</span>
+          <span className="stat-value">{avgPrice > 0 ? `₹${avgPrice}` : "—"}</span>
           <div className="stat-slider-wrap">
             <input type="range" min={100} max={5000} value={avgPrice || 250}
               className="stat-slider" readOnly/>
