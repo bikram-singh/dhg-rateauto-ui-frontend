@@ -181,6 +181,7 @@ export default function Dashboard() {
     {activePage === "Admin Panel"      && <AdminPanel           {...sp} userRole={currentUser?.role}/>}
     {activePage === "User Management"  && <UserManagementPage   userRole={currentUser?.role}/>}
     {activePage === "Audit Log"        && <AuditLogPage         currentUser={currentUser}/>}
-    {activePage === "Billing"          && <BillingPage          {...sp}/>}
+    $0
+    {activePage === "AI Advisor"       && <AIVaccineAdvisor     {...sp}/>}
   </>);
 }
