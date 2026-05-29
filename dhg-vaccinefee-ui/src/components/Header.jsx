@@ -24,17 +24,47 @@ export default function Header({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // ── All navigable pages ──
+  const ALL_PAGES = [
+    { label: "Dashboard",        icon: "🏠", desc: "Main dashboard with live KPIs and charts" },
+    { label: "Departments",      icon: "🏢", desc: "Medical department categories" },
+    { label: "Hospitals",        icon: "🏥", desc: "All hospitals directory" },
+    { label: "Hospital Profiles",icon: "🔍", desc: "Detailed hospital profiles with charts" },
+    { label: "Rankings",         icon: "🏆", desc: "Hospital rankings by score" },
+    { label: "Compare",          icon: "⚖️", desc: "Compare hospitals side by side" },
+    { label: "Vaccine Search",   icon: "🔎", desc: "Search vaccines by age, category, price" },
+    { label: "Vaccine Details",  icon: "💉", desc: "Clinical info, side effects, schedule" },
+    { label: "Vaccine Card",     icon: "🪪", desc: "Print your vaccination record card" },
+    { label: "Appointments",     icon: "📅", desc: "Book vaccination appointments" },
+    { label: "Pricing",          icon: "💰", desc: "Vaccine pricing across all hospitals" },
+    { label: "Price History",    icon: "📈", desc: "Historical price trends" },
+    { label: "Price Prediction", icon: "🤖", desc: "3-month ML price forecast" },
+    { label: "City Analytics",   icon: "🌍", desc: "Compare cities — Delhi, Mumbai, Bengaluru" },
+    { label: "Advanced Reports", icon: "📊", desc: "PDF export and email reports" },
+    { label: "Reports",          icon: "📋", desc: "Summary reports and analytics" },
+    { label: "Admin Panel",      icon: "⚙️", desc: "Add, edit, delete records" },
+    { label: "User Management",  icon: "👥", desc: "Add and manage dashboard users" },
+    { label: "Audit Log",        icon: "📝", desc: "Track all user actions" },
+    { label: "AI Advisor",       icon: "✨", desc: "Voice and chat vaccine advisor" },
+  ];
+
   // ── Live search results ──
   const searchResults = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q || q.length < 2) return { vaccines: [], hospitals: [], departments: [] };
+    if (!q || q.length < 2) return { pages: [], vaccines: [], hospitals: [], departments: [] };
 
+    // Pages
+    const matchPages = ALL_PAGES.filter((p) =>
+      p.label.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)
+    ).slice(0, 4);
+
+    // Vaccines
     const matchVaccines = vaccines
       .filter((v) =>
         v.name.toLowerCase().includes(q) ||
         (v.manufacturer || "").toLowerCase().includes(q)
       )
-      .slice(0, 5)
+      .slice(0, 4)
       .map((v) => {
         const records = pricing.filter((p) => p.vaccine_id === v.id);
         const prices  = records.map((p) => parseFloat(p.price)).filter((p) => p > 0);
@@ -42,12 +72,13 @@ export default function Header({
         return { ...v, minPrice: minP, hospitalCount: records.length, type: "vaccine" };
       });
 
+    // Hospitals
     const matchHospitals = hospitals
       .filter((h) =>
         h.name.toLowerCase().includes(q) ||
         (h.location || "").toLowerCase().includes(q)
       )
-      .slice(0, 5)
+      .slice(0, 4)
       .map((h) => {
         const records = pricing.filter((p) => p.hospital_id === h.id);
         const prices  = records.map((p) => parseFloat(p.price)).filter((p) => p > 0);
@@ -55,15 +86,17 @@ export default function Header({
         return { ...h, avgPrice: avgP, vaccineCount: [...new Set(records.map((p) => p.vaccine_id))].length, type: "hospital" };
       });
 
+    // Departments
     const matchDepts = departments
       .filter((d) => d.name.toLowerCase().includes(q))
       .slice(0, 3)
       .map((d) => ({ ...d, type: "department" }));
 
-    return { vaccines: matchVaccines, hospitals: matchHospitals, departments: matchDepts };
-  }, [searchQuery, vaccines, hospitals, departments, pricing]);
+    return { pages: matchPages, vaccines: matchVaccines, hospitals: matchHospitals, departments: matchDepts };
+  }, [searchQuery, vaccines, hospitals, departments, pricing]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const totalResults =
+    searchResults.pages.length +
     searchResults.vaccines.length +
     searchResults.hospitals.length +
     searchResults.departments.length;
@@ -74,9 +107,10 @@ export default function Header({
     setShowResults(false);
     setSearchQuery("");
     if (!onNavigate) return;
-    if (item.type === "vaccine")    onNavigate("Vaccine Search");
-    if (item.type === "hospital")   onNavigate("Hospital Profiles");
-    if (item.type === "department") onNavigate("Departments");
+    if (item.type === "page")       onNavigate(item.label);
+    else if (item.type === "vaccine")    onNavigate("Vaccine Search");
+    else if (item.type === "hospital")   onNavigate("Hospital Profiles");
+    else if (item.type === "department") onNavigate("Departments");
   };
 
   // Low stock alerts
@@ -165,6 +199,44 @@ export default function Header({
               </div>
             ) : (
               <>
+                {/* Pages */}
+                {searchResults.pages.length > 0 && (
+                  <div>
+                    <div style={{ padding: "8px 14px 4px", fontSize: "10px", fontWeight: "700",
+                      color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.8px",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      🗂️ Pages ({searchResults.pages.length})
+                    </div>
+                    {searchResults.pages.map((p) => (
+                      <div key={p.label} onClick={() => handleSelect({ ...p, type: "page" })}
+                        style={{ padding: "10px 14px", cursor: "pointer", display: "flex",
+                          alignItems: "center", gap: "10px",
+                          borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(79,195,247,0.1)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "8px", flexShrink: 0,
+                          background: "rgba(79,195,247,0.15)", border: "1px solid rgba(79,195,247,0.3)",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontSize: "15px" }}>
+                          {p.icon}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ color: "#fff", fontSize: "13px", fontWeight: "600" }}>{p.label}</div>
+                          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px",
+                            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {p.desc}
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "20px",
+                          background: "rgba(79,195,247,0.15)", color: "#4FC3F7",
+                          border: "1px solid rgba(79,195,247,0.3)", flexShrink: 0 }}>
+                          Page →
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {/* Vaccines */}
                 {searchResults.vaccines.length > 0 && (
                   <div>
