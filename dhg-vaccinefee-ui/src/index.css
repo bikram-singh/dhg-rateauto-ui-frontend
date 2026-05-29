@@ -783,3 +783,184 @@ body {
 svg *, .stat-slider, .filter-price-slider, input[type="range"] {
   transition: none !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LIGHT MODE — GLOBAL INLINE STYLE OVERRIDE
+   Covers all inner pages: Departments, Hospitals, Pricing, Reports,
+   Price History, City Analytics, Vaccine Card, etc.
+   Uses [data-theme="light"] on :root to override JSX inline styles.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Global text color for all elements in light mode */
+:root[data-theme="light"] *:not(svg):not(path):not(circle):not(rect):not(text):not(stop) {
+  color: inherit;
+}
+
+/* Force page background on every inner page wrapper */
+:root[data-theme="light"] .page-body,
+:root[data-theme="light"] .page-body > div,
+:root[data-theme="light"] .main-content {
+  background: #EBF5F7 !important;
+  color: #0C2340 !important;
+}
+
+/* ── All card/panel boxes ── */
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.06)"],
+:root[data-theme="light"] [style*="background:rgba(255,255,255,0.06)"],
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.07)"],
+:root[data-theme="light"] [style*="background:rgba(255,255,255,0.07)"],
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.08)"],
+:root[data-theme="light"] [style*="background:rgba(255,255,255,0.08)"],
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.05)"],
+:root[data-theme="light"] [style*="background:rgba(255,255,255,0.05)"],
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.04)"],
+:root[data-theme="light"] [style*="background:rgba(255,255,255,0.04)"] {
+  background: #FFFFFF !important;
+  border-color: rgba(8,145,178,0.15) !important;
+}
+
+/* ── Darker panel surfaces ── */
+:root[data-theme="light"] [style*="background: #0D1B4B"],
+:root[data-theme="light"] [style*="background:#0D1B4B"],
+:root[data-theme="light"] [style*="background: #0D1F35"],
+:root[data-theme="light"] [style*="background:#0D1F35"],
+:root[data-theme="light"] [style*="background: #091422"],
+:root[data-theme="light"] [style*="background:#091422"],
+:root[data-theme="light"] [style*="background: #0a1640"],
+:root[data-theme="light"] [style*="background:#0a1640"],
+:root[data-theme="light"] [style*="background: #0A1628"],
+:root[data-theme="light"] [style*="background:#0A1628"] {
+  background: #F0FBFC !important;
+  border-color: rgba(8,145,178,0.12) !important;
+}
+
+/* ── White text → dark text ── */
+:root[data-theme="light"] [style*="color: #fff"],
+:root[data-theme="light"] [style*="color:#fff"],
+:root[data-theme="light"] [style*="color: white"],
+:root[data-theme="light"] [style*="color:white"] {
+  color: #0C2340 !important;
+}
+
+/* ── rgba white text → dark text ── */
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.9)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.88)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.85)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.8)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.7)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.75)"] {
+  color: #0C2340 !important;
+}
+
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.6)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.65)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.5)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.55)"] {
+  color: #2E6B7A !important;
+}
+
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.4)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.45)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.3)"],
+:root[data-theme="light"] [style*="color: rgba(255,255,255,0.35)"] {
+  color: #6B9EAA !important;
+}
+
+/* ── Table rows with dark bg ── */
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.05)"] tr,
+:root[data-theme="light"] [style*="background:rgba(255,255,255,0.05)"] tr {
+  background: #F5FEFF !important;
+}
+
+/* ── Input fields ── */
+:root[data-theme="light"] input:not([type="range"]),
+:root[data-theme="light"] textarea,
+:root[data-theme="light"] select {
+  background: #F0FBFC !important;
+  color: #0C2340 !important;
+  border-color: rgba(8,145,178,0.2) !important;
+}
+
+:root[data-theme="light"] input::placeholder,
+:root[data-theme="light"] textarea::placeholder {
+  color: #6B9EAA !important;
+}
+
+/* ── Borders ── */
+:root[data-theme="light"] [style*="border: 1px solid rgba(255,255,255,0.1)"],
+:root[data-theme="light"] [style*="border:1px solid rgba(255,255,255,0.1)"],
+:root[data-theme="light"] [style*="borderColor: rgba(255,255,255,0.1)"],
+:root[data-theme="light"] [style*="border: 1px solid rgba(255,255,255,0.08)"] {
+  border-color: rgba(8,145,178,0.12) !important;
+}
+
+:root[data-theme="light"] [style*="borderBottom: 1px solid rgba(255,255,255"],
+:root[data-theme="light"] [style*="borderTop: 1px solid rgba(255,255,255"] {
+  border-color: rgba(8,145,178,0.1) !important;
+}
+
+/* ── Table headers & rows ── */
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.05)"] {
+  background: #EBF8FA !important;
+}
+
+/* ── Recharts tooltips ── */
+:root[data-theme="light"] .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #fff !important;
+  border-color: rgba(8,145,178,0.2) !important;
+  color: #0C2340 !important;
+}
+
+:root[data-theme="light"] .recharts-tooltip-wrapper * { color: #0C2340 !important; }
+
+/* ── Recharts axis tick text ── */
+:root[data-theme="light"] .recharts-cartesian-axis-tick text {
+  fill: #2E6B7A !important;
+}
+
+/* ── Recharts grid lines ── */
+:root[data-theme="light"] .recharts-cartesian-grid-horizontal line,
+:root[data-theme="light"] .recharts-cartesian-grid-vertical line {
+  stroke: rgba(8,145,178,0.1) !important;
+}
+
+/* ── Override hardcoded dark bg on page wrappers with div>div pattern ── */
+:root[data-theme="light"] .page-body > div > div {
+  color: #0C2340;
+}
+
+/* ── h2 headings on inner pages ── */
+:root[data-theme="light"] h2,
+:root[data-theme="light"] h3,
+:root[data-theme="light"] h4 {
+  color: #0C2340 !important;
+}
+
+/* ── Preserve teal/green/red/amber accent colors ── */
+:root[data-theme="light"] [style*="color: #2DD4BF"],
+:root[data-theme="light"] [style*="color: #4FC3F7"],
+:root[data-theme="light"] [style*="color: #4ADE80"],
+:root[data-theme="light"] [style*="color: #34D399"],
+:root[data-theme="light"] [style*="color: #F87171"],
+:root[data-theme="light"] [style*="color: #FCD34D"],
+:root[data-theme="light"] [style*="color: #FFA726"],
+:root[data-theme="light"] [style*="color: #AB47BC"],
+:root[data-theme="light"] [style*="color: #66BB6A"],
+:root[data-theme="light"] [style*="color: #EF5350"],
+:root[data-theme="light"] [style*="color: #29B6F6"],
+:root[data-theme="light"] [style*="color: #60A5FA"] {
+  /* Keep accent colors as-is — do not override */
+  color: inherit;
+}
+
+/* ── Sidebar stays dark in light mode ── */
+:root[data-theme="light"] .sidebar,
+:root[data-theme="light"] .sidebar * {
+  /* sidebar keeps dark theme regardless */
+}
+
+/* ── AI Advisor chat bubbles ── */
+:root[data-theme="light"] [style*="background: rgba(255,255,255,0.07)"] {
+  background: #F0FBFC !important;
+  color: #0C2340 !important;
+}
