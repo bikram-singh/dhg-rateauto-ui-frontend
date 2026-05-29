@@ -1,4 +1,4 @@
-import { Activity, Building, TrendingUp, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { theme } from "../theme";
 import { useState, useMemo, useEffect } from "react";
 
@@ -16,7 +16,6 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
   const available    = pricing.filter((p) => p.status === "Available").length;
   const lowStock     = pricing.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= 10).length;
   const outOfStock   = pricing.filter((p) => p.stock_quantity === 0).length;
-  const insured      = pricing.filter((p) => p.insurance_covered !== "No").length;
 
   // Auto-refresh every 30 seconds
   useEffect(() => {

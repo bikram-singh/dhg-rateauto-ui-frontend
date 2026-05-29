@@ -7,7 +7,7 @@ const ACTION_COLORS = {
   UPDATE: { bg:"rgba(79,195,247,0.12)", color:"#4FC3F7", border:"rgba(79,195,247,0.25)" },
   DELETE: { bg:"rgba(239,68,68,0.12)", color:"#F87171", border:"rgba(239,68,68,0.25)" },
   LOGIN:  { bg:"rgba(245,158,11,0.12)", color:"#FCD34D", border:"rgba(245,158,11,0.25)" },
-  LOGOUT: { bg:"rgba(148,163,184,0.12)", color: t.textSec, border:"rgba(148,163,184,0.2)" },
+  LOGOUT: { bg:"rgba(148,163,184,0.12)", color:"rgba(255,255,255,0.5)", border:"rgba(148,163,184,0.2)" },
   VIEW:   { bg:"rgba(139,92,246,0.12)", color:"#A78BFA", border:"rgba(139,92,246,0.25)" },
 };
 

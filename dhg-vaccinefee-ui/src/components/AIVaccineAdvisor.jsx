@@ -78,7 +78,7 @@ export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospital
     const clean = text
       .replace(/\*\*(.*?)\*\*/g, "$1")
       .replace(/\*(.*?)\*/g, "$1")
-      .replace(/^[•\-] /gm, "")
+      .replace(/^[•-] /gm, "")
       .replace(/\n/g, ". ")
       .substring(0, 500); // Limit length
     const utt   = new SpeechSynthesisUtterance(clean);

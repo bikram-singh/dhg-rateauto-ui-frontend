@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { theme } from "../theme";
-import { MapPin, Phone, Star, Activity, DollarSign, Package, TrendingUp, ArrowLeft, Download } from "lucide-react";
+import { MapPin, Star, Activity, DollarSign, Package, TrendingUp, ArrowLeft, Download } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC","#FF7043","#42A5F5","#26A69A"];
