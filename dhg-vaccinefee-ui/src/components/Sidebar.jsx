@@ -8,20 +8,20 @@ import { useState } from "react";
 
 const navConfig = [
   {
-    // Dashboard — standalone, no group label
     standalone: true,
     icon: LayoutDashboard,
     label: "Dashboard",
+    color: "#4FC3F7",
   },
   {
     group: "Hospitals",
     icon: Building,
-    color: "#4FC3F7",
+    color: "#29B6F6",
     children: [
-      { icon: Building2,    label: "Departments" },
-      { icon: Stethoscope,  label: "Hospital Profiles" },
-      { icon: Trophy,       label: "Rankings" },
-      { icon: GitCompare,   label: "Compare" },
+      { icon: Building2,     label: "Departments" },
+      { icon: Stethoscope,   label: "Hospital Profiles" },
+      { icon: Trophy,        label: "Rankings" },
+      { icon: GitCompare,    label: "Compare" },
     ],
   },
   {
@@ -29,10 +29,10 @@ const navConfig = [
     icon: Pill,
     color: "#66BB6A",
     children: [
-      { icon: Search,       label: "Vaccine Search" },
-      { icon: Pill,         label: "Vaccine Details" },
-      { icon: CreditCard,   label: "Vaccine Card" },
-      { icon: CalendarCheck,label: "Appointments" },
+      { icon: Search,        label: "Vaccine Search" },
+      { icon: Pill,          label: "Vaccine Details" },
+      { icon: CreditCard,    label: "Vaccine Card" },
+      { icon: CalendarCheck, label: "Appointments" },
     ],
   },
   {
@@ -40,9 +40,9 @@ const navConfig = [
     icon: DollarSign,
     color: "#FFA726",
     children: [
-      { icon: DollarSign,   label: "Pricing" },
-      { icon: TrendingUp,   label: "Price History" },
-      { icon: LineChart,    label: "Price Prediction" },
+      { icon: DollarSign,    label: "Pricing" },
+      { icon: TrendingUp,    label: "Price History" },
+      { icon: LineChart,     label: "Price Prediction" },
     ],
   },
   {
@@ -50,9 +50,9 @@ const navConfig = [
     icon: BarChart2,
     color: "#AB47BC",
     children: [
-      { icon: Globe,        label: "City Analytics" },
-      { icon: BarChart2,    label: "Advanced Reports" },
-      { icon: FileBarChart, label: "Reports" },
+      { icon: Globe,         label: "City Analytics" },
+      { icon: BarChart2,     label: "Advanced Reports" },
+      { icon: FileBarChart,  label: "Reports" },
     ],
   },
   {
@@ -60,9 +60,9 @@ const navConfig = [
     icon: Settings,
     color: "#EF5350",
     children: [
-      { icon: Settings,     label: "Admin Panel" },
-      { icon: Users,        label: "User Management" },
-      { icon: ClipboardList,label: "Audit Log" },
+      { icon: Settings,      label: "Admin Panel" },
+      { icon: Users,         label: "User Management" },
+      { icon: ClipboardList, label: "Audit Log" },
     ],
   },
 ];
@@ -75,156 +75,178 @@ const bottomItems = [
 export default function Sidebar({ activePage, setActivePage }) {
   const [hovered, setHovered] = useState(null);
 
-  // Auto-expand group that contains active page
-  const activeGroup = navConfig.find(
-    (n) => !n.standalone && n.children?.some((c) => c.label === activePage)
-  )?.group || null;
-
-  const [expanded, setExpanded] = useState(() => activeGroup);
-
-  const toggleGroup = (group) => {
-    setExpanded((prev) => prev === group ? null : group);
-  };
-
   const handleBottomClick = (label) => {
     if (label === "Contact") window.open("tel:+919466679107");
     else if (label === "Support") window.open("mailto:support@dummyhealthgroup.com");
   };
 
+  const isGroupActive = (item) =>
+    item.children?.some((c) => c.label === activePage);
+
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
         {navConfig.map((item) => {
-          // Standalone item (Dashboard)
+
+          /* ── Standalone item (Dashboard) ── */
           if (item.standalone) {
-            const Icon = item.icon;
+            const Icon     = item.icon;
             const isActive = activePage === item.label;
             return (
               <button key={item.label}
-                className={`sidebar-item ${isActive ? "sidebar-item--active" : ""}`}
-                onClick={() => setActivePage(item.label)}>
-                <Icon size={17}/>
-                <span>{item.label}</span>
+                onClick={() => setActivePage(item.label)}
+                style={{
+                  width: "100%", display: "flex", alignItems: "center",
+                  gap: "10px", padding: "7px 10px", border: "none",
+                  borderRadius: "10px", cursor: "pointer", marginBottom: "6px",
+                  background: isActive
+                    ? `linear-gradient(90deg, ${item.color}28, ${item.color}10)`
+                    : "transparent",
+                  borderLeft: isActive ? `3px solid ${item.color}` : "3px solid transparent",
+                }}>
+                {/* Icon box — same style for all headers */}
+                <div style={{
+                  width: "30px", height: "30px", borderRadius: "8px", flexShrink: 0,
+                  background: isActive ? `${item.color}25` : "rgba(255,255,255,0.08)",
+                  border: `1px solid ${isActive ? item.color + "60" : "rgba(255,255,255,0.12)"}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <Icon size={15} style={{ color: isActive ? item.color : "rgba(255,255,255,0.55)" }}/>
+                </div>
+                <span style={{
+                  fontSize: "13px", fontWeight: "600",
+                  color: isActive ? item.color : "rgba(255,255,255,0.8)",
+                }}>
+                  {item.label}
+                </span>
               </button>
             );
           }
 
-          // Group with children
-          const isOpen      = expanded === item.group;
-          const GroupIcon   = item.icon;
-          const hasActive   = item.children.some((c) => c.label === activePage);
+          /* ── Group with always-visible children ── */
+          const GroupIcon    = item.icon;
+          const groupActive  = isGroupActive(item);
 
           return (
-            <div key={item.group}>
-              {/* Group header button — styled like a mini card */}
+            <div key={item.group} style={{ marginBottom: "4px" }}>
+
+              {/* Group header — highlighted like Dashboard */}
               <button
-                onClick={() => toggleGroup(item.group)}
+                onClick={() => setActivePage(item.children[0].label)}
                 style={{
                   width: "100%", display: "flex", alignItems: "center",
-                  gap: "10px", padding: "8px 12px", border: "none",
-                  borderRadius: "9px", cursor: "pointer", marginBottom: "2px",
-                  background: hasActive
-                    ? `${item.color}18`
-                    : isOpen ? "rgba(255,255,255,0.07)" : "transparent",
-                  borderLeft: hasActive ? `3px solid ${item.color}` : "3px solid transparent",
-                  transition: "all 0.15s",
-                }}
-                onMouseEnter={(e) => { if (!hasActive) e.currentTarget.style.background = "rgba(255,255,255,0.07)"; }}
-                onMouseLeave={(e) => { if (!hasActive) e.currentTarget.style.background = isOpen ? "rgba(255,255,255,0.07)" : "transparent"; }}
-              >
-                {/* Icon box — same style as Dashboard icon */}
-                <div style={{
-                  width: "28px", height: "28px", borderRadius: "7px", flexShrink: 0,
-                  background: hasActive || isOpen ? `${item.color}25` : "rgba(255,255,255,0.08)",
-                  border: `1px solid ${hasActive || isOpen ? item.color + "50" : "rgba(255,255,255,0.1)"}`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all 0.15s",
+                  gap: "10px", padding: "7px 10px", border: "none",
+                  borderRadius: "10px", cursor: "pointer", marginBottom: "2px",
+                  background: groupActive
+                    ? `linear-gradient(90deg, ${item.color}28, ${item.color}10)`
+                    : "rgba(255,255,255,0.04)",
+                  borderLeft: groupActive ? `3px solid ${item.color}` : "3px solid transparent",
                 }}>
-                  <GroupIcon size={15} style={{ color: hasActive || isOpen ? item.color : "rgba(255,255,255,0.5)" }}/>
+                {/* Icon box — matching Dashboard style */}
+                <div style={{
+                  width: "30px", height: "30px", borderRadius: "8px", flexShrink: 0,
+                  background: groupActive ? `${item.color}25` : "rgba(255,255,255,0.08)",
+                  border: `1px solid ${groupActive ? item.color + "60" : "rgba(255,255,255,0.12)"}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <GroupIcon size={15} style={{ color: groupActive ? item.color : "rgba(255,255,255,0.55)" }}/>
                 </div>
-
                 <span style={{
-                  fontSize: "13px", fontWeight: "600", flex: 1, textAlign: "left",
-                  color: hasActive ? item.color : isOpen ? "#fff" : "rgba(255,255,255,0.7)",
+                  fontSize: "13px", fontWeight: "700",
+                  color: groupActive ? item.color : "rgba(255,255,255,0.85)",
+                  letterSpacing: "0.1px",
                 }}>
                   {item.group}
                 </span>
-
-                {/* Chevron */}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                  stroke={hasActive ? item.color : "rgba(255,255,255,0.3)"}
-                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                  style={{ transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>
-                  <polyline points="9 18 15 12 9 6"/>
-                </svg>
               </button>
 
-              {/* Children — collapsible */}
-              {isOpen && (
-                <div style={{ marginLeft: "14px", marginBottom: "4px",
-                  borderLeft: `1px solid rgba(255,255,255,0.08)`, paddingLeft: "8px" }}>
-                  {item.children.map(({ icon: ChildIcon, label }) => {
-                    const isActive = activePage === label;
-                    return (
-                      <button key={label}
-                        onClick={() => setActivePage(label)}
-                        style={{
-                          width: "100%", display: "flex", alignItems: "center",
-                          gap: "8px", padding: "6px 10px", border: "none",
-                          borderRadius: "7px", cursor: "pointer", marginBottom: "1px",
-                          background: isActive ? `${item.color}20` : "transparent",
-                          transition: "all 0.12s",
-                        }}
-                        onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
-                        onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
-                      >
-                        <ChildIcon size={14} style={{ color: isActive ? item.color : "rgba(255,255,255,0.45)", flexShrink: 0 }}/>
-                        <span style={{
-                          fontSize: "12px", fontWeight: isActive ? "600" : "400",
-                          color: isActive ? item.color : "rgba(255,255,255,0.65)",
-                        }}>
-                          {label}
-                        </span>
-                        {isActive && (
-                          <div style={{ marginLeft: "auto", width: "5px", height: "5px",
-                            borderRadius: "50%", background: item.color, flexShrink: 0 }}/>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              {/* Sub-items — always visible, indented */}
+              <div style={{
+                marginLeft: "18px",
+                paddingLeft: "10px",
+                borderLeft: `1px solid rgba(255,255,255,0.07)`,
+              }}>
+                {item.children.map(({ icon: ChildIcon, label }) => {
+                  const isActive = activePage === label;
+                  return (
+                    <button key={label}
+                      onClick={() => setActivePage(label)}
+                      style={{
+                        width: "100%", display: "flex", alignItems: "center",
+                        gap: "8px", padding: "6px 8px", border: "none",
+                        borderRadius: "7px", cursor: "pointer", marginBottom: "1px",
+                        background: isActive ? `${item.color}18` : "transparent",
+                        borderLeft: isActive ? `2px solid ${item.color}` : "2px solid transparent",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) e.currentTarget.style.background = "transparent";
+                      }}
+                    >
+                      <ChildIcon size={13} style={{
+                        color: isActive ? item.color : "rgba(255,255,255,0.4)",
+                        flexShrink: 0,
+                      }}/>
+                      <span style={{
+                        fontSize: "12px",
+                        fontWeight: isActive ? "600" : "400",
+                        color: isActive ? item.color : "rgba(255,255,255,0.6)",
+                      }}>
+                        {label}
+                      </span>
+                      {isActive && (
+                        <div style={{
+                          marginLeft: "auto", width: "5px", height: "5px",
+                          borderRadius: "50%", background: item.color, flexShrink: 0,
+                        }}/>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           );
         })}
       </nav>
 
-      {/* AI Advisor — special highlighted */}
+      {/* AI Advisor — always visible special item */}
       <button
-        className={`sidebar-item ${activePage === "AI Advisor" ? "sidebar-item--active" : ""}`}
         onClick={() => setActivePage("AI Advisor")}
         style={{
+          width: "100%", display: "flex", alignItems: "center",
+          gap: "10px", padding: "7px 10px", border: "none",
+          borderRadius: "10px", cursor: "pointer", margin: "6px 0",
           background: activePage === "AI Advisor"
-            ? "linear-gradient(90deg,rgba(79,195,247,0.2),rgba(21,101,192,0.2))"
-            : "linear-gradient(90deg,rgba(79,195,247,0.06),rgba(21,101,192,0.06))",
-          border: "1px solid rgba(79,195,247,0.3)",
-          borderRadius: "10px", margin: "8px 0",
+            ? "linear-gradient(90deg,rgba(79,195,247,0.25),rgba(21,101,192,0.15))"
+            : "linear-gradient(90deg,rgba(79,195,247,0.08),rgba(21,101,192,0.04))",
+          borderLeft: activePage === "AI Advisor"
+            ? "3px solid #4FC3F7" : "3px solid rgba(79,195,247,0.3)",
+          boxShadow: activePage === "AI Advisor" ? "0 2px 8px rgba(79,195,247,0.15)" : "none",
         }}>
-        <div style={{ width:"28px", height:"28px", borderRadius:"7px", flexShrink:0,
-          background:"rgba(79,195,247,0.2)", border:"1px solid rgba(79,195,247,0.4)",
-          display:"flex", alignItems:"center", justifyContent:"center" }}>
-          <Sparkles size={14} style={{ color:"#4FC3F7" }}/>
+        <div style={{
+          width: "30px", height: "30px", borderRadius: "8px", flexShrink: 0,
+          background: "rgba(79,195,247,0.2)", border: "1px solid rgba(79,195,247,0.4)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <Sparkles size={15} style={{ color: "#4FC3F7" }}/>
         </div>
-        <span style={{ color:"#4FC3F7", fontWeight:"600", fontSize:"13px" }}>AI Advisor</span>
-        <span style={{ marginLeft:"auto", fontSize:"9px", padding:"2px 6px",
-          borderRadius:"10px", background:"rgba(79,195,247,0.2)",
-          color:"#4FC3F7", border:"1px solid rgba(79,195,247,0.3)" }}>AI</span>
+        <span style={{ fontSize: "13px", fontWeight: "700", color: "#4FC3F7" }}>
+          AI Advisor
+        </span>
+        <span style={{
+          marginLeft: "auto", fontSize: "9px", padding: "2px 7px",
+          borderRadius: "10px", background: "rgba(79,195,247,0.2)",
+          color: "#4FC3F7", border: "1px solid rgba(79,195,247,0.35)",
+          fontWeight: "700", letterSpacing: "0.5px",
+        }}>AI</span>
       </button>
 
       {/* Bottom icons */}
       <div className="sidebar-bottom">
         {bottomItems.map(({ icon: Icon, label, tooltip }) => (
-          <div key={label} style={{ position:"relative" }}>
+          <div key={label} style={{ position: "relative" }}>
             <button
               className="sidebar-item sidebar-item--bottom"
               title={tooltip}
@@ -234,12 +256,15 @@ export default function Sidebar({ activePage, setActivePage }) {
               <Icon size={18}/>
             </button>
             {hovered === label && (
-              <div style={{ position:"absolute", left:"52px", bottom:"0",
-                background:"rgba(13,27,75,0.97)", border:"1px solid rgba(79,195,247,0.3)",
-                borderRadius:"8px", padding:"8px 14px", whiteSpace:"nowrap",
-                color:"#fff", fontSize:"12px", zIndex:1000, pointerEvents:"none",
-                boxShadow:"0 4px 12px rgba(0,0,0,0.3)" }}>
-                <div style={{ fontWeight:600, color:"#4FC3F7", marginBottom:"2px" }}>{label}</div>
+              <div style={{
+                position: "absolute", left: "52px", bottom: "0",
+                background: "rgba(13,27,75,0.97)",
+                border: "1px solid rgba(79,195,247,0.3)",
+                borderRadius: "8px", padding: "8px 14px", whiteSpace: "nowrap",
+                color: "#fff", fontSize: "12px", zIndex: 1000, pointerEvents: "none",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+              }}>
+                <div style={{ fontWeight: 600, color: "#4FC3F7", marginBottom: "2px" }}>{label}</div>
                 <div>{tooltip}</div>
               </div>
             )}
