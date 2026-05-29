@@ -72,7 +72,7 @@ export default function AuditLogPage({ currentUser, darkMode = true }) {
     loadLogs();
     // Log this page view
     logAction("VIEW", "Audit Log", "Viewed audit log", currentUser?.username || "bikram");
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const actions  = ["All", "CREATE", "UPDATE", "DELETE", "LOGIN", "LOGOUT", "VIEW"];
   const users    = ["All", ...new Set(logs.map((l) => l.user))];

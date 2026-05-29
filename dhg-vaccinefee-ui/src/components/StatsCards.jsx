@@ -29,7 +29,7 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRefresh = async () => {
     setRefreshing(true);
