@@ -118,7 +118,7 @@ export default function CityAnalyticsPage({ pricing = [], vaccines = [], hospita
               {[
                 { label:"Hospitals", value:c.hospitals, color:COLORS[i] },
                 { label:"Vaccines",  value:c.vaccines,  color:COLORS[i] },
-                { label:"Avg Price", value:`₹${c.avgPrice}`, color:"#4FC3F7" },
+                { label:"Avg Price", value:c.avgPrice === 0 ? "FREE" : `₹${c.avgPrice}`, color:"#4FC3F7" },
                 { label:"Available", value:`${c.availPct}%`, color:"#4ADE80" },
                 { label:"Insured",   value:`${c.insuredPct}%`, color:"#AB47BC" },
                 { label:"Score",     value:c.score, color:"#FFD700" },

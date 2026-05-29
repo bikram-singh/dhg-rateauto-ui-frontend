@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { theme } from "../theme";
 import { Plus, Edit2, Trash2, Save, X, Search } from "lucide-react";
 
 const API_BASE = "/vaccinefee/api";
 
 export default function AdminPanel({ vaccines = [], hospitals = [], pricing = [], departments = [], userRole, darkMode = true }) {
+  const t = theme(darkMode);
   const [activeTab, setActiveTab]   = useState("vaccines");
   const [search, setSearch]         = useState("");
   const [editItem, setEditItem]     = useState(null);
@@ -118,8 +120,8 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
       {/* Header */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Admin Panel</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Admin Panel</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>
             {isAdmin ? "Full access — Add, Edit, Delete records" : "View only — Contact admin for changes"}
           </p>
         </div>
@@ -147,9 +149,9 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
           <button key={tab} onClick={() => { setActiveTab(tab); setSearch(""); setShowForm(false); }}
             style={{ padding:"8px 18px", borderRadius:"8px", fontSize:"13px", fontWeight:"600",
               cursor:"pointer", textTransform:"capitalize",
-              background: activeTab===tab ? "rgba(79,195,247,0.2)" : "rgba(255,255,255,0.06)",
+              background: activeTab===tab ? "rgba(79,195,247,0.2)" : t.card,
               border: activeTab===tab ? "1px solid rgba(79,195,247,0.5)" : "1px solid rgba(255,255,255,0.12)",
-              color: activeTab===tab ? "#4FC3F7" : "rgba(255,255,255,0.6)" }}>
+              color: activeTab===tab ? "#4FC3F7" : t.textSec }}>
             {tab} ({tabData.length})
           </button>
         ))}
@@ -158,10 +160,10 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
       {/* Toolbar */}
       <div style={{ display:"flex", gap:"10px", marginBottom:"14px", alignItems:"center" }}>
         <div style={{ position:"relative", flex:1 }}>
-          <Search size={13} style={{ position:"absolute", left:"10px", top:"50%", transform:"translateY(-50%)", color:"rgba(255,255,255,0.4)" }}/>
+          <Search size={13} style={{ position:"absolute", left:"10px", top:"50%", transform:"translateY(-50%)", color: t.textMuted }}/>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={`Search ${activeTab}...`}
-            style={{ width:"100%", padding:"8px 12px 8px 30px", background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+            style={{ width:"100%", padding:"8px 12px 8px 30px", background: t.input,
+              border:`1px solid ${t.borderMid}`, borderRadius:"8px", color: t.text,
               fontSize:"13px", outline:"none", fontFamily:"inherit", boxSizing:"border-box" }}/>
         </div>
         {isAdmin && (
@@ -179,30 +181,30 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
         <div style={{ background:"rgba(79,195,247,0.08)", border:"1px solid rgba(79,195,247,0.3)",
           borderRadius:"12px", padding:"20px", marginBottom:"16px" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
-            <span style={{ color:"#fff", fontWeight:"600", fontSize:"14px" }}>
+            <span style={{ color: t.text, fontWeight:"600", fontSize:"14px" }}>
               {editItem ? `Edit ${activeTab.slice(0,-1)}` : `Add New ${activeTab.slice(0,-1)}`}
             </span>
             <button onClick={() => { setShowForm(false); setEditItem(null); }}
-              style={{ background:"none", border:"none", color:"rgba(255,255,255,0.5)", cursor:"pointer" }}>
+              style={{ background:"none", border:"none", color: t.textSec, cursor:"pointer" }}>
               <X size={18}/>
             </button>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:"12px", marginBottom:"16px" }}>
             {(formFields[activeTab] || []).map((field) => (
               <div key={field.key}>
-                <label style={{ display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)",
+                <label style={{ display:"block", fontSize:"11px", color: t.textSec,
                   textTransform:"uppercase", letterSpacing:"0.4px", marginBottom:"4px" }}>{field.label}</label>
                 {field.type === "select" ? (
                   <select value={formData[field.key] || ""} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})}
-                    style={{ width:"100%", padding:"8px 10px", background:"rgba(255,255,255,0.08)",
-                      border:"1px solid rgba(255,255,255,0.2)", borderRadius:"7px", color:"#fff",
+                    style={{ width:"100%", padding:"8px 10px", background: t.input,
+                      border:`1px solid ${t.borderMid}`, borderRadius:"7px", color: t.text,
                       fontSize:"13px", fontFamily:"inherit" }}>
-                    {field.options.map((o) => <option key={o} value={o} style={{ background:"#0D1B4B" }}>{o}</option>)}
+                    {field.options.map((o) => <option key={o} value={o} style={{ background: t.card }}>{o}</option>)}
                   </select>
                 ) : (
                   <input type={field.type} value={formData[field.key] || ""} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})}
-                    style={{ width:"100%", padding:"8px 10px", background:"rgba(255,255,255,0.08)",
-                      border:"1px solid rgba(255,255,255,0.2)", borderRadius:"7px", color:"#fff",
+                    style={{ width:"100%", padding:"8px 10px", background: t.input,
+                      border:`1px solid ${t.borderMid}`, borderRadius:"7px", color: t.text,
                       fontSize:"13px", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }}/>
                 )}
               </div>
@@ -217,7 +219,7 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
             </button>
             <button onClick={() => { setShowForm(false); setEditItem(null); }}
               style={{ padding:"9px 16px", borderRadius:"8px", fontSize:"13px", cursor:"pointer",
-                background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)", color:"rgba(255,255,255,0.6)" }}>
+                background: t.card, border:`1px solid ${t.borderMid}`, color: t.textSec }}>
               Cancel
             </button>
           </div>
@@ -225,20 +227,20 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
       )}
 
       {/* Data Table */}
-      <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden" }}>
-        <div style={{ padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,0.08)",
-          fontSize:"12px", color:"rgba(255,255,255,0.4)" }}>
+      <div style={{ background: t.card, border:`1px solid ${t.border}`, borderRadius:"12px", overflow:"hidden" }}>
+        <div style={{ padding:"10px 16px", borderBottom:`1px solid ${t.border}`,
+          fontSize:"12px", color: t.textMuted }}>
           Showing {filtered.length} of {tabData.length} records
         </div>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
-              <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
-                <th style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600", color:"rgba(255,255,255,0.5)", textTransform:"uppercase" }}>ID</th>
+              <tr style={{ background: t.cardAlt, borderBottom:`1px solid ${t.border}` }}>
+                <th style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600", color: t.textSec, textTransform:"uppercase" }}>ID</th>
                 {(formFields[activeTab] || []).map((f) => (
-                  <th key={f.key} style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600", color:"rgba(255,255,255,0.5)", textTransform:"uppercase" }}>{f.label}</th>
+                  <th key={f.key} style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600", color: t.textSec, textTransform:"uppercase" }}>{f.label}</th>
                 ))}
-                {isAdmin && <th style={{ padding:"10px 14px", textAlign:"center", fontSize:"10px", fontWeight:"600", color:"rgba(255,255,255,0.5)", textTransform:"uppercase" }}>Actions</th>}
+                {isAdmin && <th style={{ padding:"10px 14px", textAlign:"center", fontSize:"10px", fontWeight:"600", color: t.textSec, textTransform:"uppercase" }}>Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -246,9 +248,9 @@ export default function AdminPanel({ vaccines = [], hospitals = [], pricing = []
                 <tr key={item.id} style={{ borderBottom:"1px solid rgba(255,255,255,0.05)" }}
                   onMouseEnter={(e) => e.currentTarget.style.background="rgba(255,255,255,0.04)"}
                   onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
-                  <td style={{ padding:"9px 14px", color:"rgba(255,255,255,0.4)", fontSize:"11px" }}>{item.id}</td>
+                  <td style={{ padding:"9px 14px", color: t.textMuted, fontSize:"11px" }}>{item.id}</td>
                   {(formFields[activeTab] || []).map((f) => (
-                    <td key={f.key} style={{ padding:"9px 14px", color:"rgba(255,255,255,0.8)", maxWidth:"200px",
+                    <td key={f.key} style={{ padding:"9px 14px", color: t.text, maxWidth:"200px",
                       overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                       {f.key === "price" ? `₹${item[f.key]}` : String(item[f.key] || "—").substring(0,40)}
                     </td>

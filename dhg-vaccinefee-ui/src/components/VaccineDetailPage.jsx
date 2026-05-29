@@ -237,7 +237,7 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                   </div>
                   <div style={{ textAlign:"right" }}>
                     <div style={{ color: p.price===0?"#4ADE80":"#4FC3F7", fontWeight:"700", fontSize:"13px" }}>
-                      {p.price===0?"FREE":`₹${p.price}`}
+                      {p.price===0?"FREE":parseFloat(p.price) === 0 ? "FREE" : `₹${p.price}`}
                     </div>
                     <span style={{ fontSize:"10px", padding:"1px 6px", borderRadius:"10px",
                       background: p.status==="Available"?"rgba(34,197,94,0.1)":"rgba(245,158,11,0.1)",

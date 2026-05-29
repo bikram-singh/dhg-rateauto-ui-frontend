@@ -143,7 +143,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
 
       {/* Controls */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:"12px", marginBottom:"20px" }}>
-        <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.cardAlt, border:`1px solid ${t.border}`,
           borderRadius:"12px", padding:"14px 16px" }}>
           <div style={{ fontSize:"12px", color: t.textSec, marginBottom:"10px" }}>
             Select up to 5 vaccines to predict (click to toggle):
@@ -156,9 +156,9 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
                 <button key={v.id} onClick={() => toggleVaccine(v)}
                   style={{ padding:"5px 12px", borderRadius:"20px", fontSize:"11px",
                     fontWeight:"500", cursor:"pointer",
-                    background: sel ? `${COLORS[ci]}25` : "rgba(255,255,255,0.05)",
+                    background: sel ? `${COLORS[ci]}25` : t.cardAlt,
                     border: sel ? `1px solid ${COLORS[ci]}` : "1px solid rgba(255,255,255,0.12)",
-                    color: sel ? COLORS[ci] : "rgba(255,255,255,0.6)" }}>
+                    color: sel ? COLORS[ci] : t.textSec }}>
                   {v.name.substring(0, 22)}
                 </button>
               );
@@ -166,18 +166,18 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
           </div>
         </div>
 
-        <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.cardAlt, border:`1px solid ${t.border}`,
           borderRadius:"12px", padding:"14px 16px", minWidth:"200px" }}>
           <div style={{ fontSize:"12px", color: t.textSec, marginBottom:"8px" }}>
             Filter by hospital:
           </div>
           <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}
             style={{ width:"100%", padding:"8px 10px", background: t.input,
-              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
+              border:`1px solid ${t.borderMid}`, borderRadius:"8px", color: t.text,
               fontSize:"12px", fontFamily:"inherit" }}>
-            <option value="" style={{ background:"#0D1B4B" }}>All Hospitals (Avg)</option>
+            <option value="" style={{ background: t.card }}>All Hospitals (Avg)</option>
             {hospitals.map((h) => (
-              <option key={h.id} value={h.name} style={{ background:"#0D1B4B" }}>{h.name.substring(0, 35)}</option>
+              <option key={h.id} value={h.name} style={{ background: t.card }}>{h.name.substring(0, 35)}</option>
             ))}
           </select>
         </div>
@@ -233,7 +233,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
           </div>
 
           {/* Chart */}
-          <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
+          <div style={{ background: t.card, border:`1px solid ${t.border}`,
             borderRadius:"12px", padding:"20px", marginBottom:"20px" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
               <div style={{ color: t.text, fontWeight:"600", fontSize:"15px" }}>
@@ -253,11 +253,11 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
             <ReferenceLine />
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={chartData} margin={{ top:5, right:30, left:0, bottom:5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)"/>
-                <XAxis dataKey="month" tick={{ fill:"rgba(255,255,255,0.5)", fontSize:11 }} tickLine={false} axisLine={false}/>
-                <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:11 }} tickLine={false} axisLine={false}
+                <CartesianGrid strokeDasharray="3 3" stroke={t.border}/>
+                <XAxis dataKey="month" tick={{ fill:t.textSec, fontSize:11 }} tickLine={false} axisLine={false}/>
+                <YAxis tick={{ fill:t.textSec, fontSize:11 }} tickLine={false} axisLine={false}
                   tickFormatter={(v) => `₹${v}`}/>
-                <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)",
+                <Tooltip contentStyle={{ background: t.card, border:`1px solid ${t.borderMid}`,
                   borderRadius:"8px", color: t.text, fontSize:"12px" }}
                   formatter={(v, n) => [`₹${v}`, n.replace(/_actual|_pred/, "")]}/>
                 <ReferenceLine x="May'26" stroke="rgba(255,255,255,0.2)" strokeDasharray="4 4"
@@ -277,16 +277,16 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
           </div>
 
           {/* Prediction table */}
-          <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
+          <div style={{ background: t.card, border:`1px solid ${t.border}`,
             borderRadius:"12px", overflow:"hidden" }}>
-            <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.08)",
+            <div style={{ padding:"14px 18px", borderBottom:`1px solid ${t.border}`,
               color: t.text, fontWeight:"600", fontSize:"14px" }}>
               Detailed Forecast — Jun to Aug 2026
             </div>
             <div style={{ overflowX:"auto" }}>
               <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
                 <thead>
-                  <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+                  <tr style={{ background: t.cardAlt, borderBottom:`1px solid ${t.border}` }}>
                     <th style={{ padding:"10px 16px", textAlign:"left", fontSize:"10px", fontWeight:"600",
                       color: t.textSec, textTransform:"uppercase" }}>Vaccine</th>
                     {["May'26 (Current)","Jun'26 (Pred)","Jul'26 (Pred)","Aug'26 (Pred)","3M Change"].map((h) => (

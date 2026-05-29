@@ -132,8 +132,8 @@ export default function UserManagementPage({ userRole, darkMode = true }) {
                   style={{ width:"100%", padding:"9px 12px", background: t.input,
                     border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color: t.text,
                     fontSize:"13px", fontFamily:"inherit" }}>
-                  <option value="Viewer" style={{ background:"#0D1B4B" }}>Viewer</option>
-                  <option value="Admin"  style={{ background:"#0D1B4B" }}>Admin</option>
+                  <option value="Viewer" style={{ background: t.card }}>Viewer</option>
+                  <option value="Admin"  style={{ background: t.card }}>Admin</option>
                 </select>
               </div>
             </div>

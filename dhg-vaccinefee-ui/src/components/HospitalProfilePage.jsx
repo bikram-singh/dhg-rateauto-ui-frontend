@@ -154,7 +154,7 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"8px" }}>
               {[
                 { label:"Vaccines", value:h.total, color:"#4FC3F7" },
-                { label:"Avg Price", value:`₹${h.avgPrice}`, color:"#FFA726" },
+                { label:"Avg Price", value:h.avgPrice === 0 ? "FREE" : `₹${h.avgPrice}`, color:"#FFA726" },
                 { label:"Available", value:h.available, color:"#4ADE80" },
               ].map((s) => (
                 <div key={s.label} style={{ background: t.cardAlt, borderRadius:"7px",
@@ -223,8 +223,8 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
           {[
             { label:"Total Vaccines", value:h.total, icon:<Activity size={16}/>, color:"#4FC3F7" },
             { label:"Available",      value:h.available, icon:<Package size={16}/>, color:"#4ADE80" },
-            { label:"Avg Price",      value:`₹${h.avgPrice}`, icon:<DollarSign size={16}/>, color:"#FFA726" },
-            { label:"Min Price",      value:h.minPrice===0?"FREE":`₹${h.minPrice}`, icon:<TrendingUp size={16}/>, color:"#4ADE80" },
+            { label:"Avg Price",      value:h.avgPrice === 0 ? "FREE" : `₹${h.avgPrice}`, icon:<DollarSign size={16}/>, color:"#FFA726" },
+            { label:"Min Price",      value:h.minPrice===0?"FREE":h.minPrice === 0 ? "FREE" : `₹${h.minPrice}`, icon:<TrendingUp size={16}/>, color:"#4ADE80" },
             { label:"Max Price",      value:`₹${h.maxPrice}`, icon:<TrendingUp size={16}/>, color:"#EF5350" },
             { label:"Insured",        value:h.insured, icon:<Star size={16}/>, color:"#AB47BC" },
           ].map((s) => (
@@ -315,7 +315,7 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
                     </td>
                     <td style={{ padding:"10px 14px", color: t.textSec }}>{p.dept}</td>
                     <td style={{ padding:"10px 14px", color:"#4FC3F7", fontWeight:"700" }}>
-                      {p.price === 0 ? <span style={{ color:"#4ADE80" }}>FREE</span> : `₹${p.price}`}
+                      {p.price === 0 ? <span style={{ color:"#4ADE80" }}>FREE</span> : parseFloat(p.price) === 0 ? "FREE" : `₹${p.price}`}
                     </td>
                     <td style={{ padding:"10px 14px" }}>
                       {p.stock !== null && p.stock !== undefined ? (

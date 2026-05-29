@@ -167,7 +167,7 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
                       </div>
                     </td>
                     <td style={{ padding:"12px 14px", color:"#4FC3F7", fontWeight:"600" }}>
-                      {h.avgPrice === 9999 ? "—" : h.avgPrice === 0 ? <span style={{ color:"#4ADE80" }}>FREE</span> : `₹${h.avgPrice}`}
+                      {h.avgPrice === 9999 ? "—" : h.avgPrice === 0 ? <span style={{ color:"#4ADE80" }}>FREE</span> : h.avgPrice === 0 ? "FREE" : `₹${h.avgPrice}`}
                     </td>
                     <td style={{ padding:"12px 14px" }}>
                       <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
