@@ -37,7 +37,7 @@ export default function DepartmentsPage({ departments = [], pricing = [], darkMo
                 <div style={{ color: t.textSec, fontSize:"11px" }}>Pricing Records</div>
               </div>
               <div style={{ textAlign:"center" }}>
-                <div style={{ color:"#4FC3F7", fontSize:"20px", fontWeight:"700" }}>₹{d.avgPrice}</div>
+                <div style={{ color:"#4FC3F7", fontSize:"20px", fontWeight:"700" }}>{d.avgPrice > 0 ? `₹${d.avgPrice}` : ""}</div>
                 <div style={{ color: t.textSec, fontSize:"11px" }}>Avg Price</div>
               </div>
             </div>
