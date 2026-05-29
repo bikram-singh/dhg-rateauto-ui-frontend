@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, Building2, Building, DollarSign, Phone, BarChart2,
   CreditCard, MessageSquare, TrendingUp, Search, GitCompare,
-  Pill, Trophy, Globe, Activity, Settings, Users, ClipboardList,
+  Pill, Trophy, Globe, Settings, Users, ClipboardList,
   CalendarCheck, LineChart, FileBarChart, Stethoscope
 } from "lucide-react";
 import { useState } from "react";

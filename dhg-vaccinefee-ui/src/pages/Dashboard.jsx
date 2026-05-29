@@ -31,7 +31,6 @@ import HospitalProfilePage from "../components/HospitalProfilePage";
 export default function Dashboard() {
   // Auth
   const [currentUser, setCurrentUser] = useState(() => {
-    // Check JWT token in localStorage (real auth)
     const jwt = localStorage.getItem("dhg_jwt_token");
     if (jwt) {
       try {
@@ -42,7 +41,6 @@ export default function Dashboard() {
         localStorage.removeItem("dhg_jwt_token");
       } catch { localStorage.removeItem("dhg_jwt_token"); }
     }
-    // Fallback: check sessionStorage (demo mode)
     const token = sessionStorage.getItem("dhg_token");
     if (!token) return null;
     try {
@@ -60,9 +58,10 @@ export default function Dashboard() {
   const [error, setError]             = useState(null);
   const [activePage, setActivePage]   = useState(() => {
     const hash = window.location.hash.replace("#", "");
-    const validPages = ["Dashboard","Departments","Hospitals","Pricing","Price History",
-      "Vaccine Search","Compare","Hospital Map","Vaccine Details","Rankings","AI Advisor",
-      "City Analytics","Vaccine Card","Vaccine Calendar","Price Prediction","Advanced Reports","Admin Panel"];
+    const validPages = ["Dashboard","Departments","Hospitals","Hospital Profiles","Pricing",
+      "Price History","Vaccine Search","Compare","Vaccine Details","Rankings","AI Advisor",
+      "City Analytics","Vaccine Card","Price Prediction","Advanced Reports","Reports",
+      "Admin Panel","User Management","Audit Log","Appointments"];
     return validPages.includes(hash) ? hash : "Dashboard";
   });
   const [searchQuery, setSearchQuery] = useState("");
@@ -122,7 +121,6 @@ export default function Dashboard() {
 
   const sp = { pricing, vaccines, hospitals, departments };
 
-  // Show login page if not authenticated
   if (!currentUser) return <LoginPage onLogin={setCurrentUser}/>;
 
   const layout = (children) => (
@@ -167,23 +165,22 @@ export default function Dashboard() {
     </>}
     {activePage === "Departments"      && <DepartmentsPage      {...sp}/>}
     {activePage === "Hospitals"        && <HospitalsPage        {...sp}/>}
-    {activePage === "Pricing"          && <PricingPage          pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/>}
-    {activePage === "Reports"          && <ReportsPage          {...sp}/>}
-    {activePage === "Billing"          && <BillingPage          {...sp}/>}
-    {activePage === "Price History"    && <PriceHistoryPage     {...sp}/>}
-    {activePage === "Vaccine Search"   && <VaccineSearchPage    {...sp}/>}
+    {activePage === "Hospital Profiles"&& <HospitalProfilePage  {...sp}/>}
+    {activePage === "Rankings"         && <HospitalRankingPage  {...sp}/>}
     {activePage === "Compare"          && <CompareHospitalsPage {...sp}/>}
     {activePage === "Vaccine Details"  && <VaccineDetailPage    {...sp}/>}
-    {activePage === "Rankings"         && <HospitalRankingPage  {...sp}/>}
-    {activePage === "AI Advisor"       && <AIVaccineAdvisor     {...sp}/>}
-    {activePage === "City Analytics"   && <CityAnalyticsPage    {...sp}/>}
+    {activePage === "Vaccine Search"   && <VaccineSearchPage    {...sp}/>}
     {activePage === "Vaccine Card"     && <VaccineCardPage      {...sp}/>}
-    {activePage === "Price Prediction"  && <PricePredictionPage  {...sp}/>}
-    {activePage === "Advanced Reports"  && <AdvancedReportsPage  {...sp}/>}
-    {activePage === "Admin Panel"        && <AdminPanel {...sp} userRole={currentUser?.role}/>}
-    {activePage === "User Management"    && <UserManagementPage userRole={currentUser?.role}/>}
-    {activePage === "Audit Log"           && <AuditLogPage currentUser={currentUser}/>}
-    {activePage === "Appointments"        && <AppointmentPage {...sp}/>}
-    {activePage === "Hospital Profiles"   && <HospitalProfilePage {...sp}/>}
+    {activePage === "Appointments"     && <AppointmentPage      {...sp}/>}
+    {activePage === "Pricing"          && <PricingPage          pricing={filteredPricing} vaccines={vaccines} hospitals={hospitals} departments={departments}/>}
+    {activePage === "Price History"    && <PriceHistoryPage     {...sp}/>}
+    {activePage === "Price Prediction" && <PricePredictionPage  {...sp}/>}
+    {activePage === "City Analytics"   && <CityAnalyticsPage    {...sp}/>}
+    {activePage === "Advanced Reports" && <AdvancedReportsPage  {...sp}/>}
+    {activePage === "Reports"          && <ReportsPage          {...sp}/>}
+    {activePage === "Admin Panel"      && <AdminPanel           {...sp} userRole={currentUser?.role}/>}
+    {activePage === "User Management"  && <UserManagementPage   userRole={currentUser?.role}/>}
+    {activePage === "Audit Log"        && <AuditLogPage         currentUser={currentUser}/>}
+    {activePage === "Billing"          && <BillingPage          {...sp}/>}
   </>);
 }
