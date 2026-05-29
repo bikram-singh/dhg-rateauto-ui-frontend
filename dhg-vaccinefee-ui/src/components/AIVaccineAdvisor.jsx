@@ -100,7 +100,7 @@ export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospital
       const records  = pricing.filter((p) => p.vaccine_id === v.id);
       const prices   = records.map((p) => parseFloat(p.price)).filter((p) => p > 0);
       const minPrice = prices.length ? Math.min(...prices) : 0;
-      return `${v.name} (${v.manufacturer}) - min ₹${minPrice} at ${records.length} hospitals`;
+      return `${v.name} (${v.manufacturer}) - ${minPrice > 0 ? "from ₹" + minPrice : ""} at ${records.length} hospitals`;
     }).join("\n");
 
     const cityHospitals = {};
