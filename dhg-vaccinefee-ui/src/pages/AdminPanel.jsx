@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { theme } from "../theme";
 import { Plus, Edit2, Trash2, Save, X, Search } from "lucide-react";
 
 const API_BASE = "/vaccinefee/api";
