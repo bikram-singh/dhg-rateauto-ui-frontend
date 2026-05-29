@@ -127,9 +127,9 @@ export default function Header({
       <div className="header-brand">
         <div style={{
           display: "flex", alignItems: "center",
-          background: "white", borderRadius: "12px",
-          border: "2px solid #E0E7EF", padding: "6px 16px 6px 8px",
-          boxShadow: "0 2px 8px rgba(21,101,192,0.12)"
+          background: "rgba(13,31,53,0.9)", borderRadius: "12px",
+          border: "1px solid rgba(45,212,191,0.2)", padding: "6px 16px 6px 8px",
+          boxShadow: "0 2px 16px rgba(0,0,0,0.3)"
         }}>
           <svg viewBox="0 0 80 90" width="54" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
