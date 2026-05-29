@@ -1,10 +1,12 @@
 import { useMemo } from "react";
+import { theme } from "../theme";
 import { Download, Printer } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#4FC3F7","#1565C0","#26A69A","#FFA726","#EF5350","#AB47BC","#66BB6A","#FF7043"];
 
-export default function ReportsPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function ReportsPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const vaccineMap    = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
   const hospitalMap   = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h])), [hospitals]);
   const departmentMap = useMemo(() => Object.fromEntries(departments.map((d) => [d.id, d])), [departments]);
@@ -94,11 +96,11 @@ export default function ReportsPage({ pricing = [], vaccines = [], hospitals = [
   };
 
   const Card = ({ title, value, sub, color }) => (
-    <div style={{ background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)",
+    <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
       borderRadius:"12px", padding:"18px 22px", borderTop:`3px solid ${color}` }}>
-      <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.6px", fontWeight:"600" }}>{title}</div>
-      <div style={{ fontSize:"28px", fontWeight:"700", color:"#fff", margin:"6px 0 2px" }}>{value}</div>
-      {sub && <div style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)" }}>{sub}</div>}
+      <div style={{ fontSize:"11px", color: t.textSec, textTransform:"uppercase", letterSpacing:"0.6px", fontWeight:"600" }}>{title}</div>
+      <div style={{ fontSize:"28px", fontWeight:"700", color: t.text, margin:"6px 0 2px" }}>{value}</div>
+      {sub && <div style={{ fontSize:"12px", color: t.textSec }}>{sub}</div>}
     </div>
   );
 
@@ -106,8 +108,8 @@ export default function ReportsPage({ pricing = [], vaccines = [], hospitals = [
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Reports & Analytics</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Comprehensive vaccine pricing analytics</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Reports & Analytics</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>Comprehensive vaccine pricing analytics</p>
         </div>
         <div style={{ display:"flex", gap:"8px" }}>
           <button onClick={exportCSV} style={{
@@ -136,29 +138,29 @@ export default function ReportsPage({ pricing = [], vaccines = [], hospitals = [
       {/* Charts row */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"20px" }}>
         {/* Top Vaccines Bar Chart */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Top Vaccines by Avg Price</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Top Vaccines by Avg Price</div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={byVaccine} margin={{ top:0, right:10, left:0, bottom:40 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)"/>
               <XAxis dataKey="name" tick={{ fill:"rgba(255,255,255,0.5)", fontSize:9 }} angle={-35} textAnchor="end" tickLine={false} axisLine={false}/>
               <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:10 }} tickLine={false} axisLine={false} tickFormatter={(v)=>`₹${v}`}/>
-              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px" }} formatter={(v)=>[`₹${v}`,"Avg Price"]}/>
+              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }} formatter={(v)=>[`₹${v}`,"Avg Price"]}/>
               <Bar dataKey="avgPrice" fill="#4FC3F7" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Status Pie Chart */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Availability Status</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Availability Status</div>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie data={byStatus} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent*100).toFixed(0)}%`}
                 labelLine={{ stroke:"rgba(255,255,255,0.3)" }}>
                 {byStatus.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]}/>)}
               </Pie>
-              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px" }}/>
+              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -167,34 +169,34 @@ export default function ReportsPage({ pricing = [], vaccines = [], hospitals = [
       {/* Departments and Top Hospitals */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px" }}>
         {/* By Department */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Records by Department</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Records by Department</div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={byDept} layout="vertical" margin={{ top:0, right:30, left:0, bottom:0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" horizontal={false}/>
               <XAxis type="number" tick={{ fill:"rgba(255,255,255,0.5)", fontSize:10 }} tickLine={false} axisLine={false}/>
               <YAxis type="category" dataKey="name" tick={{ fill:"rgba(255,255,255,0.6)", fontSize:10 }} tickLine={false} axisLine={false} width={120}/>
-              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px" }}/>
+              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
               <Bar dataKey="count" fill="#26A69A" radius={[0,4,4,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Top Hospitals Table */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Top Hospitals by Records</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Top Hospitals by Records</div>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
               <tr style={{ borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
-                <th style={{ padding:"6px 10px", textAlign:"left", color:"rgba(255,255,255,0.5)", fontWeight:"600", fontSize:"10px", textTransform:"uppercase" }}>Hospital</th>
-                <th style={{ padding:"6px 10px", textAlign:"right", color:"rgba(255,255,255,0.5)", fontWeight:"600", fontSize:"10px", textTransform:"uppercase" }}>Records</th>
-                <th style={{ padding:"6px 10px", textAlign:"right", color:"rgba(255,255,255,0.5)", fontWeight:"600", fontSize:"10px", textTransform:"uppercase" }}>Avg ₹</th>
+                <th style={{ padding:"6px 10px", textAlign:"left", color: t.textSec, fontWeight:"600", fontSize:"10px", textTransform:"uppercase" }}>Hospital</th>
+                <th style={{ padding:"6px 10px", textAlign:"right", color: t.textSec, fontWeight:"600", fontSize:"10px", textTransform:"uppercase" }}>Records</th>
+                <th style={{ padding:"6px 10px", textAlign:"right", color: t.textSec, fontWeight:"600", fontSize:"10px", textTransform:"uppercase" }}>Avg ₹</th>
               </tr>
             </thead>
             <tbody>
               {topHospitals.map((h, i) => (
                 <tr key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
-                  <td style={{ padding:"8px 10px", color:"rgba(255,255,255,0.85)", fontSize:"12px" }}>{h.name.substring(0,28)}</td>
+                  <td style={{ padding:"8px 10px", color: t.text, fontSize:"12px" }}>{h.name.substring(0,28)}</td>
                   <td style={{ padding:"8px 10px", textAlign:"right", color:"#4FC3F7", fontWeight:"600" }}>{h.count}</td>
                   <td style={{ padding:"8px 10px", textAlign:"right", color:"#4FC3F7", fontWeight:"600" }}>₹{h.avgPrice}</td>
                 </tr>

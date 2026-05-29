@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { MapPin, Star, Activity, DollarSign, Package, TrendingUp, ArrowLeft, Download } from "lucide-react";
+import { theme } from "../theme";
+import { MapPin, Phone, Star, Activity, DollarSign, Package, TrendingUp, ArrowLeft, Download } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC","#FF7043","#42A5F5","#26A69A"];
@@ -10,7 +11,8 @@ const STATUS_STYLE = {
   "Out of Stock":{ bg:"rgba(239,68,68,0.12)", color:"#F87171", border:"rgba(239,68,68,0.25)" },
 };
 
-export default function HospitalProfilePage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function HospitalProfilePage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [search, setSearch]   = useState("");
   const [filterCity, setFilter] = useState("All");
@@ -99,8 +101,8 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
   if (!selectedHospital) return (
     <div>
       <div style={{ marginBottom:"20px" }}>
-        <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Hospital Profiles</h2>
-        <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>
+        <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Hospital Profiles</h2>
+        <p style={{ color: t.textSec, fontSize:"13px" }}>
           Click any hospital to view full profile, vaccines and pricing
         </p>
       </div>
@@ -109,16 +111,16 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
       <div style={{ display:"flex", gap:"10px", marginBottom:"16px", flexWrap:"wrap" }}>
         <input value={search} onChange={(e) => setSearch(e.target.value)}
           placeholder="Search hospitals..."
-          style={{ flex:1, minWidth:"200px", padding:"9px 14px", background:"rgba(255,255,255,0.08)",
-            border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+          style={{ flex:1, minWidth:"200px", padding:"9px 14px", background: t.input,
+            border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
             fontSize:"13px", fontFamily:"inherit", outline:"none" }}/>
         <select value={filterCity} onChange={(e) => setFilter(e.target.value)}
-          style={{ padding:"9px 14px", background:"rgba(255,255,255,0.08)",
-            border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color:"#fff",
+          style={{ padding:"9px 14px", background: t.input,
+            border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color: t.text,
             fontSize:"13px", fontFamily:"inherit" }}>
           {cities.map((c) => <option key={c} value={c} style={{ background:"#0D1B4B" }}>{c}</option>)}
         </select>
-        <span style={{ alignSelf:"center", fontSize:"12px", color:"rgba(255,255,255,0.4)" }}>
+        <span style={{ alignSelf:"center", fontSize:"12px", color: t.textMuted }}>
           {filtered.length} hospitals
         </span>
       </div>
@@ -127,7 +129,7 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:"12px" }}>
         {filtered.map((h) => (
           <div key={h.id} onClick={() => setSelectedHospital(h)}
-            style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+            style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
               borderRadius:"12px", padding:"16px", cursor:"pointer", transition:"all 0.15s" }}
             onMouseEnter={(e) => { e.currentTarget.style.background="rgba(79,195,247,0.08)"; e.currentTarget.style.borderColor="rgba(79,195,247,0.3)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background="rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor="rgba(255,255,255,0.1)"; }}>
@@ -139,9 +141,9 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
                 🏥
               </div>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px",
+                <div style={{ color: t.text, fontWeight:"600", fontSize:"14px",
                   lineHeight:1.3, marginBottom:"3px" }}>{h.name}</div>
-                <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px",
+                <div style={{ color: t.textSec, fontSize:"12px",
                   display:"flex", alignItems:"center", gap:"4px" }}>
                   <MapPin size={11}/> {h.location?.split(",")[0]}
                 </div>
@@ -155,10 +157,10 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
                 { label:"Avg Price", value:`₹${h.avgPrice}`, color:"#FFA726" },
                 { label:"Available", value:h.available, color:"#4ADE80" },
               ].map((s) => (
-                <div key={s.label} style={{ background:"rgba(255,255,255,0.05)", borderRadius:"7px",
+                <div key={s.label} style={{ background: t.cardAlt, borderRadius:"7px",
                   padding:"8px", textAlign:"center" }}>
                   <div style={{ fontSize:"15px", fontWeight:"700", color:s.color }}>{s.value}</div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)", marginTop:"1px" }}>{s.label}</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted, marginTop:"1px" }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -179,8 +181,8 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
       {/* Back button */}
       <button onClick={() => setSelectedHospital(null)}
         style={{ display:"flex", alignItems:"center", gap:"6px", marginBottom:"20px",
-          background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.15)",
-          borderRadius:"8px", padding:"8px 14px", color:"rgba(255,255,255,0.7)",
+          background: t.card, border:"1px solid rgba(255,255,255,0.15)",
+          borderRadius:"8px", padding:"8px 14px", color: t.text,
           fontSize:"13px", cursor:"pointer" }}>
         <ArrowLeft size={14}/> All Hospitals
       </button>
@@ -197,13 +199,13 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
               🏥
             </div>
             <div>
-              <h2 style={{ color:"#fff", fontSize:"22px", fontWeight:"700", marginBottom:"6px" }}>{h.name}</h2>
-              <div style={{ color:"rgba(255,255,255,0.6)", fontSize:"13px",
+              <h2 style={{ color: t.text, fontSize:"22px", fontWeight:"700", marginBottom:"6px" }}>{h.name}</h2>
+              <div style={{ color: t.textSec, fontSize:"13px",
                 display:"flex", alignItems:"center", gap:"6px", marginBottom:"4px" }}>
                 <MapPin size={13}/> {h.location || "—"}
               </div>
               {h.address && (
-                <div style={{ color:"rgba(255,255,255,0.4)", fontSize:"12px" }}>{h.address}</div>
+                <div style={{ color: t.textMuted, fontSize:"12px" }}>{h.address}</div>
               )}
             </div>
           </div>
@@ -226,12 +228,12 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
             { label:"Max Price",      value:`₹${h.maxPrice}`, icon:<TrendingUp size={16}/>, color:"#EF5350" },
             { label:"Insured",        value:h.insured, icon:<Star size={16}/>, color:"#AB47BC" },
           ].map((s) => (
-            <div key={s.label} style={{ background:"rgba(255,255,255,0.08)", borderRadius:"10px",
+            <div key={s.label} style={{ background: t.input, borderRadius:"10px",
               padding:"12px 14px", display:"flex", gap:"10px", alignItems:"center" }}>
               <div style={{ color:s.color }}>{s.icon}</div>
               <div>
                 <div style={{ fontSize:"18px", fontWeight:"700", color:s.color }}>{s.value}</div>
-                <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.45)", marginTop:"1px" }}>{s.label}</div>
+                <div style={{ fontSize:"10px", color: t.textSec, marginTop:"1px" }}>{s.label}</div>
               </div>
             </div>
           ))}
@@ -240,9 +242,9 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
 
       {/* Charts */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"20px" }}>
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>
             Vaccines by Department
           </div>
           <ResponsiveContainer width="100%" height={200}>
@@ -252,15 +254,15 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
                 angle={-30} textAnchor="end" tickLine={false} axisLine={false}/>
               <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:10 }} tickLine={false} axisLine={false}/>
               <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)",
-                borderRadius:"8px", color:"#fff", fontSize:"12px" }}/>
+                borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
               <Bar dataKey="count" fill="#4FC3F7" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>
             Stock Status
           </div>
           <ResponsiveContainer width="100%" height={200}>
@@ -271,29 +273,29 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
                 {statusChart.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]}/>)}
               </Pie>
               <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)",
-                borderRadius:"8px", color:"#fff", fontSize:"12px" }}/>
+                borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
             </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Vaccine list */}
-      <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+      <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
         borderRadius:"12px", overflow:"hidden" }}>
         <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.08)",
           display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-          <span style={{ color:"#fff", fontWeight:"600", fontSize:"14px" }}>
+          <span style={{ color: t.text, fontWeight:"600", fontSize:"14px" }}>
             All Vaccines ({hospitalPricing.length})
           </span>
-          <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.4)" }}>Sorted by price ↑</span>
+          <span style={{ fontSize:"12px", color: t.textMuted }}>Sorted by price ↑</span>
         </div>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
-              <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+              <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                 {["Vaccine","Manufacturer","Department","Price","Stock","Insurance","Status"].map((col) => (
                   <th key={col} style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px",
-                    fontWeight:"600", color:"rgba(255,255,255,0.5)", textTransform:"uppercase",
+                    fontWeight:"600", color: t.textSec, textTransform:"uppercase",
                     letterSpacing:"0.4px", whiteSpace:"nowrap" }}>{col}</th>
                 ))}
               </tr>
@@ -305,13 +307,13 @@ export default function HospitalProfilePage({ pricing = [], vaccines = [], hospi
                   <tr key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.05)" }}
                     onMouseEnter={(e) => e.currentTarget.style.background="rgba(255,255,255,0.04)"}
                     onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
-                    <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.85)", fontWeight:"500" }}>
+                    <td style={{ padding:"10px 14px", color: t.text, fontWeight:"500" }}>
                       {p.vaccine.substring(0,30)}
                     </td>
-                    <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.6)", fontSize:"11px" }}>
+                    <td style={{ padding:"10px 14px", color: t.textSec, fontSize:"11px" }}>
                       {p.mfg.substring(0,25)}
                     </td>
-                    <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.6)" }}>{p.dept}</td>
+                    <td style={{ padding:"10px 14px", color: t.textSec }}>{p.dept}</td>
                     <td style={{ padding:"10px 14px", color:"#4FC3F7", fontWeight:"700" }}>
                       {p.price === 0 ? <span style={{ color:"#4ADE80" }}>FREE</span> : `₹${p.price}`}
                     </td>

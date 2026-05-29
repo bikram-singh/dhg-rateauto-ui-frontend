@@ -118,7 +118,7 @@ export default function Dashboard() {
     return true;
   }), [pricing, vaccineMap, hospitalMap, departmentMap, filters, searchQuery]);
 
-  const sp = { pricing, vaccines, hospitals, departments };
+  const sp = { pricing, vaccines, hospitals, departments, darkMode };
 
   if (!currentUser) return <LoginPage onLogin={setCurrentUser}/>;
 

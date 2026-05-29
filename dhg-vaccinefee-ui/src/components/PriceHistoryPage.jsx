@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
@@ -15,7 +16,8 @@ function generateHistory(basePrice) {
   });
 }
 
-export default function PriceHistoryPage({ pricing = [], vaccines = [], hospitals = [] }) {
+export default function PriceHistoryPage({ pricing = [], vaccines = [], hospitals = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [selectedVaccine, setSelectedVaccine] = useState("");
   const [selectedHospital, setSelectedHospital] = useState("");
   const [compareMode, setCompareMode] = useState(false);
@@ -129,14 +131,14 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
   return (
     <div>
       <div style={{ marginBottom:"20px" }}>
-        <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Price History & Trends</h2>
-        <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Track vaccine price trends across hospitals over time</p>
+        <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Price History & Trends</h2>
+        <p style={{ color: t.textSec, fontSize:"13px" }}>Track vaccine price trends across hospitals over time</p>
       </div>
 
       {/* Controls */}
       <div style={{ display:"flex", gap:"12px", marginBottom:"20px", flexWrap:"wrap", alignItems:"center" }}>
         <select value={selectedVaccine} onChange={(e) => { setSelectedVaccine(e.target.value); setSelectedHospital(""); setCompareVaccines([]); }}
-          style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)", color:"#fff",
+          style={{ background: t.input, border:"1px solid rgba(255,255,255,0.2)", color: t.text,
             borderRadius:"8px", padding:"9px 14px", fontSize:"13px", fontFamily:"inherit", flex:1, maxWidth:"280px" }}>
           <option value="">Select a Vaccine...</option>
           {availableVaccines.map((v) => <option key={v.id} value={v.name} style={{ background:"#0D1B4B" }}>{v.name}</option>)}
@@ -144,7 +146,7 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
 
         {selectedVaccine && !compareMode && (
           <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}
-            style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)", color:"#fff",
+            style={{ background: t.input, border:"1px solid rgba(255,255,255,0.2)", color: t.text,
               borderRadius:"8px", padding:"9px 14px", fontSize:"13px", fontFamily:"inherit", flex:1, maxWidth:"280px" }}>
             <option value="">All Hospitals (Average)</option>
             {availableHospitals.map((h) => <option key={h.id} value={h.name} style={{ background:"#0D1B4B" }}>{h.name}</option>)}
@@ -162,9 +164,9 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
 
       {/* Compare vaccine selector */}
       {compareMode && (
-        <div style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"10px", padding:"14px 16px", marginBottom:"16px" }}>
-          <div style={{ color:"rgba(255,255,255,0.6)", fontSize:"12px", marginBottom:"10px" }}>
+          <div style={{ color: t.textSec, fontSize:"12px", marginBottom:"10px" }}>
             Select up to 4 vaccines to compare:
           </div>
           <div style={{ display:"flex", flexWrap:"wrap", gap:"8px" }}>
@@ -190,10 +192,10 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
             { label:"Avg Price", value:`₹${priceStats.avg}`, color:"#4FC3F7" },
             { label:"Hospitals", value:priceStats.count, color:"#FFA726" },
           ].map((s) => (
-            <div key={s.label} style={{ background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)",
+            <div key={s.label} style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
               borderRadius:"12px", padding:"16px 18px", borderTop:`3px solid ${s.color}` }}>
-              <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.5px", fontWeight:"600" }}>{s.label}</div>
-              <div style={{ fontSize:"24px", fontWeight:"700", color:"#fff", marginTop:"4px" }}>{s.value}</div>
+              <div style={{ fontSize:"11px", color: t.textSec, textTransform:"uppercase", letterSpacing:"0.5px", fontWeight:"600" }}>{s.label}</div>
+              <div style={{ fontSize:"24px", fontWeight:"700", color: t.text, marginTop:"4px" }}>{s.value}</div>
             </div>
           ))}
         </div>
@@ -201,14 +203,14 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
 
       {/* Trend chart */}
       {(historyData.length > 0 || (compareMode && compareVaccines.length > 0)) && (
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", padding:"20px", marginBottom:"20px" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
             <div>
-              <div style={{ color:"#fff", fontWeight:"600", fontSize:"15px" }}>
+              <div style={{ color: t.text, fontWeight:"600", fontSize:"15px" }}>
                 {compareMode ? "Vaccine Price Comparison" : `${selectedVaccine} — Price Trend`}
               </div>
-              <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px" }}>
+              <div style={{ color: t.textSec, fontSize:"12px" }}>
                 {compareMode ? `${compareVaccines.length} vaccines selected` : selectedHospital || "Average across all hospitals"}
               </div>
             </div>
@@ -227,7 +229,7 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)"/>
               <XAxis dataKey="month" tick={{ fill:"rgba(255,255,255,0.5)", fontSize:11 }} tickLine={false} axisLine={false}/>
               <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:11 }} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`}/>
-              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px" }}
+              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }}
                 formatter={(v, n) => [`₹${v}`, n]}/>
               {compareMode && compareVaccines.length > 0 ? (
                 compareVaccines.map((vName, i) => (
@@ -238,7 +240,7 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
                 <Line type="monotone" dataKey="price" stroke="#4FC3F7" strokeWidth={2.5}
                   dot={{ fill:"#4FC3F7", r:4, strokeWidth:0 }} activeDot={{ r:6 }}/>
               )}
-              {compareMode && <Legend wrapperStyle={{ fontSize:"11px", color:"rgba(255,255,255,0.6)" }}/>}
+              {compareMode && <Legend wrapperStyle={{ fontSize:"11px", color: t.textSec }}/>}
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -246,18 +248,18 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
 
       {/* Hospital price breakdown */}
       {hospitalPrices.length > 0 && !compareMode && (
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden" }}>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden" }}>
           <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-            <span style={{ color:"#fff", fontWeight:"600" }}>Price Across Hospitals</span>
-            <span style={{ color:"rgba(255,255,255,0.4)", fontSize:"12px", marginLeft:"10px" }}>Sorted lowest to highest</span>
+            <span style={{ color: t.text, fontWeight:"600" }}>Price Across Hospitals</span>
+            <span style={{ color: t.textMuted, fontSize:"12px", marginLeft:"10px" }}>Sorted lowest to highest</span>
           </div>
           <div style={{ overflowX:"auto" }}>
             <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
               <thead>
-                <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+                <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                   {["#","Hospital","Location","Price","vs Avg","Status"].map((h) => (
                     <th key={h} style={{ padding:"10px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600",
-                      color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.4px" }}>{h}</th>
+                      color: t.textSec, textTransform:"uppercase", letterSpacing:"0.4px" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -269,9 +271,9 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
                     <tr key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.05)" }}
                       onMouseEnter={(e) => e.currentTarget.style.background="rgba(255,255,255,0.04)"}
                       onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
-                      <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.4)" }}>{i+1}</td>
-                      <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.85)", fontWeight:"500" }}>{h.hospital}</td>
-                      <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.5)", fontSize:"11px" }}>{h.location?.split(",")[0]}</td>
+                      <td style={{ padding:"10px 14px", color: t.textMuted }}>{i+1}</td>
+                      <td style={{ padding:"10px 14px", color: t.text, fontWeight:"500" }}>{h.hospital}</td>
+                      <td style={{ padding:"10px 14px", color: t.textSec, fontSize:"11px" }}>{h.location?.split(",")[0]}</td>
                       <td style={{ padding:"10px 14px", color:"#4FC3F7", fontWeight:"700" }}>
                         {h.price === 0 ? <span style={{ color:"#4ADE80" }}>FREE</span> : `₹${h.price}`}
                       </td>
@@ -303,7 +305,7 @@ export default function PriceHistoryPage({ pricing = [], vaccines = [], hospital
       )}
 
       {!selectedVaccine && !compareMode && (
-        <div style={{ textAlign:"center", padding:"60px 20px", color:"rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign:"center", padding:"60px 20px", color: t.textMuted }}>
           <div style={{ fontSize:"48px", marginBottom:"12px" }}>📈</div>
           <div style={{ fontSize:"16px", fontWeight:"500" }}>Select a vaccine to view price history</div>
           <div style={{ fontSize:"13px", marginTop:"6px" }}>Compare prices across hospitals and track trends over time</div>

@@ -1,7 +1,9 @@
-import { RefreshCw } from "lucide-react";
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { Activity, Building, TrendingUp, RefreshCw } from "lucide-react";
+import { theme } from "../theme";
+import { useState, useMemo, useEffect } from "react";
 
-export default function StatsCards({ vaccines = [], hospitals = [], pricing = [], onRefresh }) {
+export default function StatsCards({ vaccines = [], hospitals = [], pricing = [], onRefresh, darkMode = true }) {
+  const t = theme(darkMode);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [countdown, setCountdown]     = useState(30);
   const [refreshing, setRefreshing]   = useState(false);
@@ -14,30 +16,29 @@ export default function StatsCards({ vaccines = [], hospitals = [], pricing = []
   const available    = pricing.filter((p) => p.status === "Available").length;
   const lowStock     = pricing.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= 10).length;
   const outOfStock   = pricing.filter((p) => p.stock_quantity === 0).length;
+  const insured      = pricing.filter((p) => p.insurance_covered !== "No").length;
 
   // Auto-refresh every 30 seconds
-  // handleRefresh FIRST
-const handleRefresh = useCallback(async () => {
-  setRefreshing(true);
-  if (onRefresh) await onRefresh();
-  setLastRefresh(new Date());
-  setCountdown(30);
-  setTimeout(() => setRefreshing(false), 800);
-}, [onRefresh]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) {
+          handleRefresh();
+          return 30;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-// useEffect SECOND
-useEffect(() => {
-  const interval = setInterval(() => {
-    setCountdown((c) => {
-      if (c <= 1) {
-        handleRefresh();
-        return 30;
-      }
-      return c - 1;
-    });
-  }, 1000);
-  return () => clearInterval(interval);
-}, [handleRefresh]);
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    if (onRefresh) await onRefresh();
+    setLastRefresh(new Date());
+    setCountdown(30);
+    setTimeout(() => setRefreshing(false), 800);
+  };
 
   return (
     <div>
@@ -45,7 +46,7 @@ useEffect(() => {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
         marginBottom: "10px", flexWrap: "wrap", gap: "8px" }}>
         <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-          <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>
+          <span style={{ fontSize: "12px", color: t.textSec }}>
             Last updated: {lastRefresh.toLocaleTimeString()}
           </span>
           <span style={{ fontSize: "12px", color: "rgba(79,195,247,0.8)" }}>
@@ -77,7 +78,7 @@ useEffect(() => {
         <div className="stat-card stat-card--blue">
           <span className="stat-label">Total Vaccines</span>
           <span className="stat-value">{vaccines.length || "—"}</span>
-          <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)", marginTop: "4px" }}>
+          <span style={{ fontSize: "11px", color: t.textSec, marginTop: "4px" }}>
             across {hospitals.length} hospitals
           </span>
         </div>
@@ -85,7 +86,7 @@ useEffect(() => {
         <div className="stat-card stat-card--teal">
           <span className="stat-label">Hospitals Covered</span>
           <span className="stat-value">{hospitals.length || "—"}</span>
-          <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)", marginTop: "4px" }}>
+          <span style={{ fontSize: "11px", color: t.textSec, marginTop: "4px" }}>
             India + USA + International
           </span>
         </div>
@@ -104,15 +105,15 @@ useEffect(() => {
           <div style={{ display: "flex", gap: "8px", marginTop: "6px", flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: "18px", fontWeight: "700", color: "#4ADE80" }}>{available}</div>
-              <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.5)" }}>Available</div>
+              <div style={{ fontSize: "10px", color: t.textSec }}>Available</div>
             </div>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: "18px", fontWeight: "700", color: "#FCD34D" }}>{lowStock}</div>
-              <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.5)" }}>Low Stock</div>
+              <div style={{ fontSize: "10px", color: t.textSec }}>Low Stock</div>
             </div>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: "18px", fontWeight: "700", color: "#F87171" }}>{outOfStock}</div>
-              <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.5)" }}>Out of Stock</div>
+              <div style={{ fontSize: "10px", color: t.textSec }}>Out of Stock</div>
             </div>
           </div>
         </div>

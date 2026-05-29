@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { Search, ChevronDown, ChevronUp, Shield, AlertTriangle, Clock, Users, Activity, DollarSign } from "lucide-react";
 
 const VACCINE_DETAILS = {
@@ -28,7 +29,9 @@ const DEFAULT_DETAIL = {
   doses:1, durationWeeks:0,
 };
 
-export default function VaccineDetailPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+
+export default function VaccineDetailPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [search, setSearch]         = useState("");
   const [selected, setSelected]     = useState(null);
   const [expandedSection, setExpanded] = useState("overview");
@@ -65,14 +68,14 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
   }, [selected, pricing, hospitalMap]);
 
   const Section = ({ id, title, icon, children }) => (
-    <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:"10px", overflow:"hidden", marginBottom:"10px" }}>
+    <div style={{ background: t.surfaceAlt, border:"1px solid rgba(255,255,255,0.08)", borderRadius:"10px", overflow:"hidden", marginBottom:"10px" }}>
       <button onClick={() => setExpanded(expandedSection === id ? null : id)}
         style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between",
-          padding:"12px 16px", background:"none", border:"none", cursor:"pointer", color:"#fff" }}>
+          padding:"12px 16px", background:"none", border:"none", cursor:"pointer", color: t.text }}>
         <div style={{ display:"flex", alignItems:"center", gap:"8px", fontSize:"13px", fontWeight:"600" }}>
           {icon}{title}
         </div>
-        {expandedSection === id ? <ChevronUp size={14} style={{ color:"rgba(255,255,255,0.4)" }}/> : <ChevronDown size={14} style={{ color:"rgba(255,255,255,0.4)" }}/>}
+        {expandedSection === id ? <ChevronUp size={14} style={{ color: t.textMuted }}/> : <ChevronDown size={14} style={{ color: t.textMuted }}/>}
       </button>
       {expandedSection === id && (
         <div style={{ padding:"0 16px 14px", borderTop:"1px solid rgba(255,255,255,0.06)" }}>
@@ -87,14 +90,14 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
       {/* Left — vaccine list */}
       <div style={{ width:"320px", flexShrink:0, display:"flex", flexDirection:"column", gap:"12px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"18px", fontWeight:"700" }}>Vaccine Library</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px" }}>{filtered.length} vaccines</p>
+          <h2 style={{ color: t.text, fontSize:"18px", fontWeight:"700" }}>Vaccine Library</h2>
+          <p style={{ color: t.textSec, fontSize:"12px" }}>{filtered.length} vaccines</p>
         </div>
         <div style={{ position:"relative" }}>
-          <Search size={13} style={{ position:"absolute", left:"10px", top:"50%", transform:"translateY(-50%)", color:"rgba(255,255,255,0.4)" }}/>
+          <Search size={13} style={{ position:"absolute", left:"10px", top:"50%", transform:"translateY(-50%)", color: t.textMuted }}/>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search vaccines, diseases..."
-            style={{ width:"100%", padding:"8px 12px 8px 30px", background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px", outline:"none" }}/>
+            style={{ width:"100%", padding:"8px 12px 8px 30px", background: t.input,
+              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px", outline:"none" }}/>
         </div>
         <div style={{ flex:1, overflowY:"auto", display:"flex", flexDirection:"column", gap:"6px" }}>
           {filtered.map((v) => (
@@ -104,12 +107,12 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                 border: selected?.id === v.id ? "1px solid rgba(79,195,247,0.4)" : "1px solid rgba(255,255,255,0.08)",
                 transition:"all 0.12s" }}>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:"8px" }}>
-                <span style={{ color:"#fff", fontWeight:"600", fontSize:"12px", lineHeight:1.3 }}>{v.name}</span>
+                <span style={{ color: t.text, fontWeight:"600", fontSize:"12px", lineHeight:1.3 }}>{v.name}</span>
                 <span style={{ fontSize:"12px", fontWeight:"700", color:"#4FC3F7", flexShrink:0 }}>
                   {v.minPrice === 0 ? "FREE" : `₹${v.minPrice}`}
                 </span>
               </div>
-              <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.45)", marginTop:"3px" }}>{v.manufacturer}</div>
+              <div style={{ fontSize:"11px", color: t.textSec, marginTop:"3px" }}>{v.manufacturer}</div>
               <div style={{ display:"flex", gap:"6px", marginTop:"6px", flexWrap:"wrap" }}>
                 {(v.detail.diseases||[]).slice(0,2).map((d) => (
                   <span key={d} style={{ fontSize:"10px", padding:"1px 7px", borderRadius:"20px",
@@ -129,8 +132,8 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
             border:"1px solid rgba(79,195,247,0.2)", borderRadius:"14px", padding:"22px", marginBottom:"16px" }}>
             <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"16px", flexWrap:"wrap" }}>
               <div>
-                <h2 style={{ color:"#fff", fontSize:"18px", fontWeight:"700", marginBottom:"4px" }}>{selected.name}</h2>
-                <div style={{ color:"rgba(255,255,255,0.6)", fontSize:"13px", marginBottom:"12px" }}>{selected.manufacturer}</div>
+                <h2 style={{ color: t.text, fontSize:"18px", fontWeight:"700", marginBottom:"4px" }}>{selected.name}</h2>
+                <div style={{ color: t.textSec, fontSize:"13px", marginBottom:"12px" }}>{selected.manufacturer}</div>
                 <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
                   {(selected.detail.diseases||[]).map((d) => (
                     <span key={d} style={{ fontSize:"12px", padding:"3px 12px", borderRadius:"20px",
@@ -145,9 +148,9 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                   { label:"Hospitals", value:selected.available, color:"#FFA726" },
                   { label:"Insured", value:selected.insured, color:"#AB47BC" },
                 ].map((s) => (
-                  <div key={s.label} style={{ background:"rgba(255,255,255,0.08)", borderRadius:"8px", padding:"10px 14px", textAlign:"center" }}>
+                  <div key={s.label} style={{ background: t.input, borderRadius:"8px", padding:"10px 14px", textAlign:"center" }}>
                     <div style={{ fontSize:"18px", fontWeight:"700", color:s.color }}>{s.value}</div>
-                    <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.5)" }}>{s.label}</div>
+                    <div style={{ fontSize:"10px", color: t.textSec }}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -162,11 +165,11 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
               { icon:<Users size={13}/>, label:"Who", value:selected.detail.whoShouldTake?.split(",")[0] },
             ].map((s) => (
               <div key={s.label} style={{ display:"flex", alignItems:"center", gap:"8px", padding:"8px 14px",
-                background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"8px", flex:1, minWidth:"140px" }}>
+                background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"8px", flex:1, minWidth:"140px" }}>
                 <div style={{ color:"#4FC3F7" }}>{s.icon}</div>
                 <div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)", textTransform:"uppercase", letterSpacing:"0.4px" }}>{s.label}</div>
-                  <div style={{ fontSize:"12px", color:"#fff", fontWeight:"500", marginTop:"1px" }}>{s.value}</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted, textTransform:"uppercase", letterSpacing:"0.4px" }}>{s.label}</div>
+                  <div style={{ fontSize:"12px", color: t.text, fontWeight:"500", marginTop:"1px" }}>{s.value}</div>
                 </div>
               </div>
             ))}
@@ -188,7 +191,7 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                 <div key={i} style={{ flex:1, background:"rgba(79,195,247,0.15)", border:"1px solid rgba(79,195,247,0.3)",
                   borderRadius:"8px", padding:"8px", textAlign:"center" }}>
                   <div style={{ color:"#4FC3F7", fontWeight:"700", fontSize:"16px" }}>Dose {i+1}</div>
-                  <div style={{ color:"rgba(255,255,255,0.4)", fontSize:"10px", marginTop:"2px" }}>
+                  <div style={{ color: t.textMuted, fontSize:"10px", marginTop:"2px" }}>
                     {i === 0 ? "Day 0" : i === 1 && selected.detail.durationWeeks > 0 ? `Week ${selected.detail.durationWeeks/2}` : `Week ${selected.detail.durationWeeks}`}
                   </div>
                 </div>
@@ -203,7 +206,7 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                   background:"rgba(245,158,11,0.1)", color:"#FCD34D", border:"1px solid rgba(245,158,11,0.2)" }}>{s}</span>
               ))}
             </div>
-            <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px", marginTop:"10px", lineHeight:1.6 }}>
+            <p style={{ color: t.textSec, fontSize:"12px", marginTop:"10px", lineHeight:1.6 }}>
               Most side effects are mild and temporary. Consult a doctor if symptoms persist beyond 3 days.
             </p>
           </Section>
@@ -211,17 +214,17 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
           <Section id="who" title="Who Should Take It" icon={<Users size={14} style={{ color:"#66BB6A" }}/>}>
             <div style={{ marginTop:"10px" }}>
               <div style={{ fontSize:"12px", color:"#4ADE80", fontWeight:"600", marginBottom:"6px" }}>✓ Recommended for:</div>
-              <p style={{ color:"rgba(255,255,255,0.7)", fontSize:"13px", lineHeight:1.6 }}>{selected.detail.whoShouldTake}</p>
+              <p style={{ color: t.text, fontSize:"13px", lineHeight:1.6 }}>{selected.detail.whoShouldTake}</p>
               <div style={{ fontSize:"12px", color:"#F87171", fontWeight:"600", marginTop:"12px", marginBottom:"6px" }}>✗ Should avoid or consult doctor:</div>
-              <p style={{ color:"rgba(255,255,255,0.7)", fontSize:"13px", lineHeight:1.6 }}>{selected.detail.whoShouldAvoid}</p>
+              <p style={{ color: t.text, fontSize:"13px", lineHeight:1.6 }}>{selected.detail.whoShouldAvoid}</p>
             </div>
           </Section>
 
           {/* Hospital prices */}
-          <div style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)",
+          <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.08)",
             borderRadius:"12px", overflow:"hidden", marginBottom:"10px" }}>
             <div style={{ padding:"12px 16px", borderBottom:"1px solid rgba(255,255,255,0.08)",
-              fontSize:"13px", fontWeight:"600", color:"#fff", display:"flex", alignItems:"center", gap:"8px" }}>
+              fontSize:"13px", fontWeight:"600", color: t.text, display:"flex", alignItems:"center", gap:"8px" }}>
               <DollarSign size={14} style={{ color:"#4FC3F7" }}/> Available at {hospitalPrices.length} Hospitals
             </div>
             <div style={{ maxHeight:"240px", overflowY:"auto" }}>
@@ -229,8 +232,8 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
                 <div key={i} style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
                   padding:"10px 16px", borderBottom:"1px solid rgba(255,255,255,0.04)" }}>
                   <div>
-                    <div style={{ color:"rgba(255,255,255,0.85)", fontSize:"12px", fontWeight:"500" }}>{p.hospital?.name}</div>
-                    <div style={{ color:"rgba(255,255,255,0.4)", fontSize:"10px" }}>{p.hospital?.location?.split(",")[0]}</div>
+                    <div style={{ color: t.text, fontSize:"12px", fontWeight:"500" }}>{p.hospital?.name}</div>
+                    <div style={{ color: t.textMuted, fontSize:"10px" }}>{p.hospital?.location?.split(",")[0]}</div>
                   </div>
                   <div style={{ textAlign:"right" }}>
                     <div style={{ color: p.price===0?"#4ADE80":"#4FC3F7", fontWeight:"700", fontSize:"13px" }}>
@@ -247,7 +250,7 @@ export default function VaccineDetailPage({ pricing = [], vaccines = [], hospita
         </div>
       ) : (
         <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column",
-          color:"rgba(255,255,255,0.3)", gap:"12px" }}>
+          color: t.textMuted, gap:"12px" }}>
           <div style={{ fontSize:"56px" }}>💉</div>
           <div style={{ fontSize:"16px", fontWeight:"500" }}>Select a vaccine to view full details</div>
           <div style={{ fontSize:"13px" }}>Uses, side effects, schedule, pricing across all hospitals</div>

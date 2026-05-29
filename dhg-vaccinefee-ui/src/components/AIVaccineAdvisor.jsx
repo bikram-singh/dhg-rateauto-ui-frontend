@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { theme } from "../theme";
 import { Send, Bot, User, RefreshCw, Sparkles, Mic, MicOff, Volume2 } from "lucide-react";
 
 const API_BASE = "/vaccinefee/api";
@@ -12,11 +13,12 @@ const SUGGESTED_QUESTIONS = [
   "Which vaccines are free at government hospitals?",
 ];
 
-export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospitals = [] }) {
+export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospitals = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [messages, setMessages]   = useState([
     {
       role: "assistant",
-      content: "👋 Hello! I'm your DHG AI Vaccine Advisor.\n\nI can help you with:\n• **Personalized vaccine recommendations** based on your age, health, and travel plans\n• **Vaccine information** — uses, side effects, schedules\n• **Hospital suggestions** — where to get vaccinated in your city\n• **Price comparisons** across our 108 hospitals\n\nYou can **type** or use the 🎤 **microphone** to ask your question!"
+      content: "👋 Hello! I'm your DHG AI Vaccine Advisor, powered by Claude AI.\n\nI can help you with:\n• **Personalized vaccine recommendations** based on your age, health, and travel plans\n• **Vaccine information** — uses, side effects, schedules\n• **Hospital suggestions** — where to get vaccinated in your city\n• **Price comparisons** across our 108 hospitals\n\nYou can **type** or use the 🎤 **microphone** to ask your question!"
     }
   ]);
   const [input, setInput]         = useState("");
@@ -76,7 +78,7 @@ export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospital
     const clean = text
       .replace(/\*\*(.*?)\*\*/g, "$1")
       .replace(/\*(.*?)\*/g, "$1")
-      .replace(/^[•-] /gm, "")
+      .replace(/^[•\-] /gm, "")
       .replace(/\n/g, ". ")
       .substring(0, 500); // Limit length
     const utt   = new SpeechSynthesisUtterance(clean);
@@ -193,13 +195,13 @@ GUIDELINES:
           <div style={{ width:"42px", height:"42px", borderRadius:"12px",
             background:"linear-gradient(135deg,#4FC3F7,#1565C0)",
             display:"flex", alignItems:"center", justifyContent:"center" }}>
-            <Sparkles size={20} style={{ color:"#fff" }}/>
+            <Sparkles size={20} style={{ color: t.text }}/>
           </div>
           <div>
-            <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>AI Vaccine Advisor</h2>
-            <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>
+            <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>AI Vaccine Advisor</h2>
+            <p style={{ color: t.textSec, fontSize:"13px" }}>
               Type or speak your question
-              {voiceSupported && <span style={{ color:"#4ADE80", marginLeft:"6px" }}>🎤 Voice & chat enabled</span>}
+              {voiceSupported && <span style={{ color:"#4ADE80", marginLeft:"6px" }}>🎤 Voice enabled</span>}
             </p>
           </div>
           <div style={{ marginLeft:"auto", display:"flex", gap:"8px" }}>
@@ -214,8 +216,8 @@ GUIDELINES:
             )}
             <button onClick={() => { setMessages([messages[0]]); stopSpeaking(); }}
               style={{ display:"flex", alignItems:"center", gap:"5px", padding:"7px 12px",
-                background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)",
-                color:"rgba(255,255,255,0.6)", borderRadius:"8px", fontSize:"12px", cursor:"pointer" }}>
+                background: t.card, border:"1px solid rgba(255,255,255,0.15)",
+                color: t.textSec, borderRadius:"8px", fontSize:"12px", cursor:"pointer" }}>
               <RefreshCw size={13}/> New Chat
             </button>
           </div>
@@ -234,8 +236,8 @@ GUIDELINES:
                 : "linear-gradient(135deg,#4FC3F7,#1565C0)",
               display:"flex", alignItems:"center", justifyContent:"center" }}>
               {msg.role==="user"
-                ? <User size={16} style={{ color:"rgba(255,255,255,0.7)" }}/>
-                : <Bot size={16} style={{ color:"#fff" }}/>}
+                ? <User size={16} style={{ color: t.text }}/>
+                : <Bot size={16} style={{ color: t.text }}/>}
             </div>
             <div style={{ position:"relative" }}>
               <div style={{
@@ -243,7 +245,7 @@ GUIDELINES:
                 fontSize:"13px", lineHeight:1.7,
                 background: msg.role==="user" ? "rgba(79,195,247,0.15)" : "rgba(255,255,255,0.07)",
                 border: msg.role==="user" ? "1px solid rgba(79,195,247,0.3)" : "1px solid rgba(255,255,255,0.1)",
-                color:"rgba(255,255,255,0.88)",
+                color: t.text,
                 borderTopRightRadius: msg.role==="user" ? "4px" : "12px",
                 borderTopLeftRadius:  msg.role==="assistant" ? "4px" : "12px",
               }}
@@ -252,7 +254,7 @@ GUIDELINES:
               {msg.role==="assistant" && voiceSupported && (
                 <button onClick={() => speakText(msg.content)}
                   style={{ position:"absolute", bottom:"-18px", left:"0",
-                    background:"none", border:"none", color:"rgba(255,255,255,0.3)",
+                    background:"none", border:"none", color: t.textMuted,
                     cursor:"pointer", fontSize:"10px", display:"flex", alignItems:"center", gap:"3px" }}>
                   <Volume2 size={10}/> Listen
                 </button>
@@ -266,10 +268,10 @@ GUIDELINES:
             <div style={{ width:"34px", height:"34px", borderRadius:"10px", flexShrink:0,
               background:"linear-gradient(135deg,#4FC3F7,#1565C0)",
               display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <Bot size={16} style={{ color:"#fff" }}/>
+              <Bot size={16} style={{ color: t.text }}/>
             </div>
             <div style={{ padding:"14px 18px", borderRadius:"12px", borderTopLeftRadius:"4px",
-              background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)",
+              background: t.card, border:"1px solid rgba(255,255,255,0.1)",
               display:"flex", gap:"5px", alignItems:"center" }}>
               {[0,1,2].map((d) => (
                 <div key={d} style={{ width:"7px", height:"7px", borderRadius:"50%",
@@ -285,7 +287,7 @@ GUIDELINES:
       {/* Suggested questions */}
       {messages.length <= 1 && (
         <div style={{ marginBottom:"14px" }}>
-          <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.4)", marginBottom:"8px",
+          <div style={{ fontSize:"11px", color: t.textMuted, marginBottom:"8px",
             textTransform:"uppercase", letterSpacing:"0.5px", fontWeight:"600" }}>
             Suggested Questions
           </div>
@@ -294,7 +296,7 @@ GUIDELINES:
               <button key={q} onClick={() => sendMessage(q)}
                 style={{ padding:"7px 14px", borderRadius:"20px", fontSize:"12px", cursor:"pointer",
                   background:"rgba(79,195,247,0.08)", border:"1px solid rgba(79,195,247,0.2)",
-                  color:"rgba(255,255,255,0.7)", textAlign:"left" }}>
+                  color: t.text, textAlign:"left" }}>
                 {q}
               </button>
             ))}
@@ -322,9 +324,9 @@ GUIDELINES:
           onKeyDown={handleKeyDown}
           placeholder={listening ? "Listening... speak now" : "Ask about vaccines, recommendations, side effects, prices..."}
           rows={2}
-          style={{ flex:1, padding:"12px 16px", background:"rgba(255,255,255,0.08)",
+          style={{ flex:1, padding:"12px 16px", background: t.input,
             border: listening ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.2)",
-            borderRadius:"12px", color:"#fff", fontSize:"13px", fontFamily:"inherit",
+            borderRadius:"12px", color: t.text, fontSize:"13px", fontFamily:"inherit",
             outline:"none", resize:"none", lineHeight:1.5,
             boxShadow: listening ? "0 0 0 3px rgba(239,68,68,0.15)" : "none" }}
         />
@@ -340,7 +342,7 @@ GUIDELINES:
               cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
               boxShadow: listening ? "0 0 16px rgba(239,68,68,0.4)" : "none",
               animation: listening ? "pulse 1s ease-in-out infinite" : "none" }}>
-            {listening ? <MicOff size={18} style={{ color:"#fff" }}/> : <Mic size={18} style={{ color:"rgba(255,255,255,0.7)" }}/>}
+            {listening ? <MicOff size={18} style={{ color: t.text }}/> : <Mic size={18} style={{ color: t.text }}/>}
           </button>
         )}
 
@@ -356,7 +358,7 @@ GUIDELINES:
         </button>
       </div>
 
-      <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.3)", textAlign:"center", marginTop:"8px" }}>
+      <div style={{ fontSize:"11px", color: t.textMuted, textAlign:"center", marginTop:"8px" }}>
         AI responses are for informational purposes only. Always consult a qualified healthcare professional.
         {voiceSupported && " • Voice input supported in English"}
       </div>

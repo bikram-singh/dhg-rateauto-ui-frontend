@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { Plus, Edit2, Trash2, Save, X, Search } from "lucide-react";
 
 const API_BASE = "/vaccinefee/api";
 
-export default function AdminPanel({ vaccines = [], hospitals = [], pricing = [], departments = [], userRole }) {
+export default function AdminPanel({ vaccines = [], hospitals = [], pricing = [], departments = [], userRole, dar
+  const t = theme(darkMode);kMode = true }) {
   const [activeTab, setActiveTab]   = useState("vaccines");
   const [search, setSearch]         = useState("");
   const [editItem, setEditItem]     = useState(null);

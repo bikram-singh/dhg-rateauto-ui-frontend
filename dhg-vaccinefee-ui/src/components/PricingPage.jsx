@@ -1,7 +1,9 @@
 import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { Search, Download, Printer } from "lucide-react";
 
-export default function PricingPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function PricingPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [search, setSearch] = useState("");
   const [page, setPage]     = useState(1);
   const pageSize            = 100;
@@ -103,8 +105,8 @@ export default function PricingPage({ pricing = [], vaccines = [], hospitals = [
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Pricing Records</h2>
-          <p style={{ color:"rgba(255,255,255,0.6)", fontSize:"13px" }}>{filtered.length} records found</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Pricing Records</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>{filtered.length} records found</p>
         </div>
         <div style={{ display:"flex", gap:"8px" }}>
           <button onClick={exportCSV} style={{
@@ -134,23 +136,23 @@ export default function PricingPage({ pricing = [], vaccines = [], hospitals = [
         </div>
       </div>
 
-      <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+      <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
         borderRadius:"12px", overflow:"hidden" }}>
         <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"12px 16px",
           borderBottom:"1px solid rgba(255,255,255,0.08)", flexWrap:"wrap" }}>
           <div style={{ position:"relative" }}>
-            <Search size={14} style={{ position:"absolute", left:"10px", top:"50%", transform:"translateY(-50%)", color:"rgba(255,255,255,0.4)" }}/>
+            <Search size={14} style={{ position:"absolute", left:"10px", top:"50%", transform:"translateY(-50%)", color: t.textMuted }}/>
             <input
               type="text"
               placeholder="Search pricing records..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              style={{ paddingLeft:"30px", padding:"7px 12px 7px 30px", background:"rgba(255,255,255,0.08)",
-                border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+              style={{ paddingLeft:"30px", padding:"7px 12px 7px 30px", background: t.input,
+                border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
                 fontSize:"13px", outline:"none", width:"250px" }}
             />
           </div>
-          <span style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px", marginLeft:"auto" }}>
+          <span style={{ color: t.textSec, fontSize:"12px", marginLeft:"auto" }}>
             Showing {paginated.length} of {filtered.length} records
           </span>
         </div>
@@ -158,26 +160,26 @@ export default function PricingPage({ pricing = [], vaccines = [], hospitals = [
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
-              <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+              <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                 {["Department","Vaccine","Hospital","Location","Manufacturer","Price","Insurance","Status"].map((h) => (
                   <th key={h} style={{ padding:"11px 14px", textAlign:"left", fontSize:"11px",
-                    fontWeight:"600", color:"rgba(255,255,255,0.5)", textTransform:"uppercase",
+                    fontWeight:"600", color: t.textSec, textTransform:"uppercase",
                     letterSpacing:"0.4px", whiteSpace:"nowrap" }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {paginated.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding:"2rem", textAlign:"center", color:"rgba(255,255,255,0.4)" }}>No records found</td></tr>
+                <tr><td colSpan={8} style={{ padding:"2rem", textAlign:"center", color: t.textMuted }}>No records found</td></tr>
               ) : paginated.map((r, i) => (
                 <tr key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.05)", transition:"background 0.1s" }}
                   onMouseEnter={(e) => e.currentTarget.style.background="rgba(255,255,255,0.04)"}
                   onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
-                  <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.85)" }}>{r.dept}</td>
-                  <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.85)" }}>{r.vaccine}</td>
-                  <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.85)" }}>{r.hospital}</td>
-                  <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.6)", fontSize:"12px" }}>{r.location}</td>
-                  <td style={{ padding:"10px 14px", color:"rgba(255,255,255,0.7)" }}>{r.mfg}</td>
+                  <td style={{ padding:"10px 14px", color: t.text }}>{r.dept}</td>
+                  <td style={{ padding:"10px 14px", color: t.text }}>{r.vaccine}</td>
+                  <td style={{ padding:"10px 14px", color: t.text }}>{r.hospital}</td>
+                  <td style={{ padding:"10px 14px", color: t.textSec, fontSize:"12px" }}>{r.location}</td>
+                  <td style={{ padding:"10px 14px", color: t.text }}>{r.mfg}</td>
                   <td style={{ padding:"10px 14px", color:"#4FC3F7", fontWeight:"600" }}>₹{r.price}</td>
                   <td style={{ padding:"10px 14px" }}>
                     <span style={{ fontSize:"11px", fontWeight:"600", padding:"3px 10px", borderRadius:"20px",
@@ -203,22 +205,22 @@ export default function PricingPage({ pricing = [], vaccines = [], hospitals = [
 
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
           padding:"12px 16px", borderTop:"1px solid rgba(255,255,255,0.08)", flexWrap:"wrap", gap:"8px" }}>
-          <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)" }}>
+          <span style={{ fontSize:"12px", color: t.textSec }}>
             Page {page} of {totalPages}
           </span>
           <div style={{ display:"flex", gap:"4px" }}>
             <button onClick={() => setPage(1)} disabled={page===1}
-              style={{ padding:"5px 10px", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)",
+              style={{ padding:"5px 10px", background: t.card, border:"1px solid rgba(255,255,255,0.15)",
                 borderRadius:"6px", color:page===1?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.7)", fontSize:"12px", cursor:"pointer" }}>«</button>
             <button onClick={() => setPage(p => Math.max(1,p-1))} disabled={page===1}
-              style={{ padding:"5px 10px", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)",
+              style={{ padding:"5px 10px", background: t.card, border:"1px solid rgba(255,255,255,0.15)",
                 borderRadius:"6px", color:page===1?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.7)", fontSize:"12px", cursor:"pointer" }}>Previous</button>
-            <span style={{ padding:"5px 12px", background:"#1565C0", borderRadius:"6px", color:"#fff", fontSize:"12px" }}>{page}</span>
+            <span style={{ padding:"5px 12px", background:"#1565C0", borderRadius:"6px", color: t.text, fontSize:"12px" }}>{page}</span>
             <button onClick={() => setPage(p => Math.min(totalPages,p+1))} disabled={page===totalPages}
-              style={{ padding:"5px 10px", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)",
+              style={{ padding:"5px 10px", background: t.card, border:"1px solid rgba(255,255,255,0.15)",
                 borderRadius:"6px", color:page===totalPages?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.7)", fontSize:"12px", cursor:"pointer" }}>Next</button>
             <button onClick={() => setPage(totalPages)} disabled={page===totalPages}
-              style={{ padding:"5px 10px", background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)",
+              style={{ padding:"5px 10px", background: t.card, border:"1px solid rgba(255,255,255,0.15)",
                 borderRadius:"6px", color:page===totalPages?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.7)", fontSize:"12px", cursor:"pointer" }}>»</button>
           </div>
         </div>

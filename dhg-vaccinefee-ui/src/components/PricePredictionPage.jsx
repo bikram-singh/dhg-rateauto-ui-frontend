@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { theme } from "../theme";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from "recharts";
 import { TrendingUp, TrendingDown, Minus, Download } from "lucide-react";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC"];
@@ -50,7 +51,8 @@ function generatePrediction(basePrice, vaccineId) {
   return { data: history, changePct, slope, lastActual, lastPred };
 }
 
-export default function PricePredictionPage({ pricing = [], vaccines = [], hospitals = [] }) {
+export default function PricePredictionPage({ pricing = [], vaccines = [], hospitals = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [selectedVaccines, setSelectedVaccines] = useState([]);
   const [selectedHospital, setSelectedHospital] = useState("");
 
@@ -125,8 +127,8 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Price Prediction</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Price Prediction</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>
             3-month price forecast using linear regression on historical trends
           </p>
         </div>
@@ -141,9 +143,9 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
 
       {/* Controls */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr auto", gap:"12px", marginBottom:"20px" }}>
-        <div style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", padding:"14px 16px" }}>
-          <div style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)", marginBottom:"10px" }}>
+          <div style={{ fontSize:"12px", color: t.textSec, marginBottom:"10px" }}>
             Select up to 5 vaccines to predict (click to toggle):
           </div>
           <div style={{ display:"flex", flexWrap:"wrap", gap:"6px" }}>
@@ -151,7 +153,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
               const sel = selectedVaccines.find((x) => x.id === v.id);
               const ci  = selectedVaccines.indexOf(sel);
               return (
-                <button type="button" key={v.id} onClick={() => toggleVaccine(v)}
+                <button key={v.id} onClick={() => toggleVaccine(v)}
                   style={{ padding:"5px 12px", borderRadius:"20px", fontSize:"11px",
                     fontWeight:"500", cursor:"pointer",
                     background: sel ? `${COLORS[ci]}25` : "rgba(255,255,255,0.05)",
@@ -164,14 +166,14 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
           </div>
         </div>
 
-        <div style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", padding:"14px 16px", minWidth:"200px" }}>
-          <div style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)", marginBottom:"8px" }}>
+          <div style={{ fontSize:"12px", color: t.textSec, marginBottom:"8px" }}>
             Filter by hospital:
           </div>
           <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}
-            style={{ width:"100%", padding:"8px 10px", background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+            style={{ width:"100%", padding:"8px 10px", background: t.input,
+              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
               fontSize:"12px", fontFamily:"inherit" }}>
             <option value="" style={{ background:"#0D1B4B" }}>All Hospitals (Avg)</option>
             {hospitals.map((h) => (
@@ -182,7 +184,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
       </div>
 
       {predictions.length === 0 ? (
-        <div style={{ textAlign:"center", padding:"60px", color:"rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign:"center", padding:"60px", color: t.textMuted }}>
           <div style={{ fontSize:"48px", marginBottom:"12px" }}>📈</div>
           <div style={{ fontSize:"16px", fontWeight:"500" }}>Select vaccines to see price predictions</div>
           <div style={{ fontSize:"13px", marginTop:"6px" }}>
@@ -197,18 +199,18 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
             {predictions.map((pred) => {
               const up = parseFloat(pred.changePct) > 0;
               return (
-                <div key={pred.id} style={{ background:"rgba(255,255,255,0.07)",
+                <div key={pred.id} style={{ background: t.card,
                   border:`1px solid ${pred.color}40`, borderRadius:"12px", padding:"16px",
                   borderTop:`3px solid ${pred.color}` }}>
-                  <div style={{ color:"#fff", fontWeight:"600", fontSize:"13px",
+                  <div style={{ color: t.text, fontWeight:"600", fontSize:"13px",
                     marginBottom:"10px", lineHeight:1.3 }}>{pred.name.substring(0, 30)}</div>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"8px" }}>
                     <div>
-                      <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.4)" }}>Current</div>
+                      <div style={{ fontSize:"11px", color: t.textMuted }}>Current</div>
                       <div style={{ fontSize:"18px", fontWeight:"700", color:pred.color }}>₹{pred.lastActual}</div>
                     </div>
                     <div style={{ textAlign:"right" }}>
-                      <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.4)" }}>Aug 2026</div>
+                      <div style={{ fontSize:"11px", color: t.textMuted }}>Aug 2026</div>
                       <div style={{ fontSize:"18px", fontWeight:"700", color: up ? "#F87171" : "#4ADE80" }}>
                         ₹{pred.lastPred}
                       </div>
@@ -231,23 +233,24 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
           </div>
 
           {/* Chart */}
-          <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+          <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
             borderRadius:"12px", padding:"20px", marginBottom:"20px" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
-              <div style={{ color:"#fff", fontWeight:"600", fontSize:"15px" }}>
+              <div style={{ color: t.text, fontWeight:"600", fontSize:"15px" }}>
                 Price Trend & 3-Month Forecast
               </div>
               <div style={{ display:"flex", gap:"16px" }}>
-                <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)", display:"flex", alignItems:"center", gap:"5px" }}>
+                <span style={{ fontSize:"12px", color: t.textSec, display:"flex", alignItems:"center", gap:"5px" }}>
                   <span style={{ display:"inline-block", width:"20px", height:"2px", background:"#4FC3F7" }}/>
                   Historical
                 </span>
-                <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)", display:"flex", alignItems:"center", gap:"5px" }}>
+                <span style={{ fontSize:"12px", color: t.textSec, display:"flex", alignItems:"center", gap:"5px" }}>
                   <span style={{ display:"inline-block", width:"20px", height:"2px", background:"#4FC3F7", borderTop:"2px dashed" }}/>
                   Predicted
                 </span>
               </div>
             </div>
+            <ReferenceLine />
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={chartData} margin={{ top:5, right:30, left:0, bottom:5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)"/>
@@ -255,7 +258,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
                 <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:11 }} tickLine={false} axisLine={false}
                   tickFormatter={(v) => `₹${v}`}/>
                 <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)",
-                  borderRadius:"8px", color:"#fff", fontSize:"12px" }}
+                  borderRadius:"8px", color: t.text, fontSize:"12px" }}
                   formatter={(v, n) => [`₹${v}`, n.replace(/_actual|_pred/, "")]}/>
                 <ReferenceLine x="May'26" stroke="rgba(255,255,255,0.2)" strokeDasharray="4 4"
                   label={{ value:"Today", fill:"rgba(255,255,255,0.4)", fontSize:11 }}/>
@@ -274,21 +277,21 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
           </div>
 
           {/* Prediction table */}
-          <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+          <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
             borderRadius:"12px", overflow:"hidden" }}>
             <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.08)",
-              color:"#fff", fontWeight:"600", fontSize:"14px" }}>
+              color: t.text, fontWeight:"600", fontSize:"14px" }}>
               Detailed Forecast — Jun to Aug 2026
             </div>
             <div style={{ overflowX:"auto" }}>
               <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
                 <thead>
-                  <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+                  <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                     <th style={{ padding:"10px 16px", textAlign:"left", fontSize:"10px", fontWeight:"600",
-                      color:"rgba(255,255,255,0.5)", textTransform:"uppercase" }}>Vaccine</th>
+                      color: t.textSec, textTransform:"uppercase" }}>Vaccine</th>
                     {["May'26 (Current)","Jun'26 (Pred)","Jul'26 (Pred)","Aug'26 (Pred)","3M Change"].map((h) => (
                       <th key={h} style={{ padding:"10px 16px", textAlign:"center", fontSize:"10px",
-                        fontWeight:"600", color:"rgba(255,255,255,0.5)", textTransform:"uppercase" }}>{h}</th>
+                        fontWeight:"600", color: t.textSec, textTransform:"uppercase" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -304,7 +307,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
                           <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
                             <span style={{ width:"8px", height:"8px", borderRadius:"50%",
                               background:pred.color, flexShrink:0 }}/>
-                            <span style={{ color:"rgba(255,255,255,0.85)", fontWeight:"500" }}>
+                            <span style={{ color: t.text, fontWeight:"500" }}>
                               {pred.name.substring(0, 30)}
                             </span>
                           </div>
@@ -314,8 +317,8 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
                         </td>
                         {preds.map((p, i) => (
                           <td key={i} style={{ padding:"12px 16px", textAlign:"center" }}>
-                            <div style={{ color:"rgba(255,255,255,0.8)", fontWeight:"600" }}>₹{p.predicted}</div>
-                            <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>
+                            <div style={{ color: t.text, fontWeight:"600" }}>₹{p.predicted}</div>
+                            <div style={{ fontSize:"10px", color: t.textMuted }}>
                               ₹{p.lower} – ₹{p.upper}
                             </div>
                           </td>
@@ -337,7 +340,7 @@ export default function PricePredictionPage({ pricing = [], vaccines = [], hospi
             </div>
           </div>
 
-          <div style={{ marginTop:"12px", fontSize:"11px", color:"rgba(255,255,255,0.3)", textAlign:"center" }}>
+          <div style={{ marginTop:"12px", fontSize:"11px", color: t.textMuted, textAlign:"center" }}>
             ⚠️ Predictions are based on linear regression of simulated historical data. Not financial advice.
           </div>
         </>

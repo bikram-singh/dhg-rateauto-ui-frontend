@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { theme } from "../theme";
 import { Plus, Trash2, RefreshCw, User, Shield, Eye } from "lucide-react";
 import { api } from "../services/api";
 
-export default function UserManagementPage({ userRole }) {
+export default function UserManagementPage({ userRole, darkMode = true }) {
+  const t = theme(darkMode);
   const [users, setUsers]       = useState([]);
   const [loading, setLoading]   = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -28,7 +30,7 @@ export default function UserManagementPage({ userRole }) {
     setLoading(false);
   };
 
-  useEffect(() => { loadUsers(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { loadUsers(); }, []);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -65,16 +67,16 @@ export default function UserManagementPage({ userRole }) {
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>User Management</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>User Management</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>
             Manage dashboard users and roles
           </p>
         </div>
         <div style={{ display:"flex", gap:"8px" }}>
           <button onClick={loadUsers} style={{ display:"flex", alignItems:"center", gap:"5px",
             padding:"8px 14px", borderRadius:"8px", fontSize:"13px", cursor:"pointer",
-            background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.15)",
-            color:"rgba(255,255,255,0.7)" }}>
+            background: t.card, border:"1px solid rgba(255,255,255,0.15)",
+            color: t.text }}>
             <RefreshCw size={14}/> Refresh
           </button>
           {isAdmin && (
@@ -102,7 +104,7 @@ export default function UserManagementPage({ userRole }) {
       {showForm && isAdmin && (
         <div style={{ background:"rgba(79,195,247,0.08)", border:"1px solid rgba(79,195,247,0.25)",
           borderRadius:"12px", padding:"20px", marginBottom:"20px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"16px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"16px" }}>
             Create New User
           </div>
           <form onSubmit={handleCreate}>
@@ -113,22 +115,22 @@ export default function UserManagementPage({ userRole }) {
                 { key:"password",  label:"Password",     placeholder:"Min 8 chars",     type:"password" },
               ].map((f) => (
                 <div key={f.key}>
-                  <label style={{ display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)",
+                  <label style={{ display:"block", fontSize:"11px", color: t.textSec,
                     textTransform:"uppercase", letterSpacing:"0.4px", marginBottom:"5px" }}>{f.label}</label>
                   <input type={f.type} placeholder={f.placeholder} value={form[f.key]}
                     onChange={(e) => setForm({...form, [f.key]: e.target.value})}
                     required={f.key !== "full_name"}
-                    style={{ width:"100%", padding:"9px 12px", background:"rgba(255,255,255,0.08)",
-                      border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color:"#fff",
+                    style={{ width:"100%", padding:"9px 12px", background: t.input,
+                      border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color: t.text,
                       fontSize:"13px", fontFamily:"inherit", outline:"none", boxSizing:"border-box" }}/>
                 </div>
               ))}
               <div>
-                <label style={{ display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)",
+                <label style={{ display:"block", fontSize:"11px", color: t.textSec,
                   textTransform:"uppercase", letterSpacing:"0.4px", marginBottom:"5px" }}>Role</label>
                 <select value={form.role} onChange={(e) => setForm({...form, role: e.target.value})}
-                  style={{ width:"100%", padding:"9px 12px", background:"rgba(255,255,255,0.08)",
-                    border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color:"#fff",
+                  style={{ width:"100%", padding:"9px 12px", background: t.input,
+                    border:"1px solid rgba(255,255,255,0.2)", borderRadius:"8px", color: t.text,
                     fontSize:"13px", fontFamily:"inherit" }}>
                   <option value="Viewer" style={{ background:"#0D1B4B" }}>Viewer</option>
                   <option value="Admin"  style={{ background:"#0D1B4B" }}>Admin</option>
@@ -144,8 +146,8 @@ export default function UserManagementPage({ userRole }) {
               </button>
               <button type="button" onClick={() => setShowForm(false)}
                 style={{ padding:"9px 16px", borderRadius:"8px", fontSize:"13px", cursor:"pointer",
-                  background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)",
-                  color:"rgba(255,255,255,0.6)" }}>
+                  background: t.card, border:"1px solid rgba(255,255,255,0.15)",
+                  color: t.textSec }}>
                 Cancel
               </button>
             </div>
@@ -155,27 +157,27 @@ export default function UserManagementPage({ userRole }) {
 
       {/* Users list */}
       {loading ? (
-        <div style={{ textAlign:"center", padding:"40px", color:"rgba(255,255,255,0.4)" }}>Loading users...</div>
+        <div style={{ textAlign:"center", padding:"40px", color: t.textMuted }}>Loading users...</div>
       ) : (
         <div style={{ display:"grid", gap:"12px" }}>
           {users.map((user) => {
             const rc = roleColor(user.role);
             return (
-              <div key={user.id} style={{ background:"rgba(255,255,255,0.06)",
+              <div key={user.id} style={{ background: t.card,
                 border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px",
                 padding:"16px 20px", display:"flex", alignItems:"center", gap:"16px" }}>
                 {/* Avatar */}
                 <div style={{ width:"44px", height:"44px", borderRadius:"12px", flexShrink:0,
                   background:"linear-gradient(135deg,#4FC3F7,#1565C0)",
                   display:"flex", alignItems:"center", justifyContent:"center",
-                  fontSize:"16px", fontWeight:"700", color:"#fff" }}>
+                  fontSize:"16px", fontWeight:"700", color: t.text }}>
                   {user.full_name ? user.full_name.split(" ").map((n) => n[0]).join("").substring(0,2).toUpperCase() : user.username.substring(0,2).toUpperCase()}
                 </div>
 
                 {/* Info */}
                 <div style={{ flex:1 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"4px" }}>
-                    <span style={{ color:"#fff", fontWeight:"600", fontSize:"15px" }}>
+                    <span style={{ color: t.text, fontWeight:"600", fontSize:"15px" }}>
                       {user.full_name || user.username}
                     </span>
                     <span style={{ fontSize:"11px", padding:"2px 10px", borderRadius:"20px",
@@ -191,10 +193,10 @@ export default function UserManagementPage({ userRole }) {
                     )}
                   </div>
                   <div style={{ display:"flex", gap:"16px" }}>
-                    <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.5)", display:"flex", alignItems:"center", gap:"4px" }}>
+                    <span style={{ fontSize:"12px", color: t.textSec, display:"flex", alignItems:"center", gap:"4px" }}>
                       <User size={11}/> @{user.username}
                     </span>
-                    <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.4)" }}>
+                    <span style={{ fontSize:"12px", color: t.textMuted }}>
                       ID: {user.id}
                     </span>
                   </div>
@@ -214,7 +216,7 @@ export default function UserManagementPage({ userRole }) {
             );
           })}
           {users.length === 0 && (
-            <div style={{ textAlign:"center", padding:"40px", color:"rgba(255,255,255,0.3)" }}>
+            <div style={{ textAlign:"center", padding:"40px", color: t.textMuted }}>
               No users found
             </div>
           )}
@@ -227,12 +229,12 @@ export default function UserManagementPage({ userRole }) {
           { role:"Admin", icon:<Shield size={16}/>, color:"#4FC3F7", desc:"Full access — view, create, edit and delete all data including users" },
           { role:"Viewer", icon:<Eye size={16}/>, color:"#4ADE80", desc:"Read-only access — can view all data but cannot make any changes" },
         ].map((r) => (
-          <div key={r.role} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)",
+          <div key={r.role} style={{ background: t.surfaceAlt, border:"1px solid rgba(255,255,255,0.08)",
             borderRadius:"10px", padding:"14px 16px", display:"flex", gap:"12px", alignItems:"flex-start" }}>
             <div style={{ color:r.color, marginTop:"1px" }}>{r.icon}</div>
             <div>
-              <div style={{ color:"#fff", fontWeight:"600", fontSize:"13px", marginBottom:"4px" }}>{r.role}</div>
-              <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px", lineHeight:1.5 }}>{r.desc}</div>
+              <div style={{ color: t.text, fontWeight:"600", fontSize:"13px", marginBottom:"4px" }}>{r.role}</div>
+              <div style={{ color: t.textSec, fontSize:"12px", lineHeight:1.5 }}>{r.desc}</div>
             </div>
           </div>
         ))}

@@ -1,14 +1,17 @@
-import { useState, useMemo } from "react";
-import { Printer, Mail, FileText } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { theme } from "../theme";
+import { Download, Printer, Mail, BarChart2, FileText } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC","#FF7043","#42A5F5","#26A69A"];
 
-export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [emailTo, setEmailTo]         = useState("");
   const [emailSent, setEmailSent]     = useState(false);
   const [sending, setSending]         = useState(false);
   const [reportType, setReportType]   = useState("executive");
+  const reportRef                     = useRef(null);
 
   const vaccineMap    = useMemo(() => Object.fromEntries(vaccines.map((v) => [v.id, v])), [vaccines]);
   const hospitalMap   = useMemo(() => Object.fromEntries(hospitals.map((h) => [h.id, h])), [hospitals]);
@@ -143,8 +146,8 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Advanced Reports</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>PDF export, analytics and email scheduling</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Advanced Reports</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>PDF export, analytics and email scheduling</p>
         </div>
         <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
           <button onClick={exportPDF} style={{ display:"flex", alignItems:"center", gap:"6px",
@@ -181,31 +184,31 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
           { label:"Hospitals", value:hospitals.length, color:"#66BB6A" },
           { label:"Avg Price", value:`₹${avgPrice}`, color:"#AB47BC" },
         ].map((k) => (
-          <div key={k.label} style={{ background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)",
+          <div key={k.label} style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
             borderRadius:"12px", padding:"16px 20px", borderTop:`3px solid ${k.color}` }}>
-            <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.5px", fontWeight:"600" }}>{k.label}</div>
-            <div style={{ fontSize:"26px", fontWeight:"700", color:"#fff", marginTop:"4px" }}>{k.value}</div>
+            <div style={{ fontSize:"11px", color: t.textSec, textTransform:"uppercase", letterSpacing:"0.5px", fontWeight:"600" }}>{k.label}</div>
+            <div style={{ fontSize:"26px", fontWeight:"700", color: t.text, marginTop:"4px" }}>{k.value}</div>
           </div>
         ))}
       </div>
 
       {/* Charts row */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"20px" }}>
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Top Vaccines by Avg Price</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Top Vaccines by Avg Price</div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={topVaccines} margin={{ top:0, right:10, left:0, bottom:40 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)"/>
               <XAxis dataKey="name" tick={{ fill:"rgba(255,255,255,0.5)", fontSize:9 }} angle={-35} textAnchor="end" tickLine={false} axisLine={false}/>
               <YAxis tick={{ fill:"rgba(255,255,255,0.5)", fontSize:10 }} tickLine={false} axisLine={false} tickFormatter={(v)=>`₹${v}`}/>
-              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px" }} formatter={(v)=>[`₹${v}`,"Avg Price"]}/>
+              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }} formatter={(v)=>[`₹${v}`,"Avg Price"]}/>
               <Bar dataKey="avgPrice" fill="#4FC3F7" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Availability Status</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"18px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>Availability Status</div>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie data={statusDist} cx="50%" cy="50%" outerRadius={80} dataKey="value"
@@ -213,24 +216,24 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
                 labelLine={{ stroke:"rgba(255,255,255,0.3)" }}>
                 {statusDist.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]}/>)}
               </Pie>
-              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"12px" }}/>
+              <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
             </PieChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Top hospitals table */}
-      <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden", marginBottom:"20px" }}>
-        <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.08)", color:"#fff", fontWeight:"600", fontSize:"14px" }}>
+      <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden", marginBottom:"20px" }}>
+        <div style={{ padding:"14px 18px", borderBottom:"1px solid rgba(255,255,255,0.08)", color: t.text, fontWeight:"600", fontSize:"14px" }}>
           Top Hospitals by Coverage
         </div>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
-              <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+              <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                 {["#","Hospital","Pricing Records","Avg Price"].map((h) => (
                   <th key={h} style={{ padding:"10px 16px", textAlign:"left", fontSize:"10px", fontWeight:"600",
-                    color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.4px" }}>{h}</th>
+                    color: t.textSec, textTransform:"uppercase", letterSpacing:"0.4px" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -239,8 +242,8 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
                 <tr key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.05)" }}
                   onMouseEnter={(e)=>e.currentTarget.style.background="rgba(255,255,255,0.04)"}
                   onMouseLeave={(e)=>e.currentTarget.style.background="transparent"}>
-                  <td style={{ padding:"10px 16px", color:"rgba(255,255,255,0.4)" }}>{i+1}</td>
-                  <td style={{ padding:"10px 16px", color:"rgba(255,255,255,0.85)", fontWeight:"500" }}>{h.name}</td>
+                  <td style={{ padding:"10px 16px", color: t.textMuted }}>{i+1}</td>
+                  <td style={{ padding:"10px 16px", color: t.text, fontWeight:"500" }}>{h.name}</td>
                   <td style={{ padding:"10px 16px", color:"#4FC3F7", fontWeight:"600" }}>{h.count}</td>
                   <td style={{ padding:"10px 16px", color:"#FFA726", fontWeight:"600" }}>₹{h.avgPrice}</td>
                 </tr>
@@ -251,10 +254,10 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
       </div>
 
       {/* Email section */}
-      <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"20px" }}>
+      <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"20px" }}>
         <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"14px" }}>
           <Mail size={18} style={{ color:"#4FC3F7" }}/>
-          <span style={{ color:"#fff", fontWeight:"600", fontSize:"14px" }}>Email Report</span>
+          <span style={{ color: t.text, fontWeight:"600", fontSize:"14px" }}>Email Report</span>
           <span style={{ fontSize:"11px", padding:"2px 8px", borderRadius:"20px",
             background:"rgba(245,158,11,0.15)", color:"#FCD34D", border:"1px solid rgba(245,158,11,0.3)" }}>
             Requires SendGrid API key
@@ -264,8 +267,8 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
           <input value={emailTo} onChange={(e) => setEmailTo(e.target.value)}
             placeholder="Enter email address..."
             type="email"
-            style={{ flex:1, minWidth:"200px", padding:"9px 14px", background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+            style={{ flex:1, minWidth:"200px", padding:"9px 14px", background: t.input,
+              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
               fontSize:"13px", fontFamily:"inherit", outline:"none" }}/>
           <button onClick={sendEmail} disabled={sending || !emailTo}
             style={{ display:"flex", alignItems:"center", gap:"6px", padding:"9px 20px",
@@ -278,7 +281,7 @@ export default function AdvancedReportsPage({ pricing = [], vaccines = [], hospi
             {sending ? "Sending..." : emailSent ? "✓ Sent!" : "Send Report"}
           </button>
         </div>
-        <p style={{ fontSize:"11px", color:"rgba(255,255,255,0.3)", marginTop:"10px" }}>
+        <p style={{ fontSize:"11px", color: t.textMuted, marginTop:"10px" }}>
           To enable email: add SENDGRID_API_KEY to backend secrets and uncomment the /reports/email endpoint.
         </p>
       </div>

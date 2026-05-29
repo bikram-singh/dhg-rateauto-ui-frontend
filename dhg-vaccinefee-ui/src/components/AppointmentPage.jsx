@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { MapPin, X, Printer } from "lucide-react";
+import { theme } from "../theme";
+import { Calendar, Clock, MapPin, Activity, CheckCircle, X, Printer } from "lucide-react";
 
 const TIME_SLOTS = ["09:00 AM","09:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
   "12:00 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM"];
@@ -11,7 +12,8 @@ const STATUS_STYLE = {
   Completed: { bg:"rgba(79,195,247,0.12)", color:"#4FC3F7", border:"rgba(79,195,247,0.25)" },
 };
 
-export default function AppointmentPage({ vaccines = [], hospitals = [], pricing = [] }) {
+export default function AppointmentPage({ vaccines = [], hospitals = [], pricing = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [tab, setTab]             = useState("book"); // book | my-appointments
   const [step, setStep]           = useState(1); // 1=vaccine, 2=hospital, 3=datetime, 4=details, 5=confirm
   const [selectedVaccine, setVax] = useState(null);
@@ -131,21 +133,21 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
   const minDateStr = minDate.toISOString().split("T")[0];
 
   const inputStyle = {
-    width:"100%", padding:"10px 14px", background:"rgba(255,255,255,0.08)",
-    border:"1px solid rgba(255,255,255,0.2)", borderRadius:"9px", color:"#fff",
+    width:"100%", padding:"10px 14px", background: t.input,
+    border:"1px solid rgba(255,255,255,0.2)", borderRadius:"9px", color: t.text,
     fontSize:"13px", fontFamily:"inherit", outline:"none", boxSizing:"border-box"
   };
 
   const labelStyle = {
-    display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)",
+    display:"block", fontSize:"11px", color: t.textSec,
     textTransform:"uppercase", letterSpacing:"0.4px", marginBottom:"5px", fontWeight:"600"
   };
 
   return (
     <div>
       <div style={{ marginBottom:"20px" }}>
-        <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Appointment Booking</h2>
-        <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Book vaccination appointments at any of our 108 hospitals</p>
+        <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Appointment Booking</h2>
+        <p style={{ color: t.textSec, fontSize:"13px" }}>Book vaccination appointments at any of our 108 hospitals</p>
       </div>
 
       {/* Tabs */}
@@ -171,7 +173,7 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               <h3 style={{ color:"#4ADE80", fontSize:"22px", fontWeight:"700", marginBottom:"8px" }}>
                 Appointment Confirmed!
               </h3>
-              <p style={{ color:"rgba(255,255,255,0.6)", marginBottom:"24px" }}>
+              <p style={{ color: t.textSec, marginBottom:"24px" }}>
                 Your vaccination appointment has been booked successfully.
               </p>
               <div style={{ background:"rgba(34,197,94,0.1)", border:"1px solid rgba(34,197,94,0.3)",
@@ -187,8 +189,8 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                 ].map(([k,v]) => (
                   <div key={k} style={{ display:"flex", justifyContent:"space-between",
                     padding:"6px 0", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>{k}</span>
-                    <span style={{ color:"#fff", fontWeight:"500", fontSize:"13px" }}>{v}</span>
+                    <span style={{ color: t.textSec, fontSize:"13px" }}>{k}</span>
+                    <span style={{ color: t.text, fontWeight:"500", fontSize:"13px" }}>{v}</span>
                   </div>
                 ))}
               </div>
@@ -201,8 +203,8 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                 </button>
                 <button onClick={reset}
                   style={{ padding:"10px 20px", borderRadius:"9px", fontSize:"13px", fontWeight:"600",
-                    cursor:"pointer", background:"rgba(255,255,255,0.08)",
-                    border:"1px solid rgba(255,255,255,0.2)", color:"rgba(255,255,255,0.7)" }}>
+                    cursor:"pointer", background: t.input,
+                    border:"1px solid rgba(255,255,255,0.2)", color: t.text }}>
                   Book Another
                 </button>
               </div>
@@ -231,7 +233,7 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               {/* Step 1: Select Vaccine */}
               {step === 1 && (
                 <div>
-                  <h3 style={{ color:"#fff", fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
+                  <h3 style={{ color: t.text, fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
                     Step 1: Select a Vaccine
                   </h3>
                   <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))", gap:"10px" }}>
@@ -245,12 +247,12 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                             background: selectedVaccine?.id === v.id ? "rgba(79,195,247,0.15)" : "rgba(255,255,255,0.05)",
                             border: selectedVaccine?.id === v.id ? "1px solid rgba(79,195,247,0.4)" : "1px solid rgba(255,255,255,0.1)",
                             transition:"all 0.1s" }}>
-                          <div style={{ color:"#fff", fontWeight:"600", fontSize:"13px", marginBottom:"4px" }}>{v.name}</div>
-                          <div style={{ color:"rgba(255,255,255,0.45)", fontSize:"11px", marginBottom:"6px" }}>{v.manufacturer}</div>
+                          <div style={{ color: t.text, fontWeight:"600", fontSize:"13px", marginBottom:"4px" }}>{v.name}</div>
+                          <div style={{ color: t.textSec, fontSize:"11px", marginBottom:"6px" }}>{v.manufacturer}</div>
                           <div style={{ color:"#4FC3F7", fontWeight:"700", fontSize:"14px" }}>
                             from ₹{minP || "Free"}
                           </div>
-                          <div style={{ color:"rgba(255,255,255,0.4)", fontSize:"10px" }}>
+                          <div style={{ color: t.textMuted, fontSize:"10px" }}>
                             {records.length} hospitals available
                           </div>
                         </button>
@@ -264,14 +266,14 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               {step === 2 && (
                 <div>
                   <button type="button" onClick={() => setStep(1)}
-                    style={{ color:"rgba(255,255,255,0.5)", background:"none", border:"none",
+                    style={{ color: t.textSec, background:"none", border:"none",
                       cursor:"pointer", fontSize:"13px", marginBottom:"14px", padding:0 }}>
                     ← Back
                   </button>
-                  <h3 style={{ color:"#fff", fontSize:"16px", fontWeight:"600", marginBottom:"6px" }}>
+                  <h3 style={{ color: t.text, fontSize:"16px", fontWeight:"600", marginBottom:"6px" }}>
                     Step 2: Select Hospital
                   </h3>
-                  <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px", marginBottom:"14px" }}>
+                  <p style={{ color: t.textSec, fontSize:"13px", marginBottom:"14px" }}>
                     Vaccine: <span style={{ color:"#4FC3F7" }}>{selectedVaccine?.name}</span>
                   </p>
                   <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
@@ -282,8 +284,8 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                           background: selectedHospital?.id === h.id ? "rgba(79,195,247,0.1)" : "rgba(255,255,255,0.05)",
                           border: selectedHospital?.id === h.id ? "1px solid rgba(79,195,247,0.4)" : "1px solid rgba(255,255,255,0.1)" }}>
                         <div style={{ flex:1 }}>
-                          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px" }}>{h.name}</div>
-                          <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px", display:"flex", alignItems:"center", gap:"4px", marginTop:"3px" }}>
+                          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px" }}>{h.name}</div>
+                          <div style={{ color: t.textSec, fontSize:"12px", display:"flex", alignItems:"center", gap:"4px", marginTop:"3px" }}>
                             <MapPin size={11}/> {h.location}
                           </div>
                         </div>
@@ -303,11 +305,11 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               {step === 3 && (
                 <div>
                   <button type="button" onClick={() => setStep(2)}
-                    style={{ color:"rgba(255,255,255,0.5)", background:"none", border:"none",
+                    style={{ color: t.textSec, background:"none", border:"none",
                       cursor:"pointer", fontSize:"13px", marginBottom:"14px", padding:0 }}>
                     ← Back
                   </button>
-                  <h3 style={{ color:"#fff", fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
+                  <h3 style={{ color: t.text, fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
                     Step 3: Select Date & Time
                   </h3>
                   <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px" }}>
@@ -336,7 +338,7 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                     style={{ marginTop:"20px", padding:"11px 28px", borderRadius:"9px", fontSize:"14px",
                       fontWeight:"600", cursor: !selectedDate||!selectedTime ? "not-allowed" : "pointer",
                       background: !selectedDate||!selectedTime ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#4FC3F7,#1565C0)",
-                      border:"none", color:"#fff", opacity: !selectedDate||!selectedTime ? 0.5 : 1 }}>
+                      border:"none", color: t.text, opacity: !selectedDate||!selectedTime ? 0.5 : 1 }}>
                     Continue →
                   </button>
                 </div>
@@ -346,11 +348,11 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               {step === 4 && (
                 <div>
                   <button type="button" onClick={() => setStep(3)}
-                    style={{ color:"rgba(255,255,255,0.5)", background:"none", border:"none",
+                    style={{ color: t.textSec, background:"none", border:"none",
                       cursor:"pointer", fontSize:"13px", marginBottom:"14px", padding:0 }}>
                     ← Back
                   </button>
-                  <h3 style={{ color:"#fff", fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
+                  <h3 style={{ color: t.text, fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
                     Step 4: Patient Details
                   </h3>
                   <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
@@ -381,7 +383,7 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                     style={{ marginTop:"20px", padding:"11px 28px", borderRadius:"9px", fontSize:"14px",
                       fontWeight:"600", cursor: !form.name||!form.age||!form.phone ? "not-allowed" : "pointer",
                       background: !form.name||!form.age||!form.phone ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#4FC3F7,#1565C0)",
-                      border:"none", color:"#fff", opacity: !form.name||!form.age||!form.phone ? 0.5 : 1 }}>
+                      border:"none", color: t.text, opacity: !form.name||!form.age||!form.phone ? 0.5 : 1 }}>
                     Review Appointment →
                   </button>
                 </div>
@@ -391,14 +393,14 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               {step === 5 && (
                 <div>
                   <button type="button" onClick={() => setStep(4)}
-                    style={{ color:"rgba(255,255,255,0.5)", background:"none", border:"none",
+                    style={{ color: t.textSec, background:"none", border:"none",
                       cursor:"pointer", fontSize:"13px", marginBottom:"14px", padding:0 }}>
                     ← Back
                   </button>
-                  <h3 style={{ color:"#fff", fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
+                  <h3 style={{ color: t.text, fontSize:"16px", fontWeight:"600", marginBottom:"14px" }}>
                     Step 5: Confirm Appointment
                   </h3>
-                  <div style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)",
+                  <div style={{ background: t.cardAlt, border:"1px solid rgba(255,255,255,0.1)",
                     borderRadius:"12px", padding:"20px", marginBottom:"20px" }}>
                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
                       {[
@@ -413,28 +415,28 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                         ["📞 Phone",     form.phone],
                         ["📧 Email",     form.email || "Not provided"],
                       ].map(([k,v]) => (
-                        <div key={k} style={{ background:"rgba(255,255,255,0.04)", borderRadius:"8px", padding:"10px 14px" }}>
-                          <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.4)" }}>{k}</div>
-                          <div style={{ fontSize:"13px", color:"#fff", fontWeight:"500", marginTop:"2px" }}>{v}</div>
+                        <div key={k} style={{ background: t.surfaceAlt, borderRadius:"8px", padding:"10px 14px" }}>
+                          <div style={{ fontSize:"11px", color: t.textMuted }}>{k}</div>
+                          <div style={{ fontSize:"13px", color: t.text, fontWeight:"500", marginTop:"2px" }}>{v}</div>
                         </div>
                       ))}
                     </div>
                     {form.notes && (
                       <div style={{ marginTop:"12px", padding:"10px 14px", background:"rgba(245,158,11,0.1)",
-                        borderRadius:"8px", fontSize:"12px", color:"rgba(255,255,255,0.7)" }}>
+                        borderRadius:"8px", fontSize:"12px", color: t.text }}>
                         📝 Notes: {form.notes}
                       </div>
                     )}
                   </div>
                   <div style={{ background:"rgba(34,197,94,0.08)", border:"1px solid rgba(34,197,94,0.2)",
-                    borderRadius:"10px", padding:"12px 16px", marginBottom:"16px", fontSize:"12px", color:"rgba(255,255,255,0.6)" }}>
+                    borderRadius:"10px", padding:"12px 16px", marginBottom:"16px", fontSize:"12px", color: t.textSec }}>
                     ✅ Please arrive 15 minutes before your appointment. Bring a valid photo ID.
                   </div>
                   <button type="button" onClick={confirmAppointment}
                     style={{ padding:"13px 32px", borderRadius:"10px", fontSize:"15px",
                       fontWeight:"700", cursor:"pointer",
                       background:"linear-gradient(135deg,#4ADE80,#16A34A)",
-                      border:"none", color:"#fff",
+                      border:"none", color: t.text,
                       boxShadow:"0 4px 16px rgba(34,197,94,0.3)" }}>
                     ✓ Confirm Appointment
                   </button>
@@ -449,7 +451,7 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
       {tab === "my-appointments" && (
         <div>
           {appointments.length === 0 ? (
-            <div style={{ textAlign:"center", padding:"60px", color:"rgba(255,255,255,0.3)" }}>
+            <div style={{ textAlign:"center", padding:"60px", color: t.textMuted }}>
               <div style={{ fontSize:"48px", marginBottom:"12px" }}>📅</div>
               <div style={{ fontSize:"16px", fontWeight:"500" }}>No appointments booked yet</div>
               <button type="button" onClick={() => setTab("book")}
@@ -464,14 +466,14 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
               {appointments.map((appt) => {
                 const ss = STATUS_STYLE[appt.status] || STATUS_STYLE.Pending;
                 return (
-                  <div key={appt.id} style={{ background:"rgba(255,255,255,0.06)",
+                  <div key={appt.id} style={{ background: t.card,
                     border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px",
                     padding:"18px 20px" }}>
                     <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between",
                       gap:"12px", flexWrap:"wrap" }}>
                       <div style={{ flex:1 }}>
                         <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px" }}>
-                          <span style={{ color:"#fff", fontWeight:"700", fontSize:"15px" }}>{appt.vaccine}</span>
+                          <span style={{ color: t.text, fontWeight:"700", fontSize:"15px" }}>{appt.vaccine}</span>
                           <span style={{ fontSize:"11px", padding:"2px 10px", borderRadius:"20px",
                             background:ss.bg, color:ss.color, border:`1px solid ${ss.border}`, fontWeight:"600" }}>
                             {appt.status}
@@ -486,12 +488,12 @@ export default function AppointmentPage({ vaccines = [], hospitals = [], pricing
                             ["👤", appt.patientName],
                             ["📞", appt.phone],
                           ].map(([icon, val]) => (
-                            <span key={icon} style={{ fontSize:"12px", color:"rgba(255,255,255,0.6)" }}>
+                            <span key={icon} style={{ fontSize:"12px", color: t.textSec }}>
                               {icon} {val}
                             </span>
                           ))}
                         </div>
-                        <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.3)", marginTop:"8px" }}>
+                        <div style={{ fontSize:"11px", color: t.textMuted, marginTop:"8px" }}>
                           ID: {appt.id} • Booked: {new Date(appt.bookedAt).toLocaleString("en-IN")}
                         </div>
                       </div>

@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
-import { Printer } from "lucide-react";
+import { useState, useMemo, useRef } from "react";
+import { theme } from "../theme";
+import { Printer, Download, User, Calendar, MapPin, Shield } from "lucide-react";
 
 const VACCINE_SCHEDULE = [
   { vaccine:"BCG Vaccine", age:"Birth", dose:"1", notes:"Given at birth" },
@@ -22,7 +23,8 @@ const VACCINE_SCHEDULE = [
   { vaccine:"Pneumococcal Polysaccharide (PPSV23)", age:"65y+", dose:"1-2", notes:"Seniors" },
 ];
 
-export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing = [] }) {
+export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [name, setName]         = useState("");
   const [dob, setDob]           = useState("");
   const [gender, setGender]     = useState("Male");
@@ -32,6 +34,10 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
   const [dates, setDates]       = useState({});
   const cardRef                 = useRef(null);
 
+  const cityList = useMemo(() =>
+    [...new Set(hospitals.map((h) => h.location?.split(",")[0].trim()).filter(Boolean))].sort(),
+    [hospitals]
+  );
 
   const toggleVaccine = (v) => {
     setSelectedVaccines((prev) =>
@@ -75,8 +81,8 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Vaccine Card Generator</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Create a printable personal vaccination record</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Vaccine Card Generator</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>Create a printable personal vaccination record</p>
         </div>
         <button onClick={handlePrint} style={{ display:"flex", alignItems:"center", gap:"6px",
           background:"rgba(34,197,94,0.15)", border:"1px solid rgba(34,197,94,0.3)",
@@ -87,8 +93,8 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
 
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px" }}>
         {/* Form */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"20px" }}>
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"16px" }}>Patient Information</div>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"20px" }}>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"16px" }}>Patient Information</div>
 
           {[
             { label:"Full Name", value:name, set:setName, type:"text", placeholder:"Enter full name" },
@@ -96,36 +102,36 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
             { label:"City", value:city, set:setCity, type:"text", placeholder:"Enter city" },
           ].map(({ label, value, set, type, placeholder }) => (
             <div key={label} style={{ marginBottom:"12px" }}>
-              <label style={{ display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)",
+              <label style={{ display:"block", fontSize:"11px", color: t.textSec,
                 textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"5px" }}>{label}</label>
               <input type={type} value={value} onChange={(e) => set(e.target.value)}
                 placeholder={placeholder}
-                style={{ width:"100%", padding:"9px 12px", background:"rgba(255,255,255,0.08)",
-                  border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+                style={{ width:"100%", padding:"9px 12px", background: t.input,
+                  border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
                   fontSize:"13px", outline:"none", fontFamily:"inherit" }}/>
             </div>
           ))}
 
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px", marginBottom:"16px" }}>
             <div>
-              <label style={{ display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"5px" }}>Gender</label>
+              <label style={{ display:"block", fontSize:"11px", color: t.textSec, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"5px" }}>Gender</label>
               <select value={gender} onChange={(e) => setGender(e.target.value)}
-                style={{ width:"100%", padding:"9px 12px", background:"rgba(255,255,255,0.08)",
-                  border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"13px", fontFamily:"inherit" }}>
+                style={{ width:"100%", padding:"9px 12px", background: t.input,
+                  border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"13px", fontFamily:"inherit" }}>
                 {["Male","Female","Other"].map((g) => <option key={g} value={g} style={{ background:"#0D1B4B" }}>{g}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ display:"block", fontSize:"11px", color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"5px" }}>Blood Group</label>
+              <label style={{ display:"block", fontSize:"11px", color: t.textSec, textTransform:"uppercase", letterSpacing:"0.5px", marginBottom:"5px" }}>Blood Group</label>
               <select value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}
-                style={{ width:"100%", padding:"9px 12px", background:"rgba(255,255,255,0.08)",
-                  border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"13px", fontFamily:"inherit" }}>
+                style={{ width:"100%", padding:"9px 12px", background: t.input,
+                  border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"13px", fontFamily:"inherit" }}>
                 {["A+","A-","B+","B-","O+","O-","AB+","AB-"].map((g) => <option key={g} value={g} style={{ background:"#0D1B4B" }}>{g}</option>)}
               </select>
             </div>
           </div>
 
-          <div style={{ color:"#fff", fontWeight:"600", fontSize:"13px", marginBottom:"10px" }}>Select Vaccines Received:</div>
+          <div style={{ color: t.text, fontWeight:"600", fontSize:"13px", marginBottom:"10px" }}>Select Vaccines Received:</div>
           <div style={{ maxHeight:"280px", overflowY:"auto", display:"flex", flexDirection:"column", gap:"4px" }}>
             {VACCINE_SCHEDULE.map((v) => (
               <div key={v.vaccine} style={{ display:"flex", alignItems:"center", gap:"10px", padding:"8px 12px",
@@ -135,14 +141,14 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
                 <input type="checkbox" checked={selectedVaccines.includes(v.vaccine)} readOnly
                   style={{ accentColor:"#4FC3F7", width:"14px", height:"14px" }}/>
                 <div style={{ flex:1 }}>
-                  <div style={{ fontSize:"12px", color:"rgba(255,255,255,0.85)", fontWeight:"500" }}>{v.vaccine}</div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>{v.age} • {v.dose} dose(s)</div>
+                  <div style={{ fontSize:"12px", color: t.text, fontWeight:"500" }}>{v.vaccine}</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted }}>{v.age} • {v.dose} dose(s)</div>
                 </div>
                 {selectedVaccines.includes(v.vaccine) && (
                   <input type="date" value={dates[v.vaccine] || ""} onClick={(e) => e.stopPropagation()}
                     onChange={(e) => setDates({ ...dates, [v.vaccine]: e.target.value })}
-                    style={{ padding:"3px 6px", background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)",
-                      borderRadius:"5px", color:"#fff", fontSize:"10px", fontFamily:"inherit" }}/>
+                    style={{ padding:"3px 6px", background: t.input, border:"1px solid rgba(255,255,255,0.2)",
+                      borderRadius:"5px", color: t.text, fontSize:"10px", fontFamily:"inherit" }}/>
                 )}
               </div>
             ))}
@@ -151,17 +157,17 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
 
         {/* Preview card */}
         <div>
-          <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.4)", marginBottom:"8px", textTransform:"uppercase", letterSpacing:"0.5px" }}>
+          <div style={{ fontSize:"11px", color: t.textMuted, marginBottom:"8px", textTransform:"uppercase", letterSpacing:"0.5px" }}>
             Preview — Click Print to save
           </div>
           <div ref={cardRef}>
-            <div className="card" style={{ border:"3px solid #1565C0", borderRadius:"12px", overflow:"hidden", background:"#fff" }}>
+            <div className="card" style={{ border:"3px solid #1565C0", borderRadius:"12px", overflow:"hidden", background: t.text }}>
               {/* Card header */}
               <div className="header" style={{ background:"linear-gradient(135deg,#1565C0,#0D47A1)", padding:"20px 24px", display:"flex", alignItems:"center", gap:"16px" }}>
                 <div style={{ fontSize:"40px" }}>🏥</div>
                 <div>
-                  <div className="title" style={{ fontSize:"20px", fontWeight:"700", color:"#fff" }}>DHG Vaccination Record</div>
-                  <div className="subtitle" style={{ fontSize:"12px", color:"rgba(255,255,255,0.8)", marginTop:"2px" }}>Dummy Health Group • Caring for Every Life</div>
+                  <div className="title" style={{ fontSize:"20px", fontWeight:"700", color: t.text }}>DHG Vaccination Record</div>
+                  <div className="subtitle" style={{ fontSize:"12px", color: t.text, marginTop:"2px" }}>Dummy Health Group • Caring for Every Life</div>
                 </div>
               </div>
 
@@ -222,7 +228,7 @@ export default function VaccineCardPage({ vaccines = [], hospitals = [], pricing
               </div>
 
               {/* Footer */}
-              <div style={{ padding:"12px 20px", background:"#0D47A1", color:"rgba(255,255,255,0.7)", fontSize:"11px", textAlign:"center" }}>
+              <div style={{ padding:"12px 20px", background:"#0D47A1", color: t.text, fontSize:"11px", textAlign:"center" }}>
                 This is an auto-generated vaccination record. Please verify with your healthcare provider. • DHG © {new Date().getFullYear()}
               </div>
             </div>

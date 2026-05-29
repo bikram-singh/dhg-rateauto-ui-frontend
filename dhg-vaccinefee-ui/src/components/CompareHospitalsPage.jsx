@@ -1,10 +1,12 @@
 import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { X, Plus, Download } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from "recharts";
 
 const COLORS = ["#4FC3F7","#FFA726","#66BB6A","#EF5350","#AB47BC","#FF7043"];
 
-export default function CompareHospitalsPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function CompareHospitalsPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [selectedHospitals, setSelectedHospitals] = useState([]);
   const [searchH, setSearchH]       = useState("");
   const [selectedVaccine, setSelectedVaccine] = useState("all");
@@ -116,8 +118,8 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"18px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Compare Hospitals</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Side-by-side vaccine price comparison across hospitals</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Compare Hospitals</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>Side-by-side vaccine price comparison across hospitals</p>
         </div>
         {comparisonData.length > 0 && (
           <button onClick={exportCSV} style={{ display:"flex", alignItems:"center", gap:"6px",
@@ -131,24 +133,24 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
       {/* Hospital selector */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px", marginBottom:"20px" }}>
         {/* Search panel */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"14px" }}>
-          <div style={{ color:"rgba(255,255,255,0.6)", fontSize:"12px", marginBottom:"10px" }}>
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", padding:"14px" }}>
+          <div style={{ color: t.textSec, fontSize:"12px", marginBottom:"10px" }}>
             Select up to 4 hospitals to compare:
           </div>
           <input value={searchH} onChange={(e) => setSearchH(e.target.value)} placeholder="Search hospitals..."
-            style={{ width:"100%", padding:"8px 12px", background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff",
+            style={{ width:"100%", padding:"8px 12px", background: t.input,
+              border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text,
               fontSize:"12px", outline:"none", marginBottom:"10px" }}/>
           <div style={{ maxHeight:"200px", overflowY:"auto", display:"flex", flexDirection:"column", gap:"4px" }}>
             {filteredHospitals.slice(0,20).map((h) => (
               <button key={h.id} onClick={() => addHospital(h)} disabled={selectedHospitals.length >= 4}
                 style={{ display:"flex", alignItems:"center", gap:"8px", padding:"8px 12px", borderRadius:"8px",
-                  background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)",
-                  color:"rgba(255,255,255,0.7)", fontSize:"12px", cursor:"pointer", textAlign:"left" }}>
+                  background: t.surfaceAlt, border:"1px solid rgba(255,255,255,0.08)",
+                  color: t.text, fontSize:"12px", cursor:"pointer", textAlign:"left" }}>
                 <Plus size={13} style={{ flexShrink:0, color:"#4FC3F7" }}/>
                 <div>
                   <div style={{ fontWeight:"500" }}>{h.name}</div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>{h.location?.split(",")[0]}</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted }}>{h.location?.split(",")[0]}</div>
                 </div>
               </button>
             ))}
@@ -160,7 +162,7 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
           {selectedHospitals.length === 0 ? (
             <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center",
               background:"rgba(255,255,255,0.03)", border:"1px dashed rgba(255,255,255,0.15)",
-              borderRadius:"12px", color:"rgba(255,255,255,0.3)", fontSize:"13px" }}>
+              borderRadius:"12px", color: t.textMuted, fontSize:"13px" }}>
               Select hospitals from the left →
             </div>
           ) : selectedHospitals.map((h, i) => (
@@ -168,11 +170,11 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
               borderRadius:"10px", padding:"12px 14px", display:"flex", alignItems:"center", gap:"10px" }}>
               <div style={{ width:"10px", height:"10px", borderRadius:"50%", background:COLORS[i], flexShrink:0 }}/>
               <div style={{ flex:1 }}>
-                <div style={{ color:"#fff", fontWeight:"600", fontSize:"13px" }}>{h.name}</div>
-                <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"11px" }}>{h.location}</div>
+                <div style={{ color: t.text, fontWeight:"600", fontSize:"13px" }}>{h.name}</div>
+                <div style={{ color: t.textSec, fontSize:"11px" }}>{h.location}</div>
               </div>
               <button onClick={() => removeHospital(h.id)}
-                style={{ background:"none", border:"none", color:"rgba(255,255,255,0.4)", cursor:"pointer", padding:"2px" }}>
+                style={{ background:"none", border:"none", color: t.textMuted, cursor:"pointer", padding:"2px" }}>
                 <X size={16}/>
               </button>
             </div>
@@ -185,26 +187,26 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
           {/* Summary cards */}
           <div style={{ display:"grid", gridTemplateColumns:`repeat(${selectedHospitals.length},1fr)`, gap:"12px", marginBottom:"20px" }}>
             {hospitalStats.map((h, i) => (
-              <div key={h.id} style={{ background:"rgba(255,255,255,0.07)", border:`1px solid ${COLORS[i]}40`,
+              <div key={h.id} style={{ background: t.card, border:`1px solid ${COLORS[i]}40`,
                 borderRadius:"12px", padding:"16px", borderTop:`3px solid ${COLORS[i]}` }}>
-                <div style={{ fontSize:"12px", color:"rgba(255,255,255,0.8)", fontWeight:"600", marginBottom:"10px",
+                <div style={{ fontSize:"12px", color: t.text, fontWeight:"600", marginBottom:"10px",
                   overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{h.name}</div>
                 <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
                   <div style={{ display:"flex", justifyContent:"space-between" }}>
-                    <span style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)" }}>Avg Price</span>
+                    <span style={{ fontSize:"11px", color: t.textSec }}>Avg Price</span>
                     <span style={{ fontSize:"12px", fontWeight:"700", color:COLORS[i] }}>₹{h.avgPrice}</span>
                   </div>
                   <div style={{ display:"flex", justifyContent:"space-between" }}>
-                    <span style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)" }}>Min</span>
+                    <span style={{ fontSize:"11px", color: t.textSec }}>Min</span>
                     <span style={{ fontSize:"12px", color:"#4ADE80" }}>₹{h.minPrice}</span>
                   </div>
                   <div style={{ display:"flex", justifyContent:"space-between" }}>
-                    <span style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)" }}>Max</span>
+                    <span style={{ fontSize:"11px", color: t.textSec }}>Max</span>
                     <span style={{ fontSize:"12px", color:"#F87171" }}>₹{h.maxPrice}</span>
                   </div>
                   <div style={{ display:"flex", justifyContent:"space-between" }}>
-                    <span style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)" }}>Vaccines</span>
-                    <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.7)" }}>{h.available}</span>
+                    <span style={{ fontSize:"11px", color: t.textSec }}>Vaccines</span>
+                    <span style={{ fontSize:"12px", color: t.text }}>{h.available}</span>
                   </div>
                 </div>
               </div>
@@ -212,9 +214,9 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
           </div>
 
           {/* Radar chart */}
-          <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+          <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
             borderRadius:"12px", padding:"18px", marginBottom:"20px" }}>
-            <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>
+            <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"14px" }}>
               Hospital Coverage Comparison
             </div>
             <ResponsiveContainer width="100%" height={280}>
@@ -222,7 +224,7 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
                 <PolarGrid stroke="rgba(255,255,255,0.1)"/>
                 <PolarAngleAxis dataKey="metric" tick={{ fill:"rgba(255,255,255,0.6)", fontSize:11 }}/>
                 <Tooltip contentStyle={{ background:"#0D1B4B", border:"1px solid rgba(255,255,255,0.15)",
-                  borderRadius:"8px", color:"#fff", fontSize:"12px" }}/>
+                  borderRadius:"8px", color: t.text, fontSize:"12px" }}/>
                 {selectedHospitals.map((h, i) => (
                   <Radar key={h.id} name={h.name.substring(0,15)} dataKey={h.name.substring(0,15)}
                     stroke={COLORS[i]} fill={COLORS[i]} fillOpacity={0.15}/>
@@ -233,30 +235,30 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
 
           {/* Vaccine filter */}
           <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"14px" }}>
-            <span style={{ color:"rgba(255,255,255,0.6)", fontSize:"13px" }}>Filter vaccine:</span>
+            <span style={{ color: t.textSec, fontSize:"13px" }}>Filter vaccine:</span>
             <select value={selectedVaccine} onChange={(e) => setSelectedVaccine(e.target.value)}
-              style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)", color:"#fff",
+              style={{ background: t.input, border:"1px solid rgba(255,255,255,0.2)", color: t.text,
                 borderRadius:"8px", padding:"7px 12px", fontSize:"13px", fontFamily:"inherit" }}>
               <option value="all" style={{ background:"#0D1B4B" }}>All Common Vaccines</option>
               {commonVaccines.map((v) => <option key={v.id} value={v.id} style={{ background:"#0D1B4B" }}>{v.name}</option>)}
             </select>
-            <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.4)" }}>{comparisonData.length} vaccines</span>
+            <span style={{ fontSize:"12px", color: t.textMuted }}>{comparisonData.length} vaccines</span>
           </div>
 
           {/* Comparison table */}
-          <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+          <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
             borderRadius:"12px", overflow:"hidden" }}>
             <div style={{ overflowX:"auto" }}>
               <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
                 <thead>
-                  <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+                  <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                     <th style={{ padding:"12px 16px", textAlign:"left", fontSize:"11px", fontWeight:"600",
-                      color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.4px", minWidth:"200px" }}>Vaccine</th>
+                      color: t.textSec, textTransform:"uppercase", letterSpacing:"0.4px", minWidth:"200px" }}>Vaccine</th>
                     {selectedHospitals.map((h, i) => (
                       <th key={h.id} style={{ padding:"12px 16px", textAlign:"center", fontSize:"11px",
                         fontWeight:"600", color:COLORS[i], minWidth:"140px" }}>
                         <div style={{ overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", maxWidth:"130px" }}>{h.name}</div>
-                        <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)", fontWeight:"400" }}>{h.location?.split(",")[0]}</div>
+                        <div style={{ fontSize:"10px", color: t.textMuted, fontWeight:"400" }}>{h.location?.split(",")[0]}</div>
                       </th>
                     ))}
                   </tr>
@@ -271,8 +273,8 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
                         onMouseEnter={(e) => e.currentTarget.style.background="rgba(255,255,255,0.04)"}
                         onMouseLeave={(e) => e.currentTarget.style.background="transparent"}>
                         <td style={{ padding:"11px 16px" }}>
-                          <div style={{ color:"rgba(255,255,255,0.85)", fontWeight:"500" }}>{row.vaccine}</div>
-                          <div style={{ color:"rgba(255,255,255,0.4)", fontSize:"10px" }}>{row.manufacturer?.substring(0,25)}</div>
+                          <div style={{ color: t.text, fontWeight:"500" }}>{row.vaccine}</div>
+                          <div style={{ color: t.textMuted, fontSize:"10px" }}>{row.manufacturer?.substring(0,25)}</div>
                         </td>
                         {selectedHospitals.map((h, i) => {
                           const price = row[h.id];
@@ -315,7 +317,7 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
             </div>
           </div>
 
-          <div style={{ marginTop:"10px", display:"flex", gap:"16px", fontSize:"11px", color:"rgba(255,255,255,0.4)" }}>
+          <div style={{ marginTop:"10px", display:"flex", gap:"16px", fontSize:"11px", color: t.textMuted }}>
             <span>✓ Best price</span>
             <span style={{ color:"#4ADE80" }}>■ Lowest price</span>
             <span style={{ color:"#F87171" }}>■ Highest price</span>
@@ -325,14 +327,14 @@ export default function CompareHospitalsPage({ pricing = [], vaccines = [], hosp
       )}
 
       {selectedHospitals.length < 2 && selectedHospitals.length > 0 && (
-        <div style={{ textAlign:"center", padding:"40px", color:"rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign:"center", padding:"40px", color: t.textMuted }}>
           <div style={{ fontSize:"32px" }}>➕</div>
           <div style={{ fontSize:"14px", marginTop:"8px" }}>Add at least one more hospital to compare</div>
         </div>
       )}
 
       {selectedHospitals.length === 0 && (
-        <div style={{ textAlign:"center", padding:"60px", color:"rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign:"center", padding:"60px", color: t.textMuted }}>
           <div style={{ fontSize:"48px", marginBottom:"12px" }}>🏥</div>
           <div style={{ fontSize:"16px", fontWeight:"500" }}>Select hospitals to compare</div>
           <div style={{ fontSize:"13px", marginTop:"6px" }}>Compare vaccine prices side by side across up to 4 hospitals</div>

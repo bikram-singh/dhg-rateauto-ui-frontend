@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { Download } from "lucide-react";
 
 const RANK_CRITERIA = ["Overall Score","Lowest Avg Price","Most Vaccines","Highest Availability","Most Insured"];
@@ -22,7 +23,8 @@ function scoreHospital(h, records) {
     availScore: Math.round(availScore), insureScore: Math.round(insureScore), coverScore: Math.round(coverScore), overall };
 }
 
-export default function HospitalRankingPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function HospitalRankingPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [criteria, setCriteria] = useState("Overall Score");
   const [filterCity, setFilterCity] = useState("All");
   const [showTop, setShowTop]   = useState(20);
@@ -65,7 +67,7 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
   const medalColor = (i) => i===0?"#FFD700":i===1?"#C0C0C0":i===2?"#CD7F32":null;
 
   const ScoreBar = ({ value, max=100, color }) => (
-    <div style={{ flex:1, height:"6px", background:"rgba(255,255,255,0.08)", borderRadius:"3px", overflow:"hidden" }}>
+    <div style={{ flex:1, height:"6px", background: t.input, borderRadius:"3px", overflow:"hidden" }}>
       <div style={{ width:`${Math.min(100,(value/max)*100)}%`, height:"100%", background:color, borderRadius:"3px", transition:"width 0.3s" }}/>
     </div>
   );
@@ -74,8 +76,8 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
     <div>
       <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"20px", flexWrap:"wrap", gap:"10px" }}>
         <div>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Hospital Rankings</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Ranked by price, availability, coverage and insurance</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Hospital Rankings</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>Ranked by price, availability, coverage and insurance</p>
         </div>
         <button onClick={exportCSV} style={{ display:"flex", alignItems:"center", gap:"6px",
           background:"rgba(79,195,247,0.15)", border:"1px solid rgba(79,195,247,0.3)",
@@ -97,10 +99,10 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
                 borderTop:`3px solid ${mc}`, height:heights[podiumIdx], display:"flex", flexDirection:"column",
                 alignItems:"center", justifyContent:"center", gap:"6px" }}>
                 <div style={{ fontSize:"28px" }}>{rank===1?"🥇":rank===2?"🥈":"🥉"}</div>
-                <div style={{ color:"#fff", fontWeight:"700", fontSize:"13px", lineHeight:1.3 }}>{h.name?.substring(0,28)}</div>
-                <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"11px" }}>{h.city}</div>
+                <div style={{ color: t.text, fontWeight:"700", fontSize:"13px", lineHeight:1.3 }}>{h.name?.substring(0,28)}</div>
+                <div style={{ color: t.textSec, fontSize:"11px" }}>{h.city}</div>
                 <div style={{ fontSize:"22px", fontWeight:"800", color:mc }}>{h.overall}</div>
-                <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>Overall Score</div>
+                <div style={{ fontSize:"10px", color: t.textMuted }}>Overall Score</div>
               </div>
             );
           })}
@@ -121,21 +123,21 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
           ))}
         </div>
         <select value={filterCity} onChange={(e) => setFilterCity(e.target.value)}
-          style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)", color:"#fff",
+          style={{ background: t.input, border:"1px solid rgba(255,255,255,0.2)", color: t.text,
             borderRadius:"8px", padding:"7px 12px", fontSize:"12px", fontFamily:"inherit", marginLeft:"auto" }}>
           {cities.map((c) => <option key={c} value={c} style={{ background:"#0D1B4B" }}>{c}</option>)}
         </select>
       </div>
 
       {/* Rankings table */}
-      <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden" }}>
+      <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)", borderRadius:"12px", overflow:"hidden" }}>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:"12px" }}>
             <thead>
-              <tr style={{ background:"rgba(255,255,255,0.05)", borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
+              <tr style={{ background: t.cardAlt, borderBottom:"1px solid rgba(255,255,255,0.1)" }}>
                 {["Rank","Hospital","City","Overall","Avg Price","Vaccines","Availability","Insurance"].map((h) => (
                   <th key={h} style={{ padding:"11px 14px", textAlign:"left", fontSize:"10px", fontWeight:"600",
-                    color:"rgba(255,255,255,0.5)", textTransform:"uppercase", letterSpacing:"0.4px", whiteSpace:"nowrap" }}>{h}</th>
+                    color: t.textSec, textTransform:"uppercase", letterSpacing:"0.4px", whiteSpace:"nowrap" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -150,13 +152,13 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
                       {mc ? (
                         <span style={{ fontSize:"18px" }}>{i===0?"🥇":i===1?"🥈":"🥉"}</span>
                       ) : (
-                        <span style={{ color:"rgba(255,255,255,0.5)", fontWeight:"600", fontSize:"13px" }}>#{i+1}</span>
+                        <span style={{ color: t.textSec, fontWeight:"600", fontSize:"13px" }}>#{i+1}</span>
                       )}
                     </td>
                     <td style={{ padding:"12px 14px" }}>
                       <div style={{ color:"rgba(255,255,255,0.9)", fontWeight:"500" }}>{h.name}</div>
                     </td>
-                    <td style={{ padding:"12px 14px", color:"rgba(255,255,255,0.5)", fontSize:"11px" }}>{h.city}</td>
+                    <td style={{ padding:"12px 14px", color: t.textSec, fontSize:"11px" }}>{h.city}</td>
                     <td style={{ padding:"12px 14px" }}>
                       <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
                         <span style={{ fontSize:"15px", fontWeight:"700",
@@ -169,7 +171,7 @@ export default function HospitalRankingPage({ pricing = [], vaccines = [], hospi
                     </td>
                     <td style={{ padding:"12px 14px" }}>
                       <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-                        <span style={{ color:"rgba(255,255,255,0.8)" }}>{h.total}</span>
+                        <span style={{ color: t.text }}>{h.total}</span>
                         <ScoreBar value={h.coverScore} color="#4FC3F7"/>
                       </div>
                     </td>

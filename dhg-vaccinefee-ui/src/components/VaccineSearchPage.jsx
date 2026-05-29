@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { theme } from "../theme";
 import { Search } from "lucide-react";
 
 const AGE_GROUPS = ["All Ages","Newborn (0-1m)","Infant (1-12m)","Toddler (1-3y)","Children (4-12y)","Adolescent (13-18y)","Adult (19-60y)","Senior (60+)"];
@@ -38,7 +39,8 @@ const VACCINE_AGE = {
   62:"Senior (60+)", 63:"Adult (19-60y)", 64:"Adult (19-60y)", 65:"Adult (19-60y)",
 };
 
-export default function VaccineSearchPage({ pricing = [], vaccines = [], hospitals = [], departments = [] }) {
+export default function VaccineSearchPage({ pricing = [], vaccines = [], hospitals = [], departments = [], darkMode = true }) {
+  const t = theme(darkMode);
   const [search, setSearch]       = useState("");
   const [ageGroup, setAgeGroup]   = useState("All Ages");
   const [category, setCategory]   = useState("All");
@@ -101,41 +103,41 @@ export default function VaccineSearchPage({ pricing = [], vaccines = [], hospita
       {/* Left panel */}
       <div style={{ flex:"1", display:"flex", flexDirection:"column", gap:"14px", minWidth:0 }}>
         <div style={{ marginBottom:"4px" }}>
-          <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>Vaccine Search</h2>
-          <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>Find vaccines by disease, age group or category</p>
+          <h2 style={{ color: t.text, fontSize:"20px", fontWeight:"700" }}>Vaccine Search</h2>
+          <p style={{ color: t.textSec, fontSize:"13px" }}>Find vaccines by disease, age group or category</p>
         </div>
 
         {/* Search + filters */}
-        <div style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ background: t.card, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", padding:"14px 16px", display:"flex", gap:"10px", flexWrap:"wrap", alignItems:"center" }}>
           <div style={{ position:"relative", flex:1, minWidth:"180px" }}>
-            <Search size={14} style={{ position:"absolute", left:"12px", top:"50%", transform:"translateY(-50%)", color:"rgba(255,255,255,0.4)" }}/>
+            <Search size={14} style={{ position:"absolute", left:"12px", top:"50%", transform:"translateY(-50%)", color: t.textMuted }}/>
             <input value={search} onChange={(e) => setSearch(e.target.value)}
               placeholder="Search vaccine, manufacturer, disease..."
-              style={{ width:"100%", paddingLeft:"34px", padding:"8px 12px 8px 34px", background:"rgba(255,255,255,0.08)",
-                border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color:"#fff", fontSize:"13px", outline:"none" }}/>
+              style={{ width:"100%", paddingLeft:"34px", padding:"8px 12px 8px 34px", background: t.input,
+                border:"1px solid rgba(255,255,255,0.15)", borderRadius:"8px", color: t.text, fontSize:"13px", outline:"none" }}/>
           </div>
 
           <select value={ageGroup} onChange={(e) => setAgeGroup(e.target.value)}
-            style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)", color:"#fff",
+            style={{ background: t.input, border:"1px solid rgba(255,255,255,0.2)", color: t.text,
               borderRadius:"8px", padding:"8px 12px", fontSize:"12px", fontFamily:"inherit" }}>
             {AGE_GROUPS.map((a) => <option key={a} value={a} style={{ background:"#0D1B4B" }}>{a}</option>)}
           </select>
 
           <select value={category} onChange={(e) => setCategory(e.target.value)}
-            style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.2)", color:"#fff",
+            style={{ background: t.input, border:"1px solid rgba(255,255,255,0.2)", color: t.text,
               borderRadius:"8px", padding:"8px 12px", fontSize:"12px", fontFamily:"inherit" }}>
             <option value="All" style={{ background:"#0D1B4B" }}>All Categories</option>
             {Object.keys(DISEASE_CATEGORIES).map((c) => <option key={c} value={c} style={{ background:"#0D1B4B" }}>{c}</option>)}
           </select>
 
           <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-            <span style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)" }}>Max ₹{maxPrice.toLocaleString()}</span>
+            <span style={{ fontSize:"11px", color: t.textSec }}>Max ₹{maxPrice.toLocaleString()}</span>
             <input type="range" min="0" max="20000" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))}
               style={{ width:"90px", accentColor:"#4FC3F7" }}/>
           </div>
 
-          <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.4)" }}>{filtered.length} vaccines</span>
+          <span style={{ fontSize:"12px", color: t.textMuted }}>{filtered.length} vaccines</span>
         </div>
 
         {/* Vaccine cards grid */}
@@ -147,38 +149,38 @@ export default function VaccineSearchPage({ pricing = [], vaccines = [], hospita
                 border: selected?.id === v.id ? "1px solid rgba(79,195,247,0.5)" : "1px solid rgba(255,255,255,0.1)",
                 borderRadius:"12px", padding:"14px 16px", cursor:"pointer", transition:"all 0.15s" }}>
               <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"8px", marginBottom:"10px" }}>
-                <div style={{ fontWeight:"600", fontSize:"13px", color:"#fff", lineHeight:1.3 }}>{v.name}</div>
+                <div style={{ fontWeight:"600", fontSize:"13px", color: t.text, lineHeight:1.3 }}>{v.name}</div>
                 <span style={{ fontSize:"10px", fontWeight:"600", padding:"2px 8px", borderRadius:"20px", whiteSpace:"nowrap",
                   background:`${ageColors[v.ageGroup] || "#4FC3F7"}20`, color:ageColors[v.ageGroup] || "#4FC3F7",
                   border:`1px solid ${ageColors[v.ageGroup] || "#4FC3F7"}40` }}>
                   {v.ageGroup.split(" ")[0]}
                 </span>
               </div>
-              <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.5)", marginBottom:"10px" }}>{v.manufacturer}</div>
+              <div style={{ fontSize:"11px", color: t.textSec, marginBottom:"10px" }}>{v.manufacturer}</div>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                 <div>
                   <div style={{ fontSize:"15px", fontWeight:"700", color:"#4FC3F7" }}>
                     {v.minPrice === 0 ? "FREE" : `₹${v.minPrice}`}
                     {v.maxPriceV > v.minPrice && v.minPrice > 0 && (
-                      <span style={{ fontSize:"11px", color:"rgba(255,255,255,0.4)" }}> – ₹{v.maxPriceV}</span>
+                      <span style={{ fontSize:"11px", color: t.textMuted }}> – ₹{v.maxPriceV}</span>
                     )}
                   </div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>min price</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted }}>min price</div>
                 </div>
                 <div style={{ textAlign:"right" }}>
-                  <div style={{ fontSize:"13px", fontWeight:"600", color:"rgba(255,255,255,0.7)" }}>{v.available}</div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>hospitals</div>
+                  <div style={{ fontSize:"13px", fontWeight:"600", color: t.text }}>{v.available}</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted }}>hospitals</div>
                 </div>
               </div>
               <div style={{ marginTop:"8px" }}>
                 <span style={{ fontSize:"10px", padding:"2px 8px", borderRadius:"20px",
-                  background:"rgba(255,255,255,0.06)", color:"rgba(255,255,255,0.5)",
+                  background: t.card, color: t.textSec,
                   border:"1px solid rgba(255,255,255,0.1)" }}>{v.category}</span>
               </div>
             </div>
           ))}
           {filtered.length === 0 && (
-            <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"40px", color:"rgba(255,255,255,0.3)" }}>
+            <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"40px", color: t.textMuted }}>
               <div style={{ fontSize:"36px" }}>🔍</div>
               <div style={{ fontSize:"14px", marginTop:"8px" }}>No vaccines found</div>
             </div>
@@ -188,19 +190,19 @@ export default function VaccineSearchPage({ pricing = [], vaccines = [], hospita
 
       {/* Right panel - hospital prices for selected vaccine */}
       {selected && (
-        <div style={{ width:"340px", flexShrink:0, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)",
+        <div style={{ width:"340px", flexShrink:0, background: t.card, border:"1px solid rgba(255,255,255,0.1)",
           borderRadius:"12px", overflow:"hidden", display:"flex", flexDirection:"column" }}>
           <div style={{ padding:"16px", borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-            <div style={{ color:"#fff", fontWeight:"600", fontSize:"14px", marginBottom:"4px" }}>{selected.name}</div>
-            <div style={{ color:"rgba(255,255,255,0.5)", fontSize:"12px" }}>{selected.manufacturer}</div>
+            <div style={{ color: t.text, fontWeight:"600", fontSize:"14px", marginBottom:"4px" }}>{selected.name}</div>
+            <div style={{ color: t.textSec, fontSize:"12px" }}>{selected.manufacturer}</div>
             <div style={{ display:"flex", gap:"8px", marginTop:"10px" }}>
               <div style={{ flex:1, background:"rgba(79,195,247,0.1)", borderRadius:"8px", padding:"8px", textAlign:"center" }}>
                 <div style={{ fontSize:"15px", fontWeight:"700", color:"#4FC3F7" }}>₹{selected.avgPrice || "FREE"}</div>
-                <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>avg price</div>
+                <div style={{ fontSize:"10px", color: t.textMuted }}>avg price</div>
               </div>
               <div style={{ flex:1, background:"rgba(34,197,94,0.1)", borderRadius:"8px", padding:"8px", textAlign:"center" }}>
                 <div style={{ fontSize:"15px", fontWeight:"700", color:"#4ADE80" }}>{selected.available}</div>
-                <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)" }}>hospitals</div>
+                <div style={{ fontSize:"10px", color: t.textMuted }}>hospitals</div>
               </div>
             </div>
           </div>
@@ -209,9 +211,9 @@ export default function VaccineSearchPage({ pricing = [], vaccines = [], hospita
               <div key={i} style={{ padding:"12px 16px", borderBottom:"1px solid rgba(255,255,255,0.05)",
                 display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                 <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:"12px", color:"rgba(255,255,255,0.85)", fontWeight:"500",
+                  <div style={{ fontSize:"12px", color: t.text, fontWeight:"500",
                     overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{h.hospital}</div>
-                  <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.4)", marginTop:"2px" }}>{h.location?.split(",")[0]}</div>
+                  <div style={{ fontSize:"10px", color: t.textMuted, marginTop:"2px" }}>{h.location?.split(",")[0]}</div>
                 </div>
                 <div style={{ textAlign:"right", flexShrink:0, marginLeft:"10px" }}>
                   <div style={{ fontSize:"13px", fontWeight:"700", color: h.price === 0 ? "#4ADE80" : "#4FC3F7" }}>
