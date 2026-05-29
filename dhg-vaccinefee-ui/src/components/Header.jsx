@@ -153,10 +153,10 @@ export default function Header({
               fill="#1565C0" fontFamily="sans-serif" letterSpacing="2.5">DHG</text>
           </svg>
           <div style={{ paddingLeft: "4px" }}>
-            <div style={{ fontSize: "17px", fontWeight: "700", color: "#0D1B4B", lineHeight: 1.2, letterSpacing: "-0.3px" }}>
+            <div style={{ fontSize: "17px", fontWeight: "700", color: "#fff", lineHeight: 1.2, letterSpacing: "-0.3px" }}>
               Dummy Health Group
             </div>
-            <div style={{ fontSize: "11px", color: "#1565C0", fontWeight: "500" }}>
+            <div style={{ fontSize: "11px", color: "#2DD4BF", fontWeight: "500" }}>
               Caring for Every Life
             </div>
           </div>
@@ -264,7 +264,7 @@ export default function Header({
                           </div>
                           <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px" }}>
                             {v.manufacturer} • {v.hospitalCount} hospitals
-                            {v.minPrice != null && ` • from ₹${v.minPrice}`}
+                            {v.minPrice != null && v.minPrice > 0 && ` • from ₹${v.minPrice}`}
                           </div>
                         </div>
                         <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "20px",
