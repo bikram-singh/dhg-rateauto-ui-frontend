@@ -20,12 +20,15 @@ export default function DepartmentsPage({ departments = [], pricing = [], darkMo
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:"16px" }}>
         {stats.map((d) => (
           <div key={d.id} style={{
-            background: t.card, border:"1px solid rgba(255,255,255,0.1)",
-            borderRadius:"12px", padding:"20px", backdropFilter:"blur(10px)"
+            background: t.card,
+            border: `1px solid ${t.border}`,
+            borderRadius:"12px", padding:"20px"
           }}>
             <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"14px" }}>
-              <div style={{ width:"42px", height:"42px", borderRadius:"10px", background:"rgba(79,195,247,0.15)",
-                display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px" }}>🏥</div>
+              <div style={{ width:"42px", height:"42px", borderRadius:"10px",
+                background:"rgba(79,195,247,0.15)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+                fontSize:"20px" }}>🏥</div>
               <div>
                 <div style={{ color: t.text, fontWeight:"600", fontSize:"14px" }}>{d.name}</div>
                 <div style={{ color: t.textSec, fontSize:"11px" }}>{d.description || "Medical department"}</div>
@@ -37,8 +40,14 @@ export default function DepartmentsPage({ departments = [], pricing = [], darkMo
                 <div style={{ color: t.textSec, fontSize:"11px" }}>Pricing Records</div>
               </div>
               <div style={{ textAlign:"center" }}>
-                <div style={{ color:"#4FC3F7", fontSize:"20px", fontWeight:"700" }}>{d.avgPrice > 0 ? `₹${d.avgPrice}` : ""}</div>
-                <div style={{ color: t.textSec, fontSize:"11px" }}>Avg Price</div>
+                {d.avgPrice > 0 && (
+                  <>
+                    <div style={{ color:"#4FC3F7", fontSize:"20px", fontWeight:"700" }}>
+                      {`₹${d.avgPrice}`}
+                    </div>
+                    <div style={{ color: t.textSec, fontSize:"11px" }}>Avg Price</div>
+                  </>
+                )}
               </div>
             </div>
           </div>
