@@ -135,8 +135,12 @@ export default function Dashboard() {
           darkMode={darkMode}
           toggleDarkMode={() => setDarkMode(!darkMode)}
           pricing={pricing}
+          vaccines={vaccines}
+          hospitals={hospitals}
+          departments={departments}
           user={currentUser}
           onLogout={handleLogout}
+          onNavigate={setActivePage}
         />
         <div className="page-body">{children}</div>
       </div>

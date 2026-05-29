@@ -1,31 +1,102 @@
-import { Search, Bell, Sun, Moon, X, LogOut, Share2 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { Search, Bell, Sun, Moon, X, LogOut, Share2, Building, Pill, Building2 } from "lucide-react";
+import { useState, useMemo, useRef, useEffect } from "react";
 
-export default function Header({ searchQuery = "", setSearchQuery, darkMode, toggleDarkMode, pricing = [], user, onLogout }) {
-  const [showAlerts, setShowAlerts]   = useState(false);
-  const [dismissed, setDismissed]     = useState([]);
+export default function Header({
+  searchQuery = "", setSearchQuery, darkMode, toggleDarkMode,
+  pricing = [], vaccines = [], hospitals = [], departments = [],
+  user, onLogout, onNavigate
+}) {
+  const [showAlerts,  setShowAlerts]  = useState(false);
+  const [dismissed,   setDismissed]   = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [focused,     setFocused]     = useState(false);
+  const searchRef = useRef(null);
 
-  // Find low stock items
-  const lowStockItems = useMemo(() => {
-    return pricing
-      .filter((p) => p.stock_quantity !== null && p.stock_quantity !== undefined && p.stock_quantity <= 10)
-      .slice(0, 10);
-  }, [pricing]);
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowResults(false);
+        setFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
+  // ── Live search results ──
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q || q.length < 2) return { vaccines: [], hospitals: [], departments: [] };
+
+    const matchVaccines = vaccines
+      .filter((v) =>
+        v.name.toLowerCase().includes(q) ||
+        (v.manufacturer || "").toLowerCase().includes(q)
+      )
+      .slice(0, 5)
+      .map((v) => {
+        const records = pricing.filter((p) => p.vaccine_id === v.id);
+        const prices  = records.map((p) => parseFloat(p.price)).filter((p) => p > 0);
+        const minP    = prices.length ? Math.min(...prices) : null;
+        return { ...v, minPrice: minP, hospitalCount: records.length, type: "vaccine" };
+      });
+
+    const matchHospitals = hospitals
+      .filter((h) =>
+        h.name.toLowerCase().includes(q) ||
+        (h.location || "").toLowerCase().includes(q)
+      )
+      .slice(0, 5)
+      .map((h) => {
+        const records = pricing.filter((p) => p.hospital_id === h.id);
+        const prices  = records.map((p) => parseFloat(p.price)).filter((p) => p > 0);
+        const avgP    = prices.length ? Math.round(prices.reduce((a,b)=>a+b,0)/prices.length) : null;
+        return { ...h, avgPrice: avgP, vaccineCount: [...new Set(records.map((p) => p.vaccine_id))].length, type: "hospital" };
+      });
+
+    const matchDepts = departments
+      .filter((d) => d.name.toLowerCase().includes(q))
+      .slice(0, 3)
+      .map((d) => ({ ...d, type: "department" }));
+
+    return { vaccines: matchVaccines, hospitals: matchHospitals, departments: matchDepts };
+  }, [searchQuery, vaccines, hospitals, departments, pricing]);
+
+  const totalResults =
+    searchResults.vaccines.length +
+    searchResults.hospitals.length +
+    searchResults.departments.length;
+
+  const hasResults = searchQuery.length >= 2;
+
+  const handleSelect = (item) => {
+    setShowResults(false);
+    setSearchQuery("");
+    if (!onNavigate) return;
+    if (item.type === "vaccine")    onNavigate("Vaccine Search");
+    if (item.type === "hospital")   onNavigate("Hospital Profiles");
+    if (item.type === "department") onNavigate("Departments");
+  };
+
+  // Low stock alerts
+  const lowStockItems = useMemo(() =>
+    pricing.filter((p) => p.stock_quantity != null && p.stock_quantity <= 10).slice(0, 10),
+    [pricing]
+  );
   const activeAlerts = lowStockItems.filter((p) => !dismissed.includes(p.id));
   const hasAlerts    = activeAlerts.length > 0;
 
   return (
     <header className="header">
+      {/* ── Brand Logo ── */}
       <div className="header-brand">
-        {/* Brand logo box — white background with blue logo inside, matching sketch */}
         <div style={{
-          display: "flex", alignItems: "center", gap: "0",
+          display: "flex", alignItems: "center",
           background: "white", borderRadius: "12px",
           border: "2px solid #E0E7EF", padding: "6px 16px 6px 8px",
           boxShadow: "0 2px 8px rgba(21,101,192,0.12)"
         }}>
-          {/* Shield logo */}
           <svg viewBox="0 0 80 90" width="54" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="hSG" x1="0" y1="0" x2="80" y2="90" gradientUnits="userSpaceOnUse">
@@ -38,85 +109,210 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
                 <stop offset="100%" stopColor="#1565C0"/>
               </linearGradient>
             </defs>
-            {/* Top circle */}
             <circle cx="40" cy="7" r="7" fill="url(#hSG)" stroke="white" strokeWidth="2"/>
             <circle cx="40" cy="7" r="3.5" fill="white" opacity="0.9"/>
-            {/* Shield outer */}
             <path d="M40 15 L72 27 L72 56 C72 73 58 83 40 88 C22 83 8 73 8 56 L8 27 Z" fill="url(#hSG)"/>
-            {/* Shield white inner */}
             <path d="M40 20 L68 30 L68 56 C68 71 55 79 40 84 C25 79 12 71 12 56 L12 30 Z" fill="white"/>
-            {/* Plus cross */}
             <rect x="32" y="42" width="16" height="5.5" rx="2.5" fill="url(#hCG)"/>
             <rect x="37" y="36" width="6" height="17" rx="2.5" fill="url(#hCG)"/>
-            {/* DHG text */}
             <text x="40" y="75" textAnchor="middle" fontSize="9" fontWeight="800"
               fill="#1565C0" fontFamily="sans-serif" letterSpacing="2.5">DHG</text>
           </svg>
-
-          {/* Brand text beside logo */}
           <div style={{ paddingLeft: "4px" }}>
-            <div style={{
-              fontSize: "17px", fontWeight: "700", color: "#0D1B4B",
-              lineHeight: 1.2, letterSpacing: "-0.3px"
-            }}>Dummy Health Group</div>
-            <div style={{
-              fontSize: "11px", color: "#1565C0", fontWeight: "500", letterSpacing: "0.2px"
-            }}>Caring for Every Life</div>
+            <div style={{ fontSize: "17px", fontWeight: "700", color: "#0D1B4B", lineHeight: 1.2, letterSpacing: "-0.3px" }}>
+              Dummy Health Group
+            </div>
+            <div style={{ fontSize: "11px", color: "#1565C0", fontWeight: "500" }}>
+              Caring for Every Life
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="header-search" style={{ position: "relative" }}>
-        <Search size={16} className="header-search-icon" />
+      {/* ── Search with live dropdown ── */}
+      <div ref={searchRef} className="header-search" style={{ position: "relative" }}>
+        <Search size={16} className="header-search-icon"/>
         <input
           type="text"
-          placeholder="Search vaccines, departments, hospitals..."
+          placeholder="Search vaccines, hospitals, departments..."
           className="header-search-input"
           value={searchQuery}
-          onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
+          onChange={(e) => { setSearchQuery && setSearchQuery(e.target.value); setShowResults(true); }}
+          onFocus={() => { setFocused(true); setShowResults(true); }}
+          style={{ borderColor: focused ? "rgba(79,195,247,0.5)" : undefined }}
+          autoComplete="off"
         />
         {searchQuery && (
-          <button onClick={() => setSearchQuery("")} style={{
-            position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)",
-            background: "none", border: "none", cursor: "pointer", color: "#94A3B8", fontSize: "16px"
-          }}>✕</button>
+          <button onClick={() => { setSearchQuery(""); setShowResults(false); }}
+            style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)",
+              background:"none", border:"none", cursor:"pointer", color:"#94A3B8", fontSize:"16px" }}>
+            <X size={14}/>
+          </button>
+        )}
+
+        {/* ── Dropdown results ── */}
+        {showResults && hasResults && (
+          <div style={{
+            position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0,
+            background: "#0D1B4B", border: "1px solid rgba(79,195,247,0.3)",
+            borderRadius: "12px", zIndex: 2000, overflow: "hidden",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+            maxHeight: "420px", overflowY: "auto",
+          }}>
+            {totalResults === 0 ? (
+              <div style={{ padding: "20px", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>
+                No results for "{searchQuery}"
+              </div>
+            ) : (
+              <>
+                {/* Vaccines */}
+                {searchResults.vaccines.length > 0 && (
+                  <div>
+                    <div style={{ padding: "8px 14px 4px", fontSize: "10px", fontWeight: "700",
+                      color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.8px",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      💉 Vaccines ({searchResults.vaccines.length})
+                    </div>
+                    {searchResults.vaccines.map((v) => (
+                      <div key={v.id} onClick={() => handleSelect(v)}
+                        style={{ padding: "10px 14px", cursor: "pointer", display: "flex",
+                          alignItems: "center", gap: "10px",
+                          borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(79,195,247,0.1)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "8px", flexShrink: 0,
+                          background: "rgba(102,187,106,0.15)", border: "1px solid rgba(102,187,106,0.3)",
+                          display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Pill size={14} style={{ color: "#66BB6A" }}/>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ color: "#fff", fontSize: "13px", fontWeight: "500",
+                            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {v.name}
+                          </div>
+                          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px" }}>
+                            {v.manufacturer} • {v.hospitalCount} hospitals
+                            {v.minPrice != null && ` • from ₹${v.minPrice}`}
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "20px",
+                          background: "rgba(102,187,106,0.15)", color: "#66BB6A",
+                          border: "1px solid rgba(102,187,106,0.3)", flexShrink: 0 }}>
+                          Vaccine
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Hospitals */}
+                {searchResults.hospitals.length > 0 && (
+                  <div>
+                    <div style={{ padding: "8px 14px 4px", fontSize: "10px", fontWeight: "700",
+                      color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.8px",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      🏥 Hospitals ({searchResults.hospitals.length})
+                    </div>
+                    {searchResults.hospitals.map((h) => (
+                      <div key={h.id} onClick={() => handleSelect(h)}
+                        style={{ padding: "10px 14px", cursor: "pointer", display: "flex",
+                          alignItems: "center", gap: "10px",
+                          borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(79,195,247,0.1)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "8px", flexShrink: 0,
+                          background: "rgba(41,182,246,0.15)", border: "1px solid rgba(41,182,246,0.3)",
+                          display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Building size={14} style={{ color: "#29B6F6" }}/>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ color: "#fff", fontSize: "13px", fontWeight: "500",
+                            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {h.name}
+                          </div>
+                          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px" }}>
+                            {h.location} • {h.vaccineCount} vaccines
+                            {h.avgPrice != null && ` • avg ₹${h.avgPrice}`}
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "20px",
+                          background: "rgba(41,182,246,0.15)", color: "#29B6F6",
+                          border: "1px solid rgba(41,182,246,0.3)", flexShrink: 0 }}>
+                          Hospital
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Departments */}
+                {searchResults.departments.length > 0 && (
+                  <div>
+                    <div style={{ padding: "8px 14px 4px", fontSize: "10px", fontWeight: "700",
+                      color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.8px",
+                      borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      🏢 Departments ({searchResults.departments.length})
+                    </div>
+                    {searchResults.departments.map((d) => (
+                      <div key={d.id} onClick={() => handleSelect(d)}
+                        style={{ padding: "10px 14px", cursor: "pointer", display: "flex",
+                          alignItems: "center", gap: "10px" }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(79,195,247,0.1)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "8px", flexShrink: 0,
+                          background: "rgba(171,71,188,0.15)", border: "1px solid rgba(171,71,188,0.3)",
+                          display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Building2 size={14} style={{ color: "#AB47BC" }}/>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ color: "#fff", fontSize: "13px", fontWeight: "500" }}>{d.name}</div>
+                          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "11px" }}>Department</div>
+                        </div>
+                        <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "20px",
+                          background: "rgba(171,71,188,0.15)", color: "#AB47BC",
+                          border: "1px solid rgba(171,71,188,0.3)", flexShrink: 0 }}>
+                          Dept
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Footer */}
+                <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(255,255,255,0.06)",
+                  fontSize: "11px", color: "rgba(255,255,255,0.3)", textAlign: "center" }}>
+                  {totalResults} result{totalResults !== 1 ? "s" : ""} for "{searchQuery}" • Press Enter to search all
+                </div>
+              </>
+            )}
+          </div>
         )}
       </div>
 
+      {/* ── Actions ── */}
       <div className="header-actions">
-        {/* Bell with low stock alerts */}
+        {/* Bell alerts */}
         <div style={{ position: "relative" }}>
-          <button
-            className="header-icon-btn"
-            aria-label="Notifications"
-            onClick={() => setShowAlerts(!showAlerts)}
-            style={{ position: "relative" }}
-          >
-            <Bell size={20} />
+          <button className="header-icon-btn" aria-label="Notifications"
+            onClick={() => { setShowAlerts(!showAlerts); setShowResults(false); }}
+            style={{ position: "relative" }}>
+            <Bell size={20}/>
             {hasAlerts && (
-              <span style={{
-                position: "absolute", top: "6px", right: "6px",
+              <span style={{ position: "absolute", top: "6px", right: "6px",
                 width: "8px", height: "8px", borderRadius: "50%",
                 background: "#EF4444", border: "2px solid white",
-                animation: "bellPulse 1.5s ease-in-out infinite"
-              }}/>
+                animation: "bellPulse 1.5s ease-in-out infinite" }}/>
             )}
           </button>
 
-          {/* Alerts dropdown */}
           {showAlerts && (
-            <div style={{
-              position: "absolute", top: "48px", right: "0",
+            <div style={{ position: "absolute", top: "48px", right: "0",
               width: "320px", background: "#0D1B4B",
-              border: "1px solid rgba(79,195,247,0.3)",
-              borderRadius: "12px", zIndex: 1000,
-              boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
-            }}>
+              border: "1px solid rgba(79,195,247,0.3)", borderRadius: "12px",
+              zIndex: 1000, boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
               <div style={{ padding: "14px 16px", borderBottom: "1px solid rgba(255,255,255,0.1)",
                 display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ color: "#fff", fontWeight: "600", fontSize: "14px" }}>
-                  🔔 Low Stock Alerts
-                </span>
+                <span style={{ color: "#fff", fontWeight: "600", fontSize: "14px" }}>🔔 Low Stock Alerts</span>
                 <span style={{ fontSize: "11px", padding: "2px 8px", borderRadius: "20px",
                   background: hasAlerts ? "rgba(239,68,68,0.2)" : "rgba(34,197,94,0.2)",
                   color: hasAlerts ? "#F87171" : "#4ADE80" }}>
@@ -125,14 +321,14 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
               </div>
               <div style={{ maxHeight: "280px", overflowY: "auto" }}>
                 {activeAlerts.length === 0 ? (
-                  <div style={{ padding: "24px", textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>
+                  <div style={{ padding: "24px", textAlign: "center",
+                    color: "rgba(255,255,255,0.4)", fontSize: "13px" }}>
                     ✅ All stocks are healthy
                   </div>
-                ) : activeAlerts.map((p, i) => (
-                  <div key={p.id} style={{
-                    padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)",
-                    display: "flex", alignItems: "center", justifyContent: "space-between"
-                  }}>
+                ) : activeAlerts.map((p) => (
+                  <div key={p.id} style={{ padding: "10px 16px",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)",
+                    display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
                       <div style={{ color: "#fff", fontSize: "12px", fontWeight: "500" }}>
                         {p.vaccine?.name || `Vaccine #${p.vaccine_id}`}
@@ -140,15 +336,14 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
                       <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)" }}>
                         {p.hospital?.name || `Hospital #${p.hospital_id}`}
                       </div>
-                      <div style={{ fontSize: "11px", marginTop: "2px" }}>
-                        <span style={{ color: p.stock_quantity === 0 ? "#F87171" : "#FCD34D", fontWeight: "600" }}>
-                          {p.stock_quantity === 0 ? "⚠️ Out of Stock" : `⚠️ Only ${p.stock_quantity} left`}
-                        </span>
-                      </div>
+                      <span style={{ fontSize: "11px", fontWeight: "600",
+                        color: p.stock_quantity === 0 ? "#F87171" : "#FCD34D" }}>
+                        {p.stock_quantity === 0 ? "⚠️ Out of Stock" : `⚠️ Only ${p.stock_quantity} left`}
+                      </span>
                     </div>
                     <button onClick={() => setDismissed([...dismissed, p.id])}
-                      style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)",
-                        cursor: "pointer", padding: "4px" }}>
+                      style={{ background: "none", border: "none",
+                        color: "rgba(255,255,255,0.4)", cursor: "pointer", padding: "4px" }}>
                       <X size={14}/>
                     </button>
                   </div>
@@ -168,17 +363,13 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
           )}
         </div>
 
-        <button className="header-icon-btn" aria-label="Toggle theme" onClick={toggleDarkMode}
+        <button className="header-icon-btn" onClick={toggleDarkMode}
           title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          {darkMode ? <Sun size={20}/> : <Moon size={20}/>}
         </button>
 
-        {/* Share deep link button */}
         <button className="header-icon-btn" title="Share current page"
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copied! Share: " + window.location.href);
-          }}>
+          onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }}>
           <Share2 size={18}/>
         </button>
 
@@ -192,7 +383,8 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
           </div>
           <button onClick={onLogout} title="Logout"
             style={{ background:"none", border:"none", color:"#4FC3F7",
-              cursor:"pointer", padding:"4px", marginLeft:"4px", display:"flex", alignItems:"center" }}>
+              cursor:"pointer", padding:"4px", marginLeft:"4px",
+              display:"flex", alignItems:"center" }}>
             <LogOut size={16}/>
           </button>
         </div>
@@ -201,7 +393,7 @@ export default function Header({ searchQuery = "", setSearchQuery, darkMode, tog
       <style>{`
         @keyframes bellPulse {
           0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.4); opacity: 0.7; }
+          50%       { transform: scale(1.4); opacity: 0.7; }
         }
       `}</style>
     </header>
