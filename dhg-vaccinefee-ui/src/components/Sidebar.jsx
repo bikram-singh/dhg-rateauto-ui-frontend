@@ -232,9 +232,14 @@ export default function Sidebar({ activePage, setActivePage }) {
         }}>
           <Sparkles size={15} style={{ color: "#4FC3F7" }}/>
         </div>
-        <span style={{ fontSize: "13px", fontWeight: "700", color: "#4FC3F7" }}>
-          AI Advisor
-        </span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+          <span style={{ fontSize: "13px", fontWeight: "700", color: "#4FC3F7", lineHeight: 1.2 }}>
+            AI Advisor
+          </span>
+          <span style={{ fontSize: "9px", fontWeight: "500", color: "#4ADE80", letterSpacing: "0.2px", lineHeight: 1 }}>
+            Voice & Chat Enabled
+          </span>
+        </div>
         <span style={{
           marginLeft: "auto", fontSize: "9px", padding: "2px 7px",
           borderRadius: "10px", background: "rgba(79,195,247,0.2)",
