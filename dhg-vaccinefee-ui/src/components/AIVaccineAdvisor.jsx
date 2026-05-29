@@ -16,7 +16,7 @@ export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospital
   const [messages, setMessages]   = useState([
     {
       role: "assistant",
-      content: "👋 Hello! I'm your DHG AI Vaccine Advisor, powered by Claude AI.\n\nI can help you with:\n• **Personalized vaccine recommendations** based on your age, health, and travel plans\n• **Vaccine information** — uses, side effects, schedules\n• **Hospital suggestions** — where to get vaccinated in your city\n• **Price comparisons** across our 108 hospitals\n\nYou can **type** or use the 🎤 **microphone** to ask your question!"
+      content: "👋 Hello! I'm your DHG AI Vaccine Advisor.\n\nI can help you with:\n• **Personalized vaccine recommendations** based on your age, health, and travel plans\n• **Vaccine information** — uses, side effects, schedules\n• **Hospital suggestions** — where to get vaccinated in your city\n• **Price comparisons** across our 108 hospitals\n\nYou can **type** or use the 🎤 **microphone** to ask your question!"
     }
   ]);
   const [input, setInput]         = useState("");
@@ -76,7 +76,7 @@ export default function AIVaccineAdvisor({ pricing = [], vaccines = [], hospital
     const clean = text
       .replace(/\*\*(.*?)\*\*/g, "$1")
       .replace(/\*(.*?)\*/g, "$1")
-      .replace(/^[•-] /gm, "")
+      .replace(/^[•\-] /gm, "")
       .replace(/\n/g, ". ")
       .substring(0, 500); // Limit length
     const utt   = new SpeechSynthesisUtterance(clean);
@@ -198,8 +198,8 @@ GUIDELINES:
           <div>
             <h2 style={{ color:"#fff", fontSize:"20px", fontWeight:"700" }}>AI Vaccine Advisor</h2>
             <p style={{ color:"rgba(255,255,255,0.5)", fontSize:"13px" }}>
-              Powered by Claude AI • Type or speak your question
-              {voiceSupported && <span style={{ color:"#4ADE80", marginLeft:"6px" }}>🎤 Voice enabled</span>}
+              Type or speak your question
+              {voiceSupported && <span style={{ color:"#4ADE80", marginLeft:"6px" }}>🎤 Voice & chat enabled</span>}
             </p>
           </div>
           <div style={{ marginLeft:"auto", display:"flex", gap:"8px" }}>
