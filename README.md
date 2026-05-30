@@ -159,6 +159,11 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
+### 🪪 Vaccination Card — Printable Record
+![Vaccination Card](docs/gallery/vaccination-card.png)
+
+---
+
 ### 🔄 CI/CD Pipeline — GitHub Actions
 ![Frontend CI/CD Pipeline](docs/gallery/frontend-ci-cd-pipeline.png)
 
@@ -1078,56 +1083,6 @@ All routing from `/vaccinefee/api/*` to the FastAPI backend is handled by the **
 
 ---
 
-## 🖼️ Adding Your Own UI Gallery Images
-
-Follow these steps to add your real screenshots to the `docs/gallery/` folder and make the UI Gallery section above display them:
-
-### Step 1 — Create the gallery folder in your repo
-
-```bash
-# On Windows (PowerShell)
-mkdir docs\gallery
-
-# On Mac/Linux
-mkdir -p docs/gallery
-```
-
-### Step 2 — Name and place your screenshots
-
-Save your screenshots with these exact names into `docs/gallery/`:
-
-| Filename | Page to capture |
-|---|---|
-| `dashboard-dark.png` | Dashboard in dark mode |
-| `dashboard-light.png` | Dashboard in light mode |
-| `hospitals-list.png` | Hospitals List page |
-| `hospital-profile.png` | Hospital Profile detail |
-| `vaccine-search.png` | Vaccine Search page |
-| `pricing.png` | Pricing table |
-| `price-history.png` | Price History charts |
-| `vaccine-advisor.png` | AI Vaccine Advisor chat |
-| `appointments.png` | Appointment booking wizard |
-| `city-analytics.png` | City Analytics page |
-| `login.png` | Login page |
-
-### Step 3 — Push to GitHub
-
-```bash
-git add docs/gallery/
-git commit -m "docs: add UI gallery screenshots"
-git push
-```
-
-### Step 4 — Verify
-
-Open your GitHub repo → navigate to `docs/gallery/` — the images should appear. The UI Gallery section in this README will now show the actual screenshots automatically.
-
-> 💡 **Tip:** For the best results, take screenshots at **1440×900** or higher resolution, and use **PNG format** for crisp UI rendering.
-
-> 💡 **Alternative:** You can also host screenshots on [Imgur](https://imgur.com) or [GitHub Issues](https://github.com/bikram-singh/dhg-rateauto-ui-frontend/issues/new) (drag-drop an image in the editor to get a URL), then use the full URL directly in the markdown image tag.
-
----
-
 ## 🔗 Related Repositories
 
 | Repository | Role | Purpose |
@@ -1144,13 +1099,13 @@ Open your GitHub repo → navigate to `docs/gallery/` — the images should appe
 
 <div align="center">
 
-**Maintained by Bikram Singh · DHG Platform Engineering**
+**Maintained by Bikram Singh**
 
 `dhg-vaccine-rateauto-nonpord` · `us-central1` · React 18 + GKE Autopilot
 
 <br/>
 
-🌐 **Live:** [`https://dev.gcpcloudhub.shop/vaccinefee-ui`](https://dev.gcpcloudhub.shop/vaccinefee-ui) &nbsp;|&nbsp;
-📖 **API Docs:** [`https://dev.gcpcloudhub.shop/vaccinefee/api/docs`](https://dev.gcpcloudhub.shop/vaccinefee/api/docs)
+🌐 **Live:** [`https://dev.gcpcloudhub.shop/vaccinefee-ui`](https://dev.gcpcloudhub.shop/vaccinefee-ui)
+
 
 </div>
