@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/gallery/DHG_logo.png" alt="DHG Logo" width="90" height="90"/>
+<img src="docs/gallery/logo.png" alt="DHG Logo" width="80" height="80"/>
 
 # 🏥 DHG Vaccine Fee Pricing Dashboard
 
@@ -102,20 +102,10 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ## 🖼️ UI Gallery
 
-> 📌 **Note:** All images are stored in `docs/gallery/`. See [Adding Your Own UI Gallery Images](#-adding-your-own-ui-gallery-images) at the end of this README for step-by-step instructions.
+> 📌 **Note:** Screenshots are stored in `docs/gallery/`. See [Adding Your Own UI Gallery Images](#-adding-your-own-ui-gallery-images) at the end of this README for step-by-step instructions.
 
-### 📱 Login Page
-![Login](docs/gallery/login.png)
-
----
-
-### ☀️ Dashboard — Light Mode
-![Dashboard Light Mode](docs/gallery/dashboard-light.png)
-
----
-
-### 🌑 Dashboard — Dark Mode
-![Dashboard Dark Mode](docs/gallery/dashboard-dark.png)
+### 🏠 Dashboard — Live KPI & Price Chart
+![Dashboard - Dark Mode](docs/gallery/dashboard-dark.png)
 
 ---
 
@@ -129,6 +119,11 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
+### 💉 Vaccine Search
+![Vaccine Search](docs/gallery/vaccine-search.png)
+
+---
+
 ### 💰 Pricing Table
 ![Pricing](docs/gallery/pricing.png)
 
@@ -139,18 +134,8 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 💉 Vaccine Search
-![Vaccine Search](docs/gallery/vaccine-search.png)
-
----
-
 ### 🤖 Vaccine Advisor — AI + Voice
 ![Vaccine Advisor](docs/gallery/vaccine-advisor.png)
-
----
-
-### 🌍 City Analytics
-![City Analytics](docs/gallery/city-analytics.png)
 
 ---
 
@@ -159,13 +144,18 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 🔄 CI/CD Pipeline — GitHub Actions
-![Frontend CI/CD Pipeline](docs/gallery/frontend-ci-cd-pipeline.png)
+### 🌍 City Analytics
+![City Analytics](docs/gallery/city-analytics.png)
 
 ---
 
-### ☸️ GKE Workload — Live Deployment
-![Frontend GKE Workload](docs/gallery/frontend-gke-workload.png)
+### ☀️ Light Mode — Dashboard
+![Light Mode](docs/gallery/dashboard-light.png)
+
+---
+
+### 📱 Login Page
+![Login](docs/gallery/login.png)
 
 ---
 
