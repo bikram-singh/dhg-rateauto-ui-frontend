@@ -5,7 +5,7 @@
 # 🏥 DHG Vaccine Fee Pricing Dashboard
 
 ### Enterprise Healthcare Platform · React 18 · AI-Powered · Voice Enabled
-### `dhg-rateauto-ui-frontend` — Dummy Health Group
+### `dhg-rateauto-ui-frontend` - Dummy Health Group
 
 <br/>
 
@@ -23,11 +23,11 @@
 
 <br/>
 
-> *A production-grade vaccine pricing intelligence platform — 20 functional pages, real-time KPIs, AI voice advisor, global search, JWT authentication, deep ocean teal theme, and full data export. Deployed on GKE Autopilot with zero-downtime rolling updates.*
+> *A production-grade vaccine pricing intelligence platform - 20 functional pages, real-time KPIs, AI voice advisor, global search, JWT authentication, deep ocean teal theme, and full data export. Deployed on GKE Autopilot with zero-downtime rolling updates.*
 
 <br/>
 
-**🌐 Live Application:** [`https://dev.gcpcloudhub.shop/vaccinefee-ui`](https://dev.gcpcloudhub.shop/vaccinefee-ui) &nbsp;
+**🌐 Live Application:** [`https://dev.gcpcloudhub.shop/vaccinefee-ui`](https://dev.gcpcloudhub.shop/vaccinefee-ui)
 
 </div>
 
@@ -61,9 +61,9 @@
 
 ## 🌐 Overview
 
-The **DHG Vaccine Fee Pricing Dashboard** is a full-stack enterprise healthcare web application built for the **Dummy Health Group (DHG)**. It provides real-time vaccine pricing intelligence across **~150 hospitals** in 15+ countries — helping healthcare administrators, procurement teams, and clinicians make informed vaccine purchasing decisions.
+The **DHG Vaccine Fee Pricing Dashboard** is a full-stack enterprise healthcare web application built for the **Dummy Health Group (DHG)**. It provides real-time vaccine pricing intelligence across **~150 hospitals** in 15+ countries - helping healthcare administrators, procurement teams, and clinicians make informed vaccine purchasing decisions.
 
-The frontend is a **React 18 Single Page Application** served by **nginx 1.25** on port 8080, containerised with Docker (multi-stage build), and deployed on **GKE Autopilot** via a fully automated GitHub Actions CI/CD pipeline authenticated through **Workload Identity Federation** — no JSON keys stored anywhere.
+The frontend is a **React 18 Single Page Application** served by **nginx 1.25** on port 8080, containerised with Docker (multi-stage build), and deployed on **GKE Autopilot** via a fully automated GitHub Actions CI/CD pipeline authenticated through **Workload Identity Federation** - no JSON keys stored anywhere.
 
 ### 🩺 What Problem It Solves
 
@@ -91,10 +91,10 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 | 🏙️ **Haryana Cities** | 8 district hospitals (Rewari, Rohtak, Jhajjar, Faridabad, Narnaul, Ambala, Karnal, Yamunanagar) |
 | 🤖 **AI Model** | Claude Sonnet (`claude-sonnet-4-20250514`) |
 | ⚡ **Auto-refresh** | Live KPIs every 30 seconds |
-| 🎨 **Theme** | Deep Ocean Teal — dark + light mode |
+| 🎨 **Theme** | Deep Ocean Teal - dark + light mode |
 | 📱 **PWA** | Installable on Android + iOS |
 | 🔄 **Deploy** | Zero-downtime rolling update on GKE |
-| 📦 **Docker** | Multi-stage — `node:20-alpine` → `nginx:1.25-alpine` |
+| 📦 **Docker** | Multi-stage - `node:20-alpine` → `nginx:1.25-alpine` |
 | 🔐 **Auth** | JWT (HS256, 8-hour expiry) + Role-Based Access Control |
 
 ---
@@ -183,7 +183,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 | 📜 **JavaScript** | ES2022 | Primary language (92.6% of codebase) |
 | 🎨 **CSS** | Custom Design System | Theme, layout, animations (7% of codebase) |
 | 📊 **Recharts** | Latest | Bar, line, pie, radar, area charts |
-| 🎨 **Lucide React** | 0.383.0 | Icon library — 200+ icons across all pages |
+| 🎨 **Lucide React** | 0.383.0 | Icon library - 200+ icons across all pages |
 | 🌐 **Web Speech API** | Browser native | Voice recognition + text-to-speech (`en-IN`) |
 | 📦 **react-scripts** | Latest | CRA build tooling, dev server, Jest |
 
@@ -194,15 +194,15 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 | 🌐 **nginx** | 1.25-alpine | Serves React build, proxies API, port 8080 |
 | 🐳 **Docker** | Multi-stage | `node:20-alpine` builder → `nginx:1.25-alpine` runtime |
 | ☸️ **GKE Autopilot** | Latest stable | Production Kubernetes deployment target |
-| 📦 **GAR** | — | Google Artifact Registry — Docker image storage |
-| 🔄 **GitHub Actions** | — | CI/CD: lint → build → push → deploy |
-| 🔐 **WIF** | — | Workload Identity Federation — no JSON keys |
+| 📦 **GAR** | - | Google Artifact Registry - Docker image storage |
+| 🔄 **GitHub Actions** | - | CI/CD: lint → build → push → deploy |
+| 🔐 **WIF** | - | Workload Identity Federation - no JSON keys |
 
 ### 🔌 Backend Integration
 
 | Technology | Purpose |
 |---|---|
-| 🐍 **FastAPI (Python)** | REST API backend — vaccines, hospitals, pricing, auth |
+| 🐍 **FastAPI (Python)** | REST API backend - vaccines, hospitals, pricing, auth |
 | 🔐 **JWT HS256** | 8-hour access tokens for session management |
 | 🐘 **PostgreSQL** | Cloud SQL via PSC at `10.10.0.3:5432` |
 | 🤖 **Claude Sonnet API** | Powers the AI Vaccine Advisor |
@@ -214,14 +214,14 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### 🏠 MAIN
 
 <details open>
-<summary><strong>Dashboard</strong> — Command centre of the entire platform</summary>
+<summary><strong>Dashboard</strong> - Command centre of the entire platform</summary>
 
-- **Live KPI Cards** — Total Vaccines, Hospitals Covered, Avg Price, Availability (auto-refresh 30s)
-- **Filter Bar** — Department, Vaccine, Hospital, Location, Max Price slider, Insurance toggle
-- **Price Chart** — Recharts line chart with 10-month historical data, toggle between vaccine types
-- **Data Table** — Paginated (10/25/50/100 per page), search, sort, status badges, insurance badges
-- **Export** — CSV, Excel, Print
-- **Low Stock Alerts** — ⚠️ warning badge on bell icon with dismiss functionality
+- **Live KPI Cards** - Total Vaccines, Hospitals Covered, Avg Price, Availability (auto-refresh 30s)
+- **Filter Bar** - Department, Vaccine, Hospital, Location, Max Price slider, Insurance toggle
+- **Price Chart** - Recharts line chart with 10-month historical data, toggle between vaccine types
+- **Data Table** - Paginated (10/25/50/100 per page), search, sort, status badges, insurance badges
+- **Export** - CSV, Excel, Print
+- **Low Stock Alerts** - ⚠️ warning badge on bell icon with dismiss functionality
 
 </details>
 
@@ -230,7 +230,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### 🏥 HOSPITALS - 5 Pages
 
 <details>
-<summary><strong>Departments</strong> — 13 medical department cards</summary>
+<summary><strong>Departments</strong> - 13 medical department cards</summary>
 
 - 13 department cards (Infectious Diseases, Pediatrics, Cardiology, Oncology, etc.)
 - Each card shows: icon, name, description, pricing record count, avg price
@@ -239,9 +239,9 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Hospitals List</strong> — Full directory of ~150 hospitals</summary>
+<summary><strong>Hospitals List</strong> - Full directory of ~150 hospitals</summary>
 
-- Sortable table with all hospitals — India, USA, Europe, Asia
+- Sortable table with all hospitals - India, USA, Europe, Asia
 - Columns: #, Hospital Name, City, Location, Vaccines offered, Avg Price
 - Inline search, pagination
 - Click row → navigates to Hospital Profile
@@ -249,11 +249,11 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Hospital Profiles</strong> — Click-through hospital detail page</summary>
+<summary><strong>Hospital Profiles</strong> - Click-through hospital detail page</summary>
 
-- Full hospital details — name, address, location
-- Bar chart — top vaccines by availability
-- Pie chart — stock status distribution
+- Full hospital details - name, address, location
+- Bar chart - top vaccines by availability
+- Pie chart - stock status distribution
 - Complete vaccine pricing table for that hospital
 - CSV export of all pricing for that hospital
 - Stats: Avg Price, Min Price, Max Price, Total Vaccines
@@ -261,7 +261,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Rankings</strong> — Score-based hospital ranking</summary>
+<summary><strong>Rankings</strong> - Score-based hospital ranking</summary>
 
 - Scoring algorithm: availability % + price score + insurance coverage + stock levels
 - Podium display for top 3 hospitals
@@ -271,11 +271,11 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Compare</strong> — Side-by-side hospital comparison</summary>
+<summary><strong>Compare</strong> - Side-by-side hospital comparison</summary>
 
 - Select up to 4 hospitals to compare simultaneously
-- Radar chart — multi-dimensional performance view
-- Metric table — price, vaccines, stock, insurance, location
+- Radar chart - multi-dimensional performance view
+- Metric table - price, vaccines, stock, insurance, location
 - Color-coded columns per hospital
 
 </details>
@@ -285,7 +285,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### 💉 VACCINES - 4 Pages
 
 <details>
-<summary><strong>Vaccine Search</strong> — Filter-based vaccine discovery</summary>
+<summary><strong>Vaccine Search</strong> - Filter-based vaccine discovery</summary>
 
 - Filter by: age group, disease category, max price (slider), availability status
 - Results grid with manufacturer, price range, hospital count
@@ -294,7 +294,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Vaccine Details</strong> — Clinical information page</summary>
+<summary><strong>Vaccine Details</strong> - Clinical information page</summary>
 
 - Manufacturer, description, dosage schedule
 - Which hospitals offer it and at what price
@@ -304,7 +304,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Vaccine Card</strong> — Digital vaccination record</summary>
+<summary><strong>Vaccine Card</strong> - Digital vaccination record</summary>
 
 - Fill patient name, age, ID number
 - Select vaccines received with dates
@@ -314,7 +314,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Appointments</strong> — 5-step booking wizard</summary>
+<summary><strong>Appointments</strong> - 5-step booking wizard</summary>
 
 **Step 1:** Select vaccine &nbsp;→&nbsp; **Step 2:** Choose hospital &nbsp;→&nbsp; **Step 3:** Pick date & time &nbsp;→&nbsp; **Step 4:** Enter patient info &nbsp;→&nbsp; **Step 5:** Confirm + print slip
 
@@ -325,7 +325,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### 💰 PRICING - 3 Pages
 
 <details>
-<summary><strong>Pricing</strong> — Master pricing table</summary>
+<summary><strong>Pricing</strong> - Master pricing table</summary>
 
 - All 5,000+ pricing records with filters
 - Filter by: hospital, vaccine, department, status, insurance
@@ -336,9 +336,9 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Price History</strong> — 10-month trend analysis</summary>
+<summary><strong>Price History</strong> - 10-month trend analysis</summary>
 
-- Recharts area/line chart — historical price trends
+- Recharts area/line chart - historical price trends
 - Compare up to 5 vaccines simultaneously
 - Stats cards: Min, Max, Avg price
 - Filter by hospital or vaccine
@@ -346,7 +346,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Price Prediction</strong> — ML 3-month forecast</summary>
+<summary><strong>Price Prediction</strong> - ML 3-month forecast</summary>
 
 - Linear regression model (JavaScript, client-side)
 - Confidence interval shading on chart
@@ -360,17 +360,17 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### 📊 ANALYTICS - 3 Pages
 
 <details>
-<summary><strong>City Analytics</strong> — Geographic comparison</summary>
+<summary><strong>City Analytics</strong> - Geographic comparison</summary>
 
 - Compare Delhi vs Mumbai vs Bengaluru
-- Bar chart — avg price per city
-- Radar chart — multi-metric city performance
-- Rankings table — most affordable city per vaccine
+- Bar chart - avg price per city
+- Radar chart - multi-metric city performance
+- Rankings table - most affordable city per vaccine
 
 </details>
 
 <details>
-<summary><strong>Advanced Reports</strong> — Report generation hub</summary>
+<summary><strong>Advanced Reports</strong> - Report generation hub</summary>
 
 - KPI summary with export
 - Top vaccines by pricing count bar chart
@@ -381,7 +381,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Reports</strong> — Summary analytics dashboard</summary>
+<summary><strong>Reports</strong> - Summary analytics dashboard</summary>
 
 - Vaccine distribution chart
 - Hospital coverage map stats
@@ -395,17 +395,17 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### 🔧 ADMIN - 3 Pages
 
 <details>
-<summary><strong>Admin Panel</strong> — Full CRUD interface (Admin only)</summary>
+<summary><strong>Admin Panel</strong> - Full CRUD interface (Admin only)</summary>
 
 - Manage: Vaccines, Hospitals, Departments, Pricing
-- Add / Edit / Delete via UI — no Cloud Shell needed
+- Add / Edit / Delete via UI - no Cloud Shell needed
 - Inline forms with validation
 - Instant list refresh after changes
 
 </details>
 
 <details>
-<summary><strong>User Management</strong> — User CRUD (Admin only)</summary>
+<summary><strong>User Management</strong> - User CRUD (Admin only)</summary>
 
 - Add new users with username, full name, password, role
 - Assign: Admin or Viewer role
@@ -415,7 +415,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 </details>
 
 <details>
-<summary><strong>Audit Log</strong> — Complete action history</summary>
+<summary><strong>Audit Log</strong> - Complete action history</summary>
 
 - Tracks: LOGIN, CREATE, UPDATE, DELETE, VIEW
 - Columns: Action, Resource, User, Timestamp
@@ -429,11 +429,11 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 ### ✨ AI - 1 Page
 
 <details open>
-<summary><strong>Vaccine Advisor</strong> — AI-powered consultation (Claude Sonnet)</summary>
+<summary><strong>Vaccine Advisor</strong> - AI-powered consultation (Claude Sonnet)</summary>
 
 - 🤖 Powered by **Claude Sonnet** via Anthropic API
-- 🎤 **Voice input** — Web Speech API, `en-IN` locale (Indian English)
-- 🔊 **Text-to-speech** — toggle speaker, reads AI responses aloud
+- 🎤 **Voice input** - Web Speech API, `en-IN` locale (Indian English)
+- 🔊 **Text-to-speech** - toggle speaker, reads AI responses aloud
 - 💬 Full conversation context maintained per session
 - 🔄 New chat / clear conversation button
 - 💡 6 suggested starter questions
@@ -457,8 +457,8 @@ dhg-rateauto-ui-frontend/
 │   └── 📄 Dockerfile             # Multi-stage: node:20-alpine → nginx:1.25-alpine
 │
 ├── 📁 k8s/
-│   ├── 📄 deployment.yaml        # K8s Deployment — rolling update, resource limits
-│   ├── 📄 service.yaml           # ClusterIP Service — port 8080
+│   ├── 📄 deployment.yaml        # K8s Deployment - rolling update, resource limits
+│   ├── 📄 service.yaml           # ClusterIP Service - port 8080
 │   ├── 📄 hpa.yaml               # Horizontal Pod Autoscaler
 │   └── 📄 serviceaccount.yaml    # K8s ServiceAccount for Workload Identity
 │
@@ -475,25 +475,25 @@ dhg-rateauto-ui-frontend/
 │   │
 │   └── 📁 src/
 │       ├── 📄 theme.js           # ⭐ Central dark/light color system (all 20 pages use this)
-│       ├── 📄 index.css          # Design system — tokens, layout, components (966 lines)
+│       ├── 📄 index.css          # Design system - tokens, layout, components (966 lines)
 │       ├── 📄 App.js             # Root component
 │       │
 │       ├── 📁 services/
-│       │   └── 📄 api.js         # API calls — public + JWT-protected + paginated fetch
+│       │   └── 📄 api.js         # API calls - public + JWT-protected + paginated fetch
 │       │
 │       ├── 📁 pages/
-│       │   ├── 📄 Dashboard.jsx  # Main orchestrator — auth gate, routes all 20 pages
+│       │   ├── 📄 Dashboard.jsx  # Main orchestrator - auth gate, routes all 20 pages
 │       │   ├── 📄 LoginPage.jsx  # Branded JWT login form
 │       │   └── 📄 AdminPanel.jsx # Full CRUD admin UI
 │       │
 │       └── 📁 components/        # 20 page components + 6 shared components
 │           │
 │           ├── 📄 Header.jsx              # Logo · Global search · Bell alerts · Dark mode toggle
-│           ├── 📄 Sidebar.jsx             # Grouped navigation — 6 groups, always-visible sub-items
+│           ├── 📄 Sidebar.jsx             # Grouped navigation - 6 groups, always-visible sub-items
 │           ├── 📄 Filters.jsx             # Dashboard filter bar
-│           ├── 📄 StatsCards.jsx          # Live KPI cards — auto-refresh 30s countdown
+│           ├── 📄 StatsCards.jsx          # Live KPI cards - auto-refresh 30s countdown
 │           ├── 📄 PriceChart.jsx          # Recharts price trend chart
-│           ├── 📄 DataTable.jsx           # Paginated table — search, sort, export
+│           ├── 📄 DataTable.jsx           # Paginated table - search, sort, export
 │           │
 │           ├── 📄 DepartmentsPage.jsx
 │           ├── 📄 HospitalsPage.jsx
@@ -519,7 +519,7 @@ dhg-rateauto-ui-frontend/
 │           │
 │           └── 📄 AIVaccineAdvisor.jsx    # Claude + Voice + TTS
 │
-├── 📄 .bumpversion.cfg            # bump2version config — tracks version across files
+├── 📄 .bumpversion.cfg            # bump2version config - tracks version across files
 ├── 📄 VERSION                     # Plain text current version (e.g. 0.0.1)
 ├── 📄 package-lock.json
 └── 📄 README.md                   # This file
@@ -529,7 +529,7 @@ dhg-rateauto-ui-frontend/
 
 ## 🎨 Theme System
 
-The entire dashboard uses a **centralised theme helper** — `src/theme.js` — which every component imports. Toggling `darkMode` instantly re-renders the entire UI with the correct colors.
+The entire dashboard uses a **centralised theme helper** - `src/theme.js` - which every component imports. Toggling `darkMode` instantly re-renders the entire UI with the correct colors.
 
 ```javascript
 // src/theme.js
@@ -624,7 +624,7 @@ headers: { "Authorization": `Bearer ${token}` }
 | Role | Username | Password | Can Do |
 |---|---|---|---|
 | 👑 **Admin** | `bikram` | `Admin@123` | Read + Write + Delete all data |
-| 👁️ **Viewer** | `viewer` | `View@123` | Read-only — write buttons hidden |
+| 👁️ **Viewer** | `viewer` | `View@123` | Read-only - write buttons hidden |
 
 ### RBAC in UI
 
@@ -743,7 +743,7 @@ export const fetchDepartments = () => fetchJSON(`${API_BASE}/departments/`);
 export const fetchPricingBatch = (skip, token) =>
   fetchJSONAuth(`${API_BASE}/pricing/?limit=500&skip=${skip}`, token);
 
-// ── Paginated fetch — solves 504 timeout on 5,000+ records ─
+// ── Paginated fetch - solves 504 timeout on 5,000+ records ─
 export const fetchAllPricing = async (token) => {
   let all = [], skip = 0;
   while (true) {
@@ -757,7 +757,7 @@ export const fetchAllPricing = async (token) => {
 };
 ```
 
-The **500-per-batch pagination** is critical — fetching all 5,000+ pricing records in one request causes a 504 Gateway Timeout. Batching in groups of 500 solves this completely.
+The **500-per-batch pagination** is critical - fetching all 5,000+ pricing records in one request causes a 504 Gateway Timeout. Batching in groups of 500 solves this completely.
 
 ---
 
@@ -801,7 +801,7 @@ npm run lint
 |---|---|---|
 | 🚀 **Start** | `npm start` | Dev server port 3000, hot reload, API proxy |
 | 🏗️ **Build** | `npm run build` | Production optimised React bundle → `/build` |
-| 🔍 **Lint** | `npm run lint` | ESLint — zero tolerance for errors or warnings |
+| 🔍 **Lint** | `npm run lint` | ESLint - zero tolerance for errors or warnings |
 | 🧪 **Test** | `npm test` | Run Jest unit tests |
 
 ### Local API Backend
@@ -809,7 +809,7 @@ npm run lint
 To run with a live backend locally:
 
 ```bash
-# In a separate terminal — start the FastAPI backend
+# In a separate terminal - start the FastAPI backend
 cd dhg-rateauto-api-backend/dhg-vaccinefee-api
 uvicorn app.main:app --reload --port 8000
 
@@ -847,7 +847,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 
 **Why multi-stage?**
-- Final image contains **only nginx + static files** — no Node.js, no npm, no source code
+- Final image contains **only nginx + static files** - no Node.js, no npm, no source code
 - Image size: ~50MB (vs ~700MB if Node was included)
 - No build tools in production image = smaller attack surface
 
@@ -875,7 +875,7 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-    # React SPA — all routes serve index.html
+    # React SPA - all routes serve index.html
     location /vaccinefee-ui {
         try_files $uri $uri/ /index.html;
     }
@@ -913,7 +913,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1          # One extra pod during deploy
-      maxUnavailable: 0    # Never drop below 2 — zero downtime
+      maxUnavailable: 0    # Never drop below 2 - zero downtime
 
   progressDeadlineSeconds: 900  # 15-minute deploy timeout
 
@@ -938,7 +938,7 @@ spec:
 | File | Kind | Purpose |
 |---|---|---|
 | `deployment.yaml` | `Deployment` | Pod spec, image, rolling update config, resource limits |
-| `service.yaml` | `Service` | ClusterIP on port 8080 — routes Gateway traffic to pods |
+| `service.yaml` | `Service` | ClusterIP on port 8080 - routes Gateway traffic to pods |
 | `hpa.yaml` | `HorizontalPodAutoscaler` | Auto-scales replicas on CPU/memory threshold |
 | `serviceaccount.yaml` | `ServiceAccount` | Identity for Workload Identity binding |
 
@@ -953,7 +953,7 @@ Push to main branch
         │
         ▼
 ┌──────────────────────────────────────────────────────────────┐
-│  Step 1 — Setup                                               │
+│  Step 1 - Setup                                               │
 │  • Checkout code                                             │
 │  • Setup Node.js 20                                          │
 │  • Authenticate GCP via WIF (no JSON keys!)                  │
@@ -962,7 +962,7 @@ Push to main branch
                                    │
                                    ▼
 ┌──────────────────────────────────────────────────────────────┐
-│  Step 2 — Quality Gate                                        │
+│  Step 2 - Quality Gate                                        │
 │  • cd dhg-vaccinefee-ui                                      │
 │  • npm install                                               │
 │  • npm run lint   ←─ FAIL HERE if any ESLint error/warning   │
@@ -971,14 +971,14 @@ Push to main branch
                                    │
                                    ▼
 ┌──────────────────────────────────────────────────────────────┐
-│  Step 3 — Containerise                                        │
+│  Step 3 - Containerise                                        │
 │  • docker build -f Docker/Dockerfile -t ${IMAGE}:${SHA} .   │
 │  • docker push → GAR (us-central1-docker.pkg.dev/...)       │
 └──────────────────────────────────┬───────────────────────────┘
                                    │
                                    ▼
 ┌──────────────────────────────────────────────────────────────┐
-│  Step 4 — Deploy                                              │
+│  Step 4 - Deploy                                              │
 │  • kubectl set image deployment/dhg-vaccinefee-ui \         │
 │      dhg-vaccinefee-ui=${IMAGE}:${SHA}                       │
 │  • kubectl rollout status deployment/dhg-vaccinefee-ui \    │
@@ -1027,7 +1027,7 @@ GitHub Actions sets `process.env.CI = true`. React's build tool then promotes **
 - ⚠️ Missing hook dependency → ❌ Build fails
 - ⚠️ Undefined variable → ❌ Build fails
 
-This keeps the codebase clean — you cannot merge broken or sloppy code.
+This keeps the codebase clean - you cannot merge broken or sloppy code.
 
 ### Key Code Patterns
 
@@ -1037,7 +1037,7 @@ useEffect(() => {
   loadData();
 }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-// ✅ Avoid && with numbers — React renders 0!
+// ✅ Avoid && with numbers - React renders 0!
 // ❌ Wrong:  {price && `₹${price}`}   → shows "0" when price=0
 // ✅ Right:  {price > 0 ? `₹${price}` : ""}
 
@@ -1073,20 +1073,20 @@ All routing from `/vaccinefee/api/*` to the FastAPI backend is handled by the **
 | Layer | Implementation |
 |---|---|
 | 🔐 **Auth** | JWT stored in `localStorage`, auto-redirect on expiry |
-| 👥 **RBAC** | Role checked per button/action — Admin vs Viewer |
+| 👥 **RBAC** | Role checked per button/action - Admin vs Viewer |
 | 🔒 **HTTPS** | Google-managed SSL cert, TLS 1.2+, HTTP → HTTPS redirect |
 | 🛡️ **No secrets in code** | All keys in K8s Secrets, injected as env vars at runtime |
 | 🧹 **XSS protection** | React JSX escapes all output by default |
 | 🔒 **nginx headers** | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` |
 | 🔐 **WIF** | No JSON keys in repo or GitHub Secrets |
-| 🐳 **Minimal image** | nginx:1.25-alpine — no Node.js in production image |
+| 🐳 **Minimal image** | nginx:1.25-alpine - no Node.js in production image |
 | 🔑 **RBAC K8s** | ServiceAccount with least-privilege roles |
 
 ---
 
 ## 🔖 Automated Versioning
 
-This repo uses **bump2version** to automatically increment the version number on every successful deployment to GKE dev — no manual version management needed.
+This repo uses **bump2version** to automatically increment the version number on every successful deployment to GKE dev - no manual version management needed.
 
 ### How It Works
 
@@ -1113,9 +1113,9 @@ git push origin main --follow-tags
 
 | File | Location | Purpose |
 |---|---|---|
-| 📄 `.bumpversion.cfg` | Repo root | Master config — version format, files to update, commit/tag message |
-| 📄 `VERSION` | Repo root | Plain text current version — single source of truth |
-| 📄 `package.json` | `dhg-vaccinefee-ui/` | React app version — auto-updated by bump2version |
+| 📄 `.bumpversion.cfg` | Repo root | Master config - version format, files to update, commit/tag message |
+| 📄 `VERSION` | Repo root | Plain text current version - single source of truth |
+| 📄 `package.json` | `dhg-vaccinefee-ui/` | React app version - auto-updated by bump2version |
 
 ### `.bumpversion.cfg`
 
@@ -1141,8 +1141,8 @@ replace = {new_version}
 | Command | Before | After | When Used |
 |---|---|---|---|
 | `bump2version patch` | `0.0.1` | `0.0.2` | Every push to main (automatic) |
-| `bump2version minor` | `0.0.2` | `0.1.0` | New feature — run manually |
-| `bump2version major` | `0.1.0` | `1.0.0` | Major release — run manually |
+| `bump2version minor` | `0.0.2` | `0.1.0` | New feature - run manually |
+| `bump2version major` | `0.1.0` | `1.0.0` | Major release - run manually |
 
 ### What You See on GitHub After Each Push
 
@@ -1153,7 +1153,7 @@ Commits on main
 ● chore: your actual commit message                    bikram-singh
 ```
 
-> ⚠️ **Guardrail built-in:** The `setup` job detects auto-commits (`[.*]` pattern in commit message) and sets `ABORT=true` — preventing an infinite loop where the bot's version bump triggers another pipeline run.
+> ⚠️ **Guardrail built-in:** The `setup` job detects auto-commits (`[.*]` pattern in commit message) and sets `ABORT=true` - preventing an infinite loop where the bot's version bump triggers another pipeline run.
 
 ---
 
