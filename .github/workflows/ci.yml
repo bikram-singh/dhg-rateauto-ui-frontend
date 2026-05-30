@@ -1,4 +1,4 @@
-name: DHG Vaccine Fee UI — CI/CD
+name: Continuous Integration
 
 on:
   push:
