@@ -519,6 +519,8 @@ dhg-rateauto-ui-frontend/
 │           │
 │           └── 📄 AIVaccineAdvisor.jsx    # Claude + Voice + TTS
 │
+├── 📄 .bumpversion.cfg            # bump2version config — tracks version across files
+├── 📄 VERSION                     # Plain text current version (e.g. 0.0.1)
 ├── 📄 package-lock.json
 └── 📄 README.md                   # This file
 ```
@@ -1079,6 +1081,79 @@ All routing from `/vaccinefee/api/*` to the FastAPI backend is handled by the **
 | 🔐 **WIF** | No JSON keys in repo or GitHub Secrets |
 | 🐳 **Minimal image** | nginx:1.25-alpine — no Node.js in production image |
 | 🔑 **RBAC K8s** | ServiceAccount with least-privilege roles |
+
+---
+
+## 🔖 Automated Versioning
+
+This repo uses **bump2version** to automatically increment the version number on every successful deployment to GKE dev — no manual version management needed.
+
+### How It Works
+
+```
+Push to main
+      │
+      ▼
+ci.yml: lint → build → Docker push → GKE deploy
+      │
+      ▼ (inside build-and-push-image job, after Docker push)
+bump2version patch
+      │
+      ├── Updates dhg-vaccinefee-ui/package.json  "version": "0.0.1" → "0.0.2"
+      ├── Updates VERSION file                     0.0.1 → 0.0.2
+      ├── Creates git commit: [2026-05-30] GitHub Actions Build 0.0.1 → 0.0.2
+      └── Creates git tag:    v0.0.2
+      │
+      ▼
+git push origin main --follow-tags
+(bot pushes commit + tag back to repo)
+```
+
+### Config Files
+
+| File | Location | Purpose |
+|---|---|---|
+| 📄 `.bumpversion.cfg` | Repo root | Master config — version format, files to update, commit/tag message |
+| 📄 `VERSION` | Repo root | Plain text current version — single source of truth |
+| 📄 `package.json` | `dhg-vaccinefee-ui/` | React app version — auto-updated by bump2version |
+
+### `.bumpversion.cfg`
+
+```ini
+[bumpversion]
+current_version = 0.0.1
+commit = True
+tag = True
+tag_name = v{new_version}
+message = [{now:%Y-%m-%d}] GitHub Actions Build {current_version} → {new_version}
+
+[bumpversion:file:dhg-vaccinefee-ui/package.json]
+search = "version": "{current_version}"
+replace = "version": "{new_version}"
+
+[bumpversion:file:VERSION]
+search = {current_version}
+replace = {new_version}
+```
+
+### Version Progression
+
+| Command | Before | After | When Used |
+|---|---|---|---|
+| `bump2version patch` | `0.0.1` | `0.0.2` | Every push to main (automatic) |
+| `bump2version minor` | `0.0.2` | `0.1.0` | New feature — run manually |
+| `bump2version major` | `0.1.0` | `1.0.0` | Major release — run manually |
+
+### What You See on GitHub After Each Push
+
+```
+Commits on main
+
+● [2026-05-30] GitHub Actions Build 0.0.1 → 0.0.2    github-actions[bot]
+● chore: your actual commit message                    bikram-singh
+```
+
+> ⚠️ **Guardrail built-in:** The `setup` job detects auto-commits (`[.*]` pattern in commit message) and sets `ABORT=true` — preventing an infinite loop where the bot's version bump triggers another pipeline run.
 
 ---
 
