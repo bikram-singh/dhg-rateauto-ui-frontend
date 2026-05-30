@@ -118,6 +118,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -145,6 +148,26 @@ jobs:
             --push \
             dhg-vaccinefee-ui/
 
+      - name: Setup Python for bump2version
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install bump2version
+        run: pip install bump2version
+
+      - name: Configure git identity
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump patch version and push tag
+        run: |
+          bump2version patch
+          git push origin main --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy-dev:
     name: GKE-Dev
     needs:
@@ -167,44 +190,6 @@ jobs:
       SERVICE_ACCOUNT_NAME: "dhg-vaccinefee-ui"
       HPA_NAME: "dhg-vaccinefee-ui-hpa"
     secrets: inherit
-
-  # ---------------------------------------------------------------
-  # bump-version: Runs after successful dev deploy on main branch
-  # Auto-increments patch version, commits and tags the repo
-  # ---------------------------------------------------------------
-  bump-version:
-    name: Bump version
-    runs-on: ubuntu-latest
-    needs:
-      - setup
-      - deploy-dev
-    if: ${{ needs.setup.outputs.SHOULD_DEPLOY == 'true' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install bump2version
-        run: pip install bump2version
-
-      - name: Configure git identity
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bump patch version and push tag
-        run: |
-          bump2version patch
-          git push origin main --follow-tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # ---------------------------------------------------------------
   # deploy-test: DISABLED - dhg-rateauto-test-gke-cluster not ready
