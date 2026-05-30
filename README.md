@@ -27,8 +27,7 @@
 
 <br/>
 
-**🌐 Live Application:** [`https://dev.gcpcloudhub.shop/vaccinefee-ui`](https://dev.gcpcloudhub.shop/vaccinefee-ui) &nbsp;|&nbsp;
-**📖 API Docs:** [`https://dev.gcpcloudhub.shop/vaccinefee/api/docs`](https://dev.gcpcloudhub.shop/vaccinefee/api/docs)
+**🌐 Live Application:** [`https://dev.gcpcloudhub.shop/vaccinefee-ui`](https://dev.gcpcloudhub.shop/vaccinefee-ui) &nbsp;
 
 </div>
 
@@ -102,19 +101,19 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ## 🖼️ UI Gallery
 
-> 📌 **Note:** All images are stored in `docs/gallery/`. See [Adding Your Own UI Gallery Images](#-adding-your-own-ui-gallery-images) at the end of this README for step-by-step instructions.
+> 📌 **Note:** All images are stored in `docs/gallery/`. See [Adding Your Own UI Gallery Images](#-adding-your-own-ui-gallery-images)
 
 ### 📱 Login Page
 ![Login](docs/gallery/login.png)
 
 ---
 
-### ☀️ Dashboard — Light Mode
+### ☀️ Dashboard - Light Mode
 ![Dashboard Light Mode](docs/gallery/dashboard-light.png)
 
 ---
 
-### 🌑 Dashboard — Dark Mode
+### 🌑 Dashboard - Dark Mode
 ![Dashboard Dark Mode](docs/gallery/dashboard-dark.png)
 
 ---
@@ -124,7 +123,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 🏥 Hospital Profiles — Detailed View
+### 🏥 Hospital Profiles - Detailed View
 ![Hospital Profile](docs/gallery/hospital-profile.png)
 
 ---
@@ -134,7 +133,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 📈 Price History — Trend Charts
+### 📈 Price History - Trend Charts
 ![Price History](docs/gallery/price-history.png)
 
 ---
@@ -144,7 +143,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 🤖 Vaccine Advisor — AI + Voice
+### 🤖 Vaccine Advisor - Chat + Voice
 ![Vaccine Advisor](docs/gallery/vaccine-advisor.png)
 
 ---
@@ -154,22 +153,22 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 📅 Appointments — 5-Step Wizard
+### 📅 Appointments - 5-Step Wizard
 ![Appointments](docs/gallery/appointments.png)
 
 ---
 
-### 🪪 Vaccination Card — Printable Record
+### 🪪 Vaccination Card - Printable Record
 ![Vaccination Card](docs/gallery/vaccination-card.png)
 
 ---
 
-### 🔄 CI/CD Pipeline — GitHub Actions
+### 🔄 CI/CD Pipeline - GitHub Actions
 ![Frontend CI/CD Pipeline](docs/gallery/frontend-ci-cd-pipeline.png)
 
 ---
 
-### ☸️ GKE Workload — Live Deployment
+### ☸️ GKE Workload - Deployment
 ![Frontend GKE Workload](docs/gallery/frontend-gke-workload.png)
 
 ---
@@ -228,7 +227,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 🏥 HOSPITALS — 5 Pages
+### 🏥 HOSPITALS - 5 Pages
 
 <details>
 <summary><strong>Departments</strong> — 13 medical department cards</summary>
@@ -283,7 +282,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 💉 VACCINES — 4 Pages
+### 💉 VACCINES - 4 Pages
 
 <details>
 <summary><strong>Vaccine Search</strong> — Filter-based vaccine discovery</summary>
@@ -323,7 +322,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 💰 PRICING — 3 Pages
+### 💰 PRICING - 3 Pages
 
 <details>
 <summary><strong>Pricing</strong> — Master pricing table</summary>
@@ -358,7 +357,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 📊 ANALYTICS — 3 Pages
+### 📊 ANALYTICS - 3 Pages
 
 <details>
 <summary><strong>City Analytics</strong> — Geographic comparison</summary>
@@ -393,7 +392,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### 🔧 ADMIN — 3 Pages
+### 🔧 ADMIN - 3 Pages
 
 <details>
 <summary><strong>Admin Panel</strong> — Full CRUD interface (Admin only)</summary>
@@ -427,7 +426,7 @@ The frontend is a **React 18 Single Page Application** served by **nginx 1.25** 
 
 ---
 
-### ✨ AI — 1 Page
+### ✨ AI - 1 Page
 
 <details open>
 <summary><strong>Vaccine Advisor</strong> — AI-powered consultation (Claude Sonnet)</summary>
